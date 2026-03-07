@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
@@ -10,25 +10,41 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Налаштування multer для завантаження файлів
-const storage = multer.diskStorage({
+// Створення необхідних папок
+const uploadsDir = path.join(__dirname, 'uploads');
+const photosDir = path.join(uploadsDir, 'photos');
+const videosDir = path.join(uploadsDir, 'videos');
+
+fs.ensureDirSync(photosDir);
+fs.ensureDirSync(videosDir);
+
+// Налаштування multer для фото
+const photoStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const dir = path.join(__dirname, 'uploads');
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
-        cb(null, dir);
+        cb(null, photosDir);
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const ext = path.extname(file.originalname);
-        cb(null, 'logo-' + uniqueSuffix + ext);
+        cb(null, 'photo-' + uniqueSuffix + ext);
     }
 });
 
-const upload = multer({ 
-    storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+// Налаштування multer для відео
+const videoStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, videosDir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, 'video-' + uniqueSuffix + ext);
+    }
+});
+
+const uploadPhoto = multer({ 
+    storage: photoStorage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
@@ -38,15 +54,31 @@ const upload = multer({
     }
 });
 
+const uploadVideo = multer({ 
+    storage: videoStorage,
+    limits: { fileSize: 100 * 1024 * 1024 }, // 100MB
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('video/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Тільки відео дозволені'));
+        }
+    }
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:' + PORT,
+    credentials: true
+}));
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Налаштування сесій
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'volunteer-secret-key',
+    secret: process.env.SESSION_SECRET || 'volunteer-blue-white-secret',
     resave: false,
     saveUninitialized: false,
     cookie: { 
@@ -59,8 +91,8 @@ app.use(session({
 const DB_PATH = path.join(__dirname, 'database.json');
 
 // Ініціалізація БД
-function initDB() {
-    if (!fs.existsSync(DB_PATH)) {
+async function initDB() {
+    if (!await fs.pathExists(DB_PATH)) {
         const salt = bcrypt.genSaltSync(10);
         const defaultDB = {
             users: [
@@ -75,6 +107,8 @@ function initDB() {
             settings: {
                 siteName: 'Волонтерська організація 4.5.0',
                 logo: null,
+                primaryColor: '#0066cc',
+                secondaryColor: '#ffffff',
                 contacts: {
                     phone: '+380 (99) 123-45-67',
                     email: 'info@volunteer450.org',
@@ -125,14 +159,6 @@ function initDB() {
                     amount: 500,
                     status: 'pending',
                     createdAt: '2024-01-16T14:20:00Z'
-                },
-                {
-                    id: 3,
-                    collectionId: 2,
-                    name: 'Петро',
-                    amount: 2000,
-                    status: 'confirmed',
-                    createdAt: '2024-01-17T09:15:00Z'
                 }
             ],
             reports: [
@@ -141,14 +167,28 @@ function initDB() {
                     title: 'Придбано тепловізори',
                     content: 'Придбано 3 тепловізори на суму 45000 грн',
                     amount: 45000,
-                    date: '2024-01-15'
+                    date: '2024-01-15',
+                    media: [
+                        {
+                            type: 'photo',
+                            url: '/uploads/photos/example1.jpg',
+                            caption: 'Тепловізори перед відправкою'
+                        }
+                    ]
                 },
                 {
                     id: 2,
                     title: 'Передано автівку',
                     content: 'Передано пікап на передову',
                     amount: 120000,
-                    date: '2024-01-20'
+                    date: '2024-01-20',
+                    media: [
+                        {
+                            type: 'video',
+                            url: '/uploads/videos/example1.mp4',
+                            caption: 'Відео передачі автівки'
+                        }
+                    ]
                 }
             ],
             about: {
@@ -162,7 +202,7 @@ function initDB() {
             activity: []
         };
         
-        fs.writeFileSync(DB_PATH, JSON.stringify(defaultDB, null, 2));
+        await fs.writeJson(DB_PATH, defaultDB, { spaces: 2 });
         console.log('✅ Базу даних створено');
     }
 }
@@ -170,12 +210,12 @@ function initDB() {
 initDB();
 
 // Допоміжні функції для роботи з БД
-function readDB() {
-    return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+async function readDB() {
+    return await fs.readJson(DB_PATH);
 }
 
-function writeDB(data) {
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+async function writeDB(data) {
+    await fs.writeJson(DB_PATH, data, { spaces: 2 });
 }
 
 // Middleware для перевірки авторизації
@@ -188,9 +228,7 @@ function requireAuth(req, res, next) {
 }
 
 function requireAdmin(req, res, next) {
-    const db = readDB();
-    const user = db.users.find(u => u.id === req.session.userId);
-    if (user && user.role === 'superadmin') {
+    if (req.session.userId && req.session.role === 'superadmin') {
         next();
     } else {
         res.status(403).json({ error: 'Доступ заборонено' });
@@ -200,9 +238,9 @@ function requireAdmin(req, res, next) {
 // ==================== API Routes ====================
 
 // Аутентифікація
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
-    const db = readDB();
+    const db = await readDB();
     const user = db.users.find(u => u.username === username);
     
     if (user && bcrypt.compareSync(password, user.password)) {
@@ -210,7 +248,6 @@ app.post('/api/login', (req, res) => {
         req.session.username = user.username;
         req.session.role = user.role;
         
-        // Логування активності
         db.activity.push({
             id: Date.now(),
             type: 'login',
@@ -218,7 +255,7 @@ app.post('/api/login', (req, res) => {
             timestamp: new Date().toISOString(),
             details: 'Успішний вхід в систему'
         });
-        writeDB(db);
+        await writeDB(db);
         
         res.json({ 
             success: true, 
@@ -233,9 +270,9 @@ app.post('/api/login', (req, res) => {
     }
 });
 
-app.post('/api/logout', (req, res) => {
+app.post('/api/logout', async (req, res) => {
     if (req.session.userId) {
-        const db = readDB();
+        const db = await readDB();
         db.activity.push({
             id: Date.now(),
             type: 'logout',
@@ -243,7 +280,7 @@ app.post('/api/logout', (req, res) => {
             timestamp: new Date().toISOString(),
             details: 'Вихід з системи'
         });
-        writeDB(db);
+        await writeDB(db);
     }
     
     req.session.destroy();
@@ -266,13 +303,13 @@ app.get('/api/session', (req, res) => {
 });
 
 // Збори
-app.get('/api/collections', (req, res) => {
-    const db = readDB();
+app.get('/api/collections', async (req, res) => {
+    const db = await readDB();
     res.json(db.collections);
 });
 
-app.get('/api/collections/:id', (req, res) => {
-    const db = readDB();
+app.get('/api/collections/:id', async (req, res) => {
+    const db = await readDB();
     const collection = db.collections.find(c => c.id === parseInt(req.params.id));
     if (collection) {
         res.json(collection);
@@ -281,8 +318,8 @@ app.get('/api/collections/:id', (req, res) => {
     }
 });
 
-app.post('/api/collections', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.post('/api/collections', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     const newCollection = {
         id: Date.now(),
         ...req.body,
@@ -301,12 +338,12 @@ app.post('/api/collections', requireAuth, requireAdmin, (req, res) => {
         details: `Додано новий збір: ${newCollection.name}`
     });
     
-    writeDB(db);
+    await writeDB(db);
     res.json(newCollection);
 });
 
-app.put('/api/collections/:id', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.put('/api/collections/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     const index = db.collections.findIndex(c => c.id === parseInt(req.params.id));
     
     if (index !== -1) {
@@ -320,15 +357,15 @@ app.put('/api/collections/:id', requireAuth, requireAdmin, (req, res) => {
             details: `Оновлено збір: ${db.collections[index].name}`
         });
         
-        writeDB(db);
+        await writeDB(db);
         res.json(db.collections[index]);
     } else {
         res.status(404).json({ error: 'Збір не знайдено' });
     }
 });
 
-app.delete('/api/collections/:id', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.delete('/api/collections/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     const collection = db.collections.find(c => c.id === parseInt(req.params.id));
     db.collections = db.collections.filter(c => c.id !== parseInt(req.params.id));
     
@@ -340,13 +377,13 @@ app.delete('/api/collections/:id', requireAuth, requireAdmin, (req, res) => {
         details: `Видалено збір: ${collection ? collection.name : 'невідомий'}`
     });
     
-    writeDB(db);
+    await writeDB(db);
     res.json({ success: true });
 });
 
 // Донати
-app.get('/api/donations', (req, res) => {
-    const db = readDB();
+app.get('/api/donations', async (req, res) => {
+    const db = await readDB();
     const { status } = req.query;
     
     let donations = db.donations;
@@ -354,7 +391,6 @@ app.get('/api/donations', (req, res) => {
         donations = donations.filter(d => d.status === status);
     }
     
-    // Додаємо інформацію про збір
     donations = donations.map(d => ({
         ...d,
         collectionName: db.collections.find(c => c.id === d.collectionId)?.name || 'Невідомий збір'
@@ -363,8 +399,8 @@ app.get('/api/donations', (req, res) => {
     res.json(donations);
 });
 
-app.post('/api/donations', (req, res) => {
-    const db = readDB();
+app.post('/api/donations', async (req, res) => {
+    const db = await readDB();
     const newDonation = {
         id: Date.now(),
         ...req.body,
@@ -373,18 +409,17 @@ app.post('/api/donations', (req, res) => {
     };
     
     db.donations.push(newDonation);
-    writeDB(db);
+    await writeDB(db);
     res.json(newDonation);
 });
 
-app.put('/api/donations/:id/confirm', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.put('/api/donations/:id/confirm', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     const donationIndex = db.donations.findIndex(d => d.id === parseInt(req.params.id));
     
     if (donationIndex !== -1) {
         db.donations[donationIndex].status = 'confirmed';
         
-        // Оновлюємо суму в зборі
         const donation = db.donations[donationIndex];
         const collectionIndex = db.collections.findIndex(c => c.id === donation.collectionId);
         
@@ -400,15 +435,15 @@ app.put('/api/donations/:id/confirm', requireAuth, requireAdmin, (req, res) => {
             details: `Підтверджено донат від ${donation.name} на суму ${donation.amount} грн`
         });
         
-        writeDB(db);
+        await writeDB(db);
         res.json(db.donations[donationIndex]);
     } else {
         res.status(404).json({ error: 'Донат не знайдено' });
     }
 });
 
-app.delete('/api/donations/:id', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.delete('/api/donations/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     const donation = db.donations.find(d => d.id === parseInt(req.params.id));
     db.donations = db.donations.filter(d => d.id !== parseInt(req.params.id));
     
@@ -420,21 +455,22 @@ app.delete('/api/donations/:id', requireAuth, requireAdmin, (req, res) => {
         details: `Відхилено донат від ${donation ? donation.name : 'невідомого'}`
     });
     
-    writeDB(db);
+    await writeDB(db);
     res.json({ success: true });
 });
 
-// Звіти
-app.get('/api/reports', (req, res) => {
-    const db = readDB();
+// Звіти з медіа
+app.get('/api/reports', async (req, res) => {
+    const db = await readDB();
     res.json(db.reports);
 });
 
-app.post('/api/reports', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.post('/api/reports', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     const newReport = {
         id: Date.now(),
         ...req.body,
+        media: req.body.media || [],
         date: new Date().toISOString().split('T')[0]
     };
     
@@ -448,13 +484,88 @@ app.post('/api/reports', requireAuth, requireAdmin, (req, res) => {
         details: `Додано звіт: ${newReport.title}`
     });
     
-    writeDB(db);
+    await writeDB(db);
     res.json(newReport);
 });
 
-app.delete('/api/reports/:id', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.post('/api/reports/:id/photos', requireAuth, requireAdmin, uploadPhoto.array('photos', 10), async (req, res) => {
+    const db = await readDB();
+    const reportIndex = db.reports.findIndex(r => r.id === parseInt(req.params.id));
+    
+    if (reportIndex !== -1) {
+        const files = req.files.map(file => ({
+            type: 'photo',
+            url: '/uploads/photos/' + file.filename,
+            caption: req.body.caption || ''
+        }));
+        
+        db.reports[reportIndex].media = [...(db.reports[reportIndex].media || []), ...files];
+        await writeDB(db);
+        res.json({ success: true, files });
+    } else {
+        res.status(404).json({ error: 'Звіт не знайдено' });
+    }
+});
+
+app.post('/api/reports/:id/videos', requireAuth, requireAdmin, uploadVideo.single('video'), async (req, res) => {
+    const db = await readDB();
+    const reportIndex = db.reports.findIndex(r => r.id === parseInt(req.params.id));
+    
+    if (reportIndex !== -1 && req.file) {
+        const video = {
+            type: 'video',
+            url: '/uploads/videos/' + req.file.filename,
+            caption: req.body.caption || ''
+        };
+        
+        db.reports[reportIndex].media = [...(db.reports[reportIndex].media || []), video];
+        await writeDB(db);
+        res.json({ success: true, video });
+    } else {
+        res.status(404).json({ error: 'Звіт не знайдено' });
+    }
+});
+
+app.delete('/api/reports/:id/media/:mediaIndex', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    const reportIndex = db.reports.findIndex(r => r.id === parseInt(req.params.id));
+    
+    if (reportIndex !== -1) {
+        const mediaIndex = parseInt(req.params.mediaIndex);
+        if (mediaIndex >= 0 && mediaIndex < db.reports[reportIndex].media.length) {
+            const media = db.reports[reportIndex].media[mediaIndex];
+            
+            // Видаляємо файл
+            const filePath = path.join(__dirname, media.url);
+            if (await fs.pathExists(filePath)) {
+                await fs.remove(filePath);
+            }
+            
+            db.reports[reportIndex].media.splice(mediaIndex, 1);
+            await writeDB(db);
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ error: 'Медіа не знайдено' });
+        }
+    } else {
+        res.status(404).json({ error: 'Звіт не знайдено' });
+    }
+});
+
+app.delete('/api/reports/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     const report = db.reports.find(r => r.id === parseInt(req.params.id));
+    
+    if (report) {
+        // Видаляємо всі медіа файли
+        for (const media of report.media || []) {
+            const filePath = path.join(__dirname, media.url);
+            if (await fs.pathExists(filePath)) {
+                await fs.remove(filePath);
+            }
+        }
+    }
+    
     db.reports = db.reports.filter(r => r.id !== parseInt(req.params.id));
     
     db.activity.push({
@@ -465,18 +576,18 @@ app.delete('/api/reports/:id', requireAuth, requireAdmin, (req, res) => {
         details: `Видалено звіт: ${report ? report.title : 'невідомий'}`
     });
     
-    writeDB(db);
+    await writeDB(db);
     res.json({ success: true });
 });
 
 // Про нас
-app.get('/api/about', (req, res) => {
-    const db = readDB();
+app.get('/api/about', async (req, res) => {
+    const db = await readDB();
     res.json(db.about);
 });
 
-app.put('/api/about', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.put('/api/about', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     db.about = { ...db.about, ...req.body };
     
     db.activity.push({
@@ -487,18 +598,18 @@ app.put('/api/about', requireAuth, requireAdmin, (req, res) => {
         details: 'Оновлено сторінку "Про нас"'
     });
     
-    writeDB(db);
+    await writeDB(db);
     res.json(db.about);
 });
 
 // Налаштування
-app.get('/api/settings', (req, res) => {
-    const db = readDB();
+app.get('/api/settings', async (req, res) => {
+    const db = await readDB();
     res.json(db.settings);
 });
 
-app.put('/api/settings', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.put('/api/settings', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     db.settings = { ...db.settings, ...req.body };
     
     db.activity.push({
@@ -509,14 +620,14 @@ app.put('/api/settings', requireAuth, requireAdmin, (req, res) => {
         details: 'Оновлено налаштування сайту'
     });
     
-    writeDB(db);
+    await writeDB(db);
     res.json(db.settings);
 });
 
-app.post('/api/settings/logo', requireAuth, requireAdmin, upload.single('logo'), (req, res) => {
+app.post('/api/settings/logo', requireAuth, requireAdmin, uploadPhoto.single('logo'), async (req, res) => {
     if (req.file) {
-        const db = readDB();
-        const logoPath = '/uploads/' + req.file.filename;
+        const db = await readDB();
+        const logoPath = '/uploads/photos/' + req.file.filename;
         db.settings.logo = logoPath;
         
         db.activity.push({
@@ -527,16 +638,16 @@ app.post('/api/settings/logo', requireAuth, requireAdmin, upload.single('logo'),
             details: 'Оновлено логотип сайту'
         });
         
-        writeDB(db);
+        await writeDB(db);
         res.json({ logo: logoPath });
     } else {
         res.status(400).json({ error: 'Файл не завантажено' });
     }
 });
 
-app.post('/api/settings/credentials', requireAuth, requireAdmin, (req, res) => {
+app.post('/api/settings/credentials', requireAuth, requireAdmin, async (req, res) => {
     const { username, password } = req.body;
-    const db = readDB();
+    const db = await readDB();
     const userIndex = db.users.findIndex(u => u.id === req.session.userId);
     
     if (userIndex !== -1) {
@@ -554,30 +665,30 @@ app.post('/api/settings/credentials', requireAuth, requireAdmin, (req, res) => {
             details: 'Змінено облікові дані адміністратора'
         });
         
-        writeDB(db);
+        await writeDB(db);
         res.json({ success: true });
     } else {
         res.status(404).json({ error: 'Користувача не знайдено' });
     }
 });
 
-app.get('/api/logo', (req, res) => {
-    const db = readDB();
-    if (db.settings.logo && fs.existsSync(path.join(__dirname, db.settings.logo))) {
+app.get('/api/logo', async (req, res) => {
+    const db = await readDB();
+    if (db.settings.logo && await fs.pathExists(path.join(__dirname, db.settings.logo))) {
         res.sendFile(path.join(__dirname, db.settings.logo));
     } else {
-        // Відправляємо SVG як відповідь
+        // Біло-синій логотип
         res.setHeader('Content-Type', 'image/svg+xml');
         res.send(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="#4f46e5"/>
-            <text x="50" y="70" font-size="50" text-anchor="middle" fill="white" font-family="Arial">❤️</text>
+            <circle cx="50" cy="50" r="45" fill="#0066cc"/>
+            <text x="50" y="70" font-size="50" text-anchor="middle" fill="white" font-family="Arial">4.5.0</text>
         </svg>`);
     }
 });
 
 // Статистика
-app.get('/api/stats', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.get('/api/stats', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     
     const stats = {
         activeCollections: db.collections.filter(c => c.status === 'active').length,
@@ -586,30 +697,28 @@ app.get('/api/stats', requireAuth, requireAdmin, (req, res) => {
         totalReports: db.reports.length,
         totalDonors: [...new Set(db.donations.map(d => d.name))].length,
         totalCollections: db.collections.length,
-        confirmedDonations: db.donations.filter(d => d.status === 'confirmed').length
+        confirmedDonations: db.donations.filter(d => d.status === 'confirmed').length,
+        totalMedia: db.reports.reduce((sum, r) => sum + (r.media?.length || 0), 0)
     };
     
     res.json(stats);
 });
 
-app.get('/api/activity', requireAuth, requireAdmin, (req, res) => {
-    const db = readDB();
+app.get('/api/activity', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
     res.json(db.activity.slice(-30).reverse());
 });
 
 // ==================== Сторінки ====================
 
-// Головна сторінка
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Сторінка логіну адміна
 app.get('/admin-login', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin-login.html'));
 });
 
-// Адмін-панель (перевірка авторизації)
 app.get('/admin', (req, res) => {
     if (req.session.userId) {
         res.sendFile(path.join(__dirname, 'admin.html'));
@@ -623,7 +732,7 @@ app.listen(PORT, () => {
     console.log(`
     ╔══════════════════════════════════════════╗
     ║   Волонтерська організація 4.5.0         ║
-    ║   Сервер успішно запущено!                ║
+    ║   Синьо-білий стиль                       ║
     ╠══════════════════════════════════════════╣
     ║   Головна сторінка: http://localhost:${PORT}  ║
     ║   Адмін-логін: http://localhost:${PORT}/admin-login ║
