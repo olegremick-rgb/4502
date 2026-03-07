@@ -39,11 +39,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
         .loader-wrapper {
             position: fixed;
             top: 0;
@@ -76,6 +71,11 @@
             position: relative;
             transform: rotate(45deg);
             animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: rotate(45deg) scale(1); }
+            50% { transform: rotate(45deg) scale(1.1); }
         }
 
         .heart:before,
@@ -174,6 +174,45 @@
             background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0,102,204,0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Прихована кнопка адміна за замовчуванням */
+        .admin-btn {
+            display: none !important;
+        }
+
+        .admin-btn.visible {
+            display: inline-flex !important;
+        }
+
+        .login-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .login-input {
+            padding: 8px 15px;
+            border: 2px solid var(--gray-light);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            width: 120px;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         main {
@@ -293,6 +332,7 @@
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
+            border: 1px solid var(--gray-light);
         }
 
         .media-item img,
@@ -374,10 +414,6 @@
             color: var(--primary);
         }
 
-        .collection-media {
-            margin: 15px 0;
-        }
-
         /* Звіти */
         .reports-grid {
             display: grid;
@@ -414,13 +450,45 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 50px;
-            align-items: center;
+            align-items: start;
+        }
+
+        .about-text {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,102,204,0.1);
         }
 
         .about-description {
             font-size: 1.1rem;
             line-height: 1.8;
             margin-bottom: 30px;
+            color: var(--dark);
+        }
+
+        .about-history {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid var(--accent);
+        }
+
+        .about-history h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .about-mission {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--accent);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .about-mission h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
         }
 
         .about-image {
@@ -434,28 +502,6 @@
             width: 100%;
             height: auto;
             display: block;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 20px;
-            background: var(--accent);
-            border-radius: 10px;
-            border: 1px solid var(--primary);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 5px;
         }
 
         /* Модальне вікно */
@@ -599,15 +645,36 @@
             gap: 10px;
             z-index: 3000;
             border-left: 4px solid var(--primary);
+            animation: fadeInUp 0.3s;
+        }
+
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
         }
 
         @media (max-width: 768px) {
             .nav { display: none; }
+            .login-form { flex-direction: column; }
             .news-grid { grid-template-columns: 1fr; }
             .collections-grid { grid-template-columns: 1fr; }
             .reports-grid { grid-template-columns: 1fr; }
             .about-content { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -634,9 +701,22 @@
                 </ul>
             </nav>
 
-            <div class="auth-buttons">
-                <a href="/admin-login" class="btn btn-primary">
-                    <i class="fas fa-lock"></i> Адмін
+            <div class="auth-section">
+                <div id="loginForm" class="login-form">
+                    <input type="text" id="loginUsername" class="login-input" placeholder="Логін">
+                    <input type="password" id="loginPassword" class="login-input" placeholder="Пароль">
+                    <button class="btn btn-primary" onclick="login()">Увійти</button>
+                </div>
+                
+                <div id="userInfo" class="user-info" style="display: none;">
+                    <span id="currentUser"></span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+
+                <a href="/admin" id="adminBtn" class="btn btn-primary admin-btn">
+                    <i class="fas fa-lock"></i> Адмін-панель
                 </a>
             </div>
         </div>
@@ -699,19 +779,14 @@
                         <h1 class="section-title">Про нас</h1>
                         <div id="aboutContent" class="about-description"></div>
                         
-                        <div class="stats-grid" id="statsGrid">
-                            <div class="stat-item">
-                                <div class="stat-number" id="totalRaised">0</div>
-                                <div class="stat-label">Зібрано грн</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-number" id="successfulCollections">0</div>
-                                <div class="stat-label">Зборів</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-number" id="helpedSoldiers">0</div>
-                                <div class="stat-label">Допомогли</div>
-                            </div>
+                        <div class="about-history" id="aboutHistory">
+                            <h3>Наша історія</h3>
+                            <p id="historyText"></p>
+                        </div>
+                        
+                        <div class="about-mission" id="aboutMission">
+                            <h3>Наша місія</h3>
+                            <p id="missionText"></p>
                         </div>
                     </div>
                     
@@ -735,23 +810,23 @@
     <div class="modal" id="donateModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeDonateModal()">&times;</button>
-            <h2>Зробити донат</h2>
+            <h2 style="color: var(--primary); margin-bottom: 20px;">Зробити донат</h2>
             <div id="donateCollectionInfo"></div>
             
             <form id="donateForm">
-                <div class="form-group">
-                    <label>Ваше ім'я</label>
-                    <input type="text" id="donorName" required style="width:100%; padding:8px; margin:10px 0;">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Ваше ім'я</label>
+                    <input type="text" id="donorName" required style="width:100%; padding:10px; border: 2px solid var(--gray-light); border-radius: 8px;">
                 </div>
-                <div class="form-group">
-                    <label>Сума (грн)</label>
-                    <input type="number" id="donorAmount" required min="1" style="width:100%; padding:8px; margin:10px 0;">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Сума (грн)</label>
+                    <input type="number" id="donorAmount" required min="1" style="width:100%; padding:10px; border: 2px solid var(--gray-light); border-radius: 8px;">
                 </div>
-                <div class="form-group">
-                    <label>Реквізити</label>
-                    <div class="collection-requisites" id="collectionRequisites"></div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Реквізити</label>
+                    <div class="collection-requisites" id="collectionRequisites" style="padding: 15px; background: var(--accent); border-radius: 8px; text-align: center; font-family: monospace;"></div>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width:100%;">Підтвердити</button>
+                <button type="submit" class="btn btn-primary" style="width:100%; padding: 12px;">Підтвердити донат</button>
             </form>
         </div>
     </div>
@@ -790,17 +865,101 @@
 
     <script>
         let currentCollectionId = null;
+        let isAdmin = false;
 
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 document.getElementById('loader').classList.add('fade-out');
             }, 1000);
             
+            checkSession();
             loadData();
             setupScroll();
             setupYear();
             setupForm();
         });
+
+        async function checkSession() {
+            try {
+                const res = await fetch('/api/session');
+                const data = await res.json();
+                
+                if (data.authenticated) {
+                    isAdmin = data.user.role === 'superadmin';
+                    showUserInfo(data.user.username);
+                    
+                    if (isAdmin) {
+                        document.getElementById('adminBtn').classList.add('visible');
+                    }
+                } else {
+                    showLoginForm();
+                }
+            } catch (error) {
+                console.error('Помилка перевірки сесії:', error);
+            }
+        }
+
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'flex';
+            document.getElementById('userInfo').style.display = 'none';
+            document.getElementById('adminBtn').classList.remove('visible');
+        }
+
+        function showUserInfo(username) {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('currentUser').textContent = username;
+        }
+
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showToast('Введіть логін та пароль', 'warning');
+                return;
+            }
+            
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    isAdmin = data.user.role === 'superadmin';
+                    showUserInfo(data.user.username);
+                    
+                    if (isAdmin) {
+                        document.getElementById('adminBtn').classList.add('visible');
+                    }
+                    
+                    showToast('Вхід виконано успішно', 'success');
+                    
+                    // Очистити поля
+                    document.getElementById('loginUsername').value = '';
+                    document.getElementById('loginPassword').value = '';
+                } else {
+                    showToast(data.error || 'Невірний логін або пароль', 'error');
+                }
+            } catch (error) {
+                showToast('Помилка з\'єднання', 'error');
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                isAdmin = false;
+                showLoginForm();
+                showToast('Ви вийшли з системи', 'info');
+            } catch (error) {
+                showToast('Помилка', 'error');
+            }
+        }
 
         async function loadData() {
             try {
@@ -854,12 +1013,12 @@
                             <span class="news-date">${news.date}</span>
                             ${news.important ? '<span class="news-badge">Важливо</span>' : ''}
                         </div>
-                        <h3>${news.title}</h3>
-                        <p>${news.content}</p>
+                        <h3 style="margin-bottom: 10px;">${news.title}</h3>
+                        <p style="margin-bottom: 15px;">${news.content}</p>
                         
                         ${news.media && news.media.length > 0 ? `
                             <div class="news-media">
-                                <h4>Медіа:</h4>
+                                <h4 style="margin-bottom: 10px; color: var(--primary);">Медіа:</h4>
                                 <div class="media-grid">
                                     ${news.media.map((m, index) => `
                                         <div class="media-item" onclick="openMedia('${m.url}', '${m.type}')">
@@ -898,23 +1057,8 @@
                     const percent = ((c.current / c.target) * 100).toFixed(1);
                     return `
                         <div class="collection-card">
-                            <h3>${c.name}</h3>
-                            <p>${c.description}</p>
-                            
-                            ${c.media && c.media.length > 0 ? `
-                                <div class="collection-media">
-                                    <div class="media-grid">
-                                        ${c.media.slice(0, 3).map(m => `
-                                            <div class="media-item" onclick="openMedia('${m.url}', '${m.type}')">
-                                                ${m.type === 'photo' 
-                                                    ? `<img src="${m.url}" alt="${m.caption || 'Фото'}">`
-                                                    : `<video src="${m.url}"></video>`
-                                                }
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
+                            <h3 style="margin-bottom: 10px;">${c.name}</h3>
+                            <p style="margin-bottom: 15px;">${c.description}</p>
                             
                             <div class="collection-progress">
                                 <div class="progress-bar">
@@ -924,11 +1068,13 @@
                                     <span>${c.current.toLocaleString()} грн</span>
                                     <span>${percent}%</span>
                                 </div>
-                                <div>Ціль: ${c.target.toLocaleString()} грн</div>
+                                <div style="color: var(--gray);">Ціль: ${c.target.toLocaleString()} грн</div>
                             </div>
+                            
                             <div class="collection-requisites">
                                 <i class="fas fa-credit-card"></i> ${c.requisites}
                             </div>
+                            
                             <button class="btn btn-primary" style="width:100%;" onclick="openDonateModal(${c.id}, '${c.requisites}')">
                                 <i class="fas fa-heart"></i> Задонатити
                             </button>
@@ -955,15 +1101,15 @@
                 container.innerHTML = data.sort((a,b) => new Date(b.date) - new Date(a.date)).map(r => `
                     <div class="report-card">
                         <div class="report-header">
-                            <h3>${r.title}</h3>
+                            <h3 style="margin-bottom: 5px;">${r.title}</h3>
                             <span class="report-date">${r.date}</span>
                         </div>
-                        <p>${r.content}</p>
-                        ${r.amount ? `<p><strong>Сума: ${r.amount.toLocaleString()} грн</strong></p>` : ''}
+                        <p style="margin-bottom: 10px;">${r.content}</p>
+                        ${r.amount ? `<p style="font-weight: 600; color: var(--primary);">Сума: ${r.amount.toLocaleString()} грн</p>` : ''}
                         
                         ${r.media && r.media.length > 0 ? `
-                            <div class="report-media">
-                                <h4>Медіа:</h4>
+                            <div class="report-media" style="margin-top: 15px;">
+                                <h4 style="margin-bottom: 10px; color: var(--primary);">Медіа:</h4>
                                 <div class="media-grid">
                                     ${r.media.map((m, index) => `
                                         <div class="media-item" onclick="openMedia('${m.url}', '${m.type}')">
@@ -992,30 +1138,11 @@
                 const data = await res.json();
                 
                 document.getElementById('aboutContent').innerHTML = data.content.replace(/\n/g, '<br>');
-                
-                if (data.stats) {
-                    animateNumber('totalRaised', data.stats.totalRaised);
-                    document.getElementById('successfulCollections').textContent = data.stats.successfulCollections;
-                    document.getElementById('helpedSoldiers').textContent = data.stats.helpedSoldiers;
-                }
+                document.getElementById('historyText').textContent = data.history || 'Наша організація була заснована в 2022 році групою небайдужих волонтерів. За цей час ми допомогли багатьом військовим підрозділам отримати необхідне обладнання та техніку.';
+                document.getElementById('missionText').textContent = data.mission || 'Допомога українській армії шляхом збору коштів на необхідне обладнання та забезпечення.';
             } catch (error) {
                 console.error('Помилка завантаження інформації:', error);
             }
-        }
-
-        function animateNumber(elementId, target) {
-            const element = document.getElementById(elementId);
-            let current = 0;
-            const increment = target / 100;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    element.textContent = target.toLocaleString();
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current).toLocaleString();
-                }
-            }, 20);
         }
 
         function showPage(page) {
@@ -1076,6 +1203,8 @@
                     if (res.ok) {
                         showToast('Донат прийнято! Очікуйте підтвердження', 'success');
                         closeDonateModal();
+                    } else {
+                        showToast('Помилка при створенні донату', 'error');
                     }
                 } catch (error) {
                     showToast('Помилка сервера', 'error');
@@ -1100,20 +1229,24 @@
 
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.style.borderLeftColor = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#0066cc';
+            toast.className = `toast ${type}`;
             toast.innerHTML = `
                 <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
                 <span>${message}</span>
             `;
             
             document.getElementById('toastContainer').appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
 
+        // Закриття модальних вікон
         window.addEventListener('click', (e) => {
             const donateModal = document.getElementById('donateModal');
             const mediaModal = document.getElementById('mediaModal');
+            
             if (e.target === donateModal) closeDonateModal();
             if (e.target === mediaModal) closeMediaModal();
         });
