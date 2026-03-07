@@ -58,7 +58,7 @@ const newsStorage = multer.diskStorage({
 
 const uploadPhoto = multer({ 
     storage: photoStorage,
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
@@ -70,7 +70,7 @@ const uploadPhoto = multer({
 
 const uploadVideo = multer({ 
     storage: videoStorage,
-    limits: { fileSize: 100 * 1024 * 1024 },
+    limits: { fileSize: 100 * 1024 * 1024 }, // 100MB
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('video/')) {
             cb(null, true);
@@ -82,7 +82,7 @@ const uploadVideo = multer({
 
 const uploadNews = multer({ 
     storage: newsStorage,
-    limits: { fileSize: 50 * 1024 * 1024 },
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
             cb(null, true);
@@ -109,7 +109,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         secure: false, 
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 24 * 60 * 60 * 1000 // 24 години
     }
 }));
 
@@ -225,11 +225,8 @@ async function initDB() {
                     important: false
                 }
             ],
-         // ... (весь попередній код server.js без змін, але в функції initDB() змінено about)
-
             about: {
                 content: 'Ми - волонтерська організація 4.5.0, яка допомагає військовим з 2022 року. Наша мета - забезпечити наших захисників усім необхідним для виконання бойових завдань.\n\nКожна гривня, яку ви жертвуєте, йде на потреби військових. Ми публікуємо детальні звіти про всі витрати. Ми працюємо цілодобово, щоб наблизити перемогу. Долучайтеся до нашої команди!'
-}
             },
             activity: []
         };
@@ -819,4 +816,3 @@ app.listen(PORT, () => {
     ╚══════════════════════════════════════════╝
     `);
 });
-
