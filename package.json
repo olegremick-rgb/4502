@@ -1,7 +1,7 @@
 {
   "name": "volunteer-organization-450",
   "version": "1.0.0",
-  "description": "Волонтерська організація 4.5.0 - сайт для збору коштів",
+  "description": "Волонтерська організація 4.5.0",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -12,13 +12,10 @@
     "express-session": "^1.17.3",
     "bcryptjs": "^2.4.3",
     "multer": "^1.4.5-lts.1",
-    "path": "^0.12.7",
-    "fs": "^0.0.1-security"
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   }
 }
