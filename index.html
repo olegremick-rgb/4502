@@ -13,24 +13,24 @@
         }
 
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --primary-light: #818cf8;
-            --secondary: #ec4899;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #1f2937;
-            --darker: #111827;
-            --light: #f9fafb;
-            --lighter: #ffffff;
-            --gray: #6b7280;
-            --gray-light: #e5e7eb;
+            --primary: #0066cc;
+            --primary-dark: #004999;
+            --primary-light: #4da3ff;
+            --secondary: #ffffff;
+            --accent: #e6f0ff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --dark: #003366;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--white) 0%, var(--accent) 100%);
             min-height: 100vh;
             color: var(--dark);
         }
@@ -56,7 +56,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary), var(--dark));
             display: flex;
             justify-content: center;
             align-items: center;
@@ -100,11 +100,12 @@
         .header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 20px rgba(0,102,204,0.1);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            border-bottom: 2px solid var(--primary);
         }
 
         .header-container {
@@ -132,10 +133,7 @@
         .logo-text {
             font-size: 1.2rem;
             font-weight: 600;
-            color: var(--dark);
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary);
         }
 
         .nav-menu {
@@ -149,24 +147,15 @@
             color: var(--dark);
             font-weight: 500;
             transition: all 0.3s;
-            position: relative;
             cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
         }
 
-        .nav-link:after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: width 0.3s;
-        }
-
-        .nav-link:hover:after,
-        .nav-link.active:after {
-            width: 100%;
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary);
+            background: var(--accent);
         }
 
         .btn {
@@ -183,13 +172,14 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             color: white;
         }
 
         .btn-primary:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 10px 25px rgba(0,102,204,0.3);
         }
 
         .btn-outline {
@@ -231,15 +221,25 @@
         .section-title {
             font-size: 2.5rem;
             margin-bottom: 15px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
         }
 
         .section-subtitle {
             font-size: 1.2rem;
-            color: var(--lighter);
-            opacity: 0.9;
+            color: var(--gray);
         }
 
         .collections-grid {
@@ -249,18 +249,18 @@
         }
 
         .collection-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 20px;
             padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,102,204,0.1);
             transition: all 0.3s;
-            animation: fadeInUp 0.5s ease-out;
+            border: 1px solid var(--gray-light);
         }
 
         .collection-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px rgba(0,102,204,0.2);
+            border-color: var(--primary);
         }
 
         .collection-progress {
@@ -277,7 +277,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: var(--primary);
             transition: width 1s ease-in-out;
         }
 
@@ -289,7 +289,7 @@
         }
 
         .collection-requisites {
-            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            background: var(--accent);
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
@@ -297,54 +297,83 @@
             font-size: 1.1rem;
             text-align: center;
             border: 1px dashed var(--primary);
+            color: var(--primary);
         }
 
-        .reports-timeline {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
         }
 
-        .reports-timeline:before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-        }
-
-        .report-item {
-            position: relative;
-            margin: 50px 0;
-        }
-
-        .report-item:nth-child(odd) {
-            padding-right: 50%;
-        }
-
-        .report-item:nth-child(even) {
-            padding-left: 50%;
-        }
-
-        .report-content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+        .report-card {
+            background: white;
+            border-radius: 20px;
             padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
+            box-shadow: 0 10px 30px rgba(0,102,204,0.1);
+            border: 1px solid var(--gray-light);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
         .report-date {
-            display: inline-block;
+            background: var(--accent);
             padding: 5px 15px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
             border-radius: 50px;
+            color: var(--primary);
             font-size: 0.9rem;
-            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .report-media {
+            margin: 20px 0;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .media-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            cursor: pointer;
+        }
+
+        .media-item img,
+        .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,102,204,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .media-item:hover .media-overlay {
+            opacity: 1;
         }
 
         .about-content {
@@ -358,14 +387,15 @@
             font-size: 1.1rem;
             line-height: 1.8;
             margin-bottom: 30px;
-            color: white;
+            color: var(--dark);
         }
 
         .about-image {
             position: relative;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0,102,204,0.2);
+            border: 3px solid var(--primary);
         }
 
         .about-image img {
@@ -384,16 +414,20 @@
         .stat-item {
             text-align: center;
             padding: 20px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
+            background: var(--accent);
             border-radius: 10px;
-            color: white;
+            border: 1px solid var(--primary);
         }
 
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
+            color: var(--primary);
             margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray);
         }
 
         .modal {
@@ -404,7 +438,6 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
             z-index: 2000;
             justify-content: center;
             align-items: center;
@@ -419,8 +452,11 @@
             padding: 40px;
             border-radius: 20px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
             position: relative;
+            border: 2px solid var(--primary);
         }
 
         .modal-close {
@@ -434,6 +470,17 @@
             color: var(--gray);
         }
 
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .media-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -442,19 +489,26 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
+            color: var(--primary);
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 12px;
             border: 2px solid var(--gray-light);
             border-radius: 8px;
             font-size: 1rem;
+            transition: all 0.3s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
         }
 
         .btn-block {
@@ -462,7 +516,7 @@
         }
 
         .footer {
-            background: linear-gradient(135deg, var(--darker), var(--dark));
+            background: var(--dark);
             color: white;
             padding: 60px 20px 20px;
             margin-top: 60px;
@@ -479,6 +533,9 @@
         .footer-section h3 {
             font-size: 1.2rem;
             margin-bottom: 20px;
+            color: var(--white);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
         }
 
         .footer-section ul {
@@ -490,6 +547,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .footer-section i {
+            color: var(--primary);
         }
 
         .social-links {
@@ -521,7 +582,7 @@
             right: 30px;
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 50%;
@@ -530,12 +591,13 @@
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,102,204,0.3);
             z-index: 999;
         }
 
         .scroll-top.show {
             display: flex;
+            animation: fadeInUp 0.3s;
         }
 
         .toast {
@@ -545,23 +607,23 @@
             background: white;
             padding: 15px 25px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,102,204,0.2);
             display: flex;
             align-items: center;
             gap: 10px;
             z-index: 3000;
-            animation: fadeInUp 0.3s ease-out;
+            border-left: 4px solid var(--primary);
+            animation: fadeInUp 0.3s;
         }
 
-        .toast.success { border-left: 4px solid var(--success); }
-        .toast.error { border-left: 4px solid var(--danger); }
-        .toast.warning { border-left: 4px solid var(--warning); }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
 
         @media (max-width: 768px) {
             .nav { display: none; }
             .collections-grid { grid-template-columns: 1fr; }
-            .reports-timeline:before { left: 20px; }
-            .report-item { padding-left: 50px !important; padding-right: 0 !important; }
+            .reports-grid { grid-template-columns: 1fr; }
             .about-content { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr; }
         }
@@ -605,8 +667,8 @@
                     <p class="section-subtitle">Разом ми сила! Кожна гривня наближає перемогу</p>
                 </div>
                 <div class="collections-grid" id="collectionsList">
-                    <div style="text-align: center; color: white; grid-column: 1/-1;">
-                        <i class="fas fa-spinner fa-spin fa-3x"></i>
+                    <div style="text-align: center; grid-column: 1/-1;">
+                        <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
                         <p>Завантаження...</p>
                     </div>
                 </div>
@@ -619,9 +681,9 @@
                     <h1 class="section-title">Звіти</h1>
                     <p class="section-subtitle">Прозорість та відповідальність</p>
                 </div>
-                <div class="reports-timeline" id="reportsList">
-                    <div style="text-align: center; color: white;">
-                        <i class="fas fa-spinner fa-spin fa-3x"></i>
+                <div class="reports-grid" id="reportsList">
+                    <div style="text-align: center; grid-column: 1/-1;">
+                        <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
                         <p>Завантаження...</p>
                     </div>
                 </div>
@@ -659,6 +721,15 @@
         </section>
     </main>
 
+    <!-- Модальне вікно для перегляду медіа -->
+    <div class="modal" id="mediaModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeMediaModal()">&times;</button>
+            <div id="mediaModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Модальне вікно для донату -->
     <div class="modal" id="donateModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeDonateModal()">&times;</button>
@@ -695,6 +766,7 @@
                     <ul id="contactsList">
                         <li><i class="fas fa-phone"></i> <span id="contactPhone">+380 (99) 123-45-67</span></li>
                         <li><i class="fas fa-envelope"></i> <span id="contactEmail">info@volunteer450.org</span></li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span id="contactAddress">м. Київ, Україна</span></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -729,12 +801,16 @@
         });
 
         async function loadData() {
-            await Promise.all([
-                loadSettings(),
-                loadCollections(),
-                loadReports(),
-                loadAbout()
-            ]);
+            try {
+                await Promise.all([
+                    loadSettings(),
+                    loadCollections(),
+                    loadReports(),
+                    loadAbout()
+                ]);
+            } catch (error) {
+                showToast('Помилка завантаження даних', 'error');
+            }
         }
 
         async function loadSettings() {
@@ -746,13 +822,14 @@
                 document.getElementById('footerSiteName').textContent = data.siteName;
                 document.getElementById('contactPhone').textContent = data.contacts.phone;
                 document.getElementById('contactEmail').textContent = data.contacts.email;
+                document.getElementById('contactAddress').textContent = data.contacts.address;
                 
                 const social = document.getElementById('socialLinks');
                 social.innerHTML = Object.entries(data.social).map(([key, url]) => 
                     `<a href="${url}" target="_blank"><i class="fab fa-${key}"></i></a>`
                 ).join('');
             } catch (error) {
-                showToast('Помилка завантаження налаштувань', 'error');
+                console.error('Помилка завантаження налаштувань:', error);
             }
         }
 
@@ -764,12 +841,12 @@
                 const container = document.getElementById('collectionsList');
                 
                 if (data.length === 0) {
-                    container.innerHTML = '<div style="text-align:center;color:white">Немає активних зборів</div>';
+                    container.innerHTML = '<div style="text-align:center">Немає активних зборів</div>';
                     return;
                 }
                 
                 container.innerHTML = data.map(c => {
-                    const percent = (c.current / c.target * 100).toFixed(1);
+                    const percent = ((c.current / c.target) * 100).toFixed(1);
                     return `
                         <div class="collection-card">
                             <h3>${c.name}</h3>
@@ -784,7 +861,9 @@
                                 </div>
                                 <div>Ціль: ${c.target.toLocaleString()} грн</div>
                             </div>
-                            <div class="collection-requisites">${c.requisites}</div>
+                            <div class="collection-requisites">
+                                <i class="fas fa-credit-card"></i> ${c.requisites}
+                            </div>
                             <button class="btn btn-primary btn-block" onclick="openDonateModal(${c.id}, '${c.requisites}')">
                                 <i class="fas fa-heart"></i> Задонатити
                             </button>
@@ -792,6 +871,7 @@
                     `;
                 }).join('');
             } catch (error) {
+                console.error('Помилка завантаження зборів:', error);
                 showToast('Помилка завантаження зборів', 'error');
             }
         }
@@ -804,21 +884,41 @@
                 const container = document.getElementById('reportsList');
                 
                 if (data.length === 0) {
-                    container.innerHTML = '<div style="text-align:center;color:white">Ще немає звітів</div>';
+                    container.innerHTML = '<div style="text-align:center">Ще немає звітів</div>';
                     return;
                 }
                 
                 container.innerHTML = data.sort((a,b) => new Date(b.date) - new Date(a.date)).map(r => `
-                    <div class="report-item">
-                        <div class="report-content">
-                            <span class="report-date">${r.date}</span>
+                    <div class="report-card">
+                        <div class="report-header">
                             <h3>${r.title}</h3>
-                            <p>${r.content}</p>
-                            ${r.amount ? `<p><strong>Сума: ${r.amount.toLocaleString()} грн</strong></p>` : ''}
+                            <span class="report-date">${r.date}</span>
                         </div>
+                        <p>${r.content}</p>
+                        ${r.amount ? `<p><strong>Сума: ${r.amount.toLocaleString()} грн</strong></p>` : ''}
+                        
+                        ${r.media && r.media.length > 0 ? `
+                            <div class="report-media">
+                                <h4>Медіа матеріали:</h4>
+                                <div class="media-grid">
+                                    ${r.media.map((m, index) => `
+                                        <div class="media-item" onclick="openMedia('${m.url}', '${m.type}')">
+                                            ${m.type === 'photo' 
+                                                ? `<img src="${m.url}" alt="${m.caption || 'Фото'}">`
+                                                : `<video src="${m.url}"></video>`
+                                            }
+                                            <div class="media-overlay">
+                                                <i class="fas fa-${m.type === 'photo' ? 'camera' : 'video'}"></i>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                 `).join('');
             } catch (error) {
+                console.error('Помилка завантаження звітів:', error);
                 showToast('Помилка завантаження звітів', 'error');
             }
         }
@@ -831,13 +931,28 @@
                 document.getElementById('aboutContent').innerHTML = data.content.replace(/\n/g, '<br>');
                 
                 if (data.stats) {
-                    document.getElementById('totalRaised').textContent = data.stats.totalRaised.toLocaleString();
+                    animateNumber('totalRaised', data.stats.totalRaised);
                     document.getElementById('successfulCollections').textContent = data.stats.successfulCollections;
                     document.getElementById('helpedSoldiers').textContent = data.stats.helpedSoldiers;
                 }
             } catch (error) {
-                showToast('Помилка завантаження інформації', 'error');
+                console.error('Помилка завантаження інформації:', error);
             }
+        }
+
+        function animateNumber(elementId, target) {
+            const element = document.getElementById(elementId);
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 20);
         }
 
         function showPage(page) {
@@ -856,6 +971,24 @@
         function closeDonateModal() {
             document.getElementById('donateModal').classList.remove('active');
             document.getElementById('donateForm').reset();
+        }
+
+        function openMedia(url, type) {
+            const modal = document.getElementById('mediaModal');
+            const content = document.getElementById('mediaModalContent');
+            
+            if (type === 'photo') {
+                content.innerHTML = `<img src="${url}" class="media-preview" alt="Медіа">`;
+            } else {
+                content.innerHTML = `<video src="${url}" class="media-preview" controls></video>`;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeMediaModal() {
+            document.getElementById('mediaModal').classList.remove('active');
+            document.getElementById('mediaModalContent').innerHTML = '';
         }
 
         function setupForm() {
@@ -880,16 +1013,23 @@
                     if (res.ok) {
                         showToast('Донат прийнято! Очікуйте підтвердження', 'success');
                         closeDonateModal();
+                    } else {
+                        showToast('Помилка при створенні донату', 'error');
                     }
                 } catch (error) {
-                    showToast('Помилка', 'error');
+                    showToast('Помилка сервера', 'error');
                 }
             });
         }
 
         function setupScroll() {
             window.addEventListener('scroll', () => {
-                document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 500);
+                const btn = document.getElementById('scrollTop');
+                if (window.scrollY > 500) {
+                    btn.classList.add('show');
+                } else {
+                    btn.classList.remove('show');
+                }
             });
         }
 
@@ -900,10 +1040,34 @@
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
             document.getElementById('toastContainer').appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
+
+        // Закриття модальних вікон по кліку поза ними
+        window.addEventListener('click', (e) => {
+            const donateModal = document.getElementById('donateModal');
+            const mediaModal = document.getElementById('mediaModal');
+            
+            if (e.target === donateModal) closeDonateModal();
+            if (e.target === mediaModal) closeMediaModal();
+        });
+
+        // Закриття по Escape
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDonateModal();
+                closeMediaModal();
+            }
+        });
     </script>
 </body>
 </html>
