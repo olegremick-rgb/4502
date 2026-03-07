@@ -13,8 +13,17 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #004999;
+            --primary-light: #4da3ff;
+            --white: #ffffff;
+            --gray-light: #f0f5ff;
+            --gray: #6c757d;
+        }
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,13 +32,14 @@
         }
 
         .login-card {
-            background: white;
+            background: var(--white);
             border-radius: 20px;
             padding: 40px;
             width: 100%;
             max-width: 400px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             animation: fadeInUp 0.5s;
+            border: 1px solid var(--primary-light);
         }
 
         @keyframes fadeInUp {
@@ -49,8 +59,12 @@
         }
 
         .login-header h1 {
-            color: #333;
+            color: var(--primary);
             margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--gray);
         }
 
         .form-group {
@@ -61,7 +75,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #333;
+            color: var(--primary);
         }
 
         .input-group {
@@ -73,13 +87,13 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #666;
+            color: var(--primary);
         }
 
         .input-group input {
             width: 100%;
             padding: 12px 15px 12px 45px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--gray-light);
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s;
@@ -87,14 +101,14 @@
 
         .input-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
         }
 
         .btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 8px;
@@ -105,8 +119,9 @@
         }
 
         .btn:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102,126,234,0.4);
+            box-shadow: 0 10px 25px rgba(0,102,204,0.3);
         }
 
         .btn.loading {
@@ -137,16 +152,20 @@
         }
 
         .login-footer a {
-            color: #667eea;
+            color: var(--primary);
             text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
         }
 
         .loader {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+            border: 3px solid var(--white);
+            border-top: 3px solid transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -160,7 +179,7 @@
 <body>
     <div class="login-card">
         <div class="login-header">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23667eea'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='white' font-family='Arial'%3E❤️%3C/text%3E%3C/svg%3E" alt="Лого">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%230066cc'/%3E%3Ctext x='50' y='70' font-size='40' text-anchor='middle' fill='white' font-family='Arial'%3E4.5.0%3C/text%3E%3C/svg%3E" alt="Лого">
             <h1>Адмін-панель</h1>
             <p>Волонтерська організація 4.5.0</p>
         </div>
