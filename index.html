@@ -463,32 +463,8 @@
         .about-description {
             font-size: 1.1rem;
             line-height: 1.8;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             color: var(--dark);
-        }
-
-        .about-history {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px solid var(--accent);
-        }
-
-        .about-history h3 {
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
-        .about-mission {
-            margin-top: 30px;
-            padding: 20px;
-            background: var(--accent);
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
-        }
-
-        .about-mission h3 {
-            color: var(--primary);
-            margin-bottom: 10px;
         }
 
         .about-image {
@@ -778,16 +754,6 @@
                     <div class="about-text">
                         <h1 class="section-title">Про нас</h1>
                         <div id="aboutContent" class="about-description"></div>
-                        
-                        <div class="about-history" id="aboutHistory">
-                            <h3>Наша історія</h3>
-                            <p id="historyText"></p>
-                        </div>
-                        
-                        <div class="about-mission" id="aboutMission">
-                            <h3>Наша місія</h3>
-                            <p id="missionText"></p>
-                        </div>
                     </div>
                     
                     <div class="about-image">
@@ -1138,8 +1104,6 @@
                 const data = await res.json();
                 
                 document.getElementById('aboutContent').innerHTML = data.content.replace(/\n/g, '<br>');
-                document.getElementById('historyText').textContent = data.history || 'Наша організація була заснована в 2022 році групою небайдужих волонтерів. За цей час ми допомогли багатьом військовим підрозділам отримати необхідне обладнання та техніку.';
-                document.getElementById('missionText').textContent = data.mission || 'Допомога українській армії шляхом збору коштів на необхідне обладнання та забезпечення.';
             } catch (error) {
                 console.error('Помилка завантаження інформації:', error);
             }
