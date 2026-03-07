@@ -1,23 +1,28 @@
 const express = require('express');
-const path = require('path');
 const fs = require('fs');
-const multer = require('multer');
+const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const cors = require('cors');
+require('dotenv').config();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Налаштування multer для завантаження файлів
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const dir = path.join(__dirname, 'public', 'uploads');
+        const dir = path.join(__dirname, 'uploads');
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
         cb(null, dir);
     },
     filename: function (req, file, cb) {
-        cb(null, 'logo-' + Date.now() + path.extname(file.originalname));
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, 'logo-' + uniqueSuffix + ext);
     }
 });
 
@@ -36,66 +41,70 @@ const upload = multer({
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Налаштування сесій
 app.use(session({
-    secret: 'volunteer-secret-key-2024',
+    secret: process.env.SESSION_SECRET || 'volunteer-secret-key',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 години
+    cookie: { 
+        secure: false, 
+        maxAge: 24 * 60 * 60 * 1000 // 24 години
+    }
 }));
 
-// База даних (файлове сховище)
+// ==================== База даних ====================
 const DB_PATH = path.join(__dirname, 'database.json');
 
-// Ініціалізація бази даних
+// Ініціалізація БД
 function initDB() {
     if (!fs.existsSync(DB_PATH)) {
+        const salt = bcrypt.genSaltSync(10);
         const defaultDB = {
             users: [
                 {
                     id: 1,
                     username: 'admin',
-                    password: '$2a$10$rJqZx9k5Zk5Zk5Zk5Zk5Zu', // "admin" буде захешовано при першому запуску
+                    password: bcrypt.hashSync('admin', salt),
                     role: 'superadmin',
                     createdAt: new Date().toISOString()
                 }
             ],
             settings: {
                 siteName: 'Волонтерська організація 4.5.0',
-                logo: '/uploads/default-logo.svg',
-                primaryColor: '#4f46e5',
+                logo: null,
                 contacts: {
                     phone: '+380 (99) 123-45-67',
                     email: 'info@volunteer450.org',
                     address: 'м. Київ, Україна'
                 },
                 social: {
-                    facebook: '#',
-                    instagram: '#',
-                    telegram: '#',
-                    youtube: '#'
+                    facebook: 'https://facebook.com/volunteer450',
+                    instagram: 'https://instagram.com/volunteer450',
+                    telegram: 'https://t.me/volunteer450',
+                    youtube: 'https://youtube.com/volunteer450'
                 }
             },
             collections: [
                 {
                     id: 1,
                     name: 'Збір на тепловізори',
-                    description: 'Збір коштів на тепловізори для розвідників 95-ї бригади',
+                    description: 'Збір коштів на тепловізори для розвідників',
                     target: 50000,
                     current: 15750,
                     requisites: '4149 4999 9999 9999',
-                    image: '/uploads/collection1.jpg',
                     createdAt: '2024-01-10',
                     status: 'active'
                 },
                 {
                     id: 2,
                     name: 'Збір на автівку',
-                    description: 'Збір на пікап для 93-ї бригади "Холодний Яр"',
+                    description: 'Збір на пікап для військових',
                     target: 120000,
                     current: 45000,
                     requisites: '5168 7575 1010 2020',
-                    image: '/uploads/collection2.jpg',
                     createdAt: '2024-01-15',
                     status: 'active'
                 }
@@ -116,24 +125,30 @@ function initDB() {
                     amount: 500,
                     status: 'pending',
                     createdAt: '2024-01-16T14:20:00Z'
+                },
+                {
+                    id: 3,
+                    collectionId: 2,
+                    name: 'Петро',
+                    amount: 2000,
+                    status: 'confirmed',
+                    createdAt: '2024-01-17T09:15:00Z'
                 }
             ],
             reports: [
                 {
                     id: 1,
                     title: 'Придбано тепловізори',
-                    content: 'Придбано 3 тепловізори на суму 45000 грн для розвідників',
+                    content: 'Придбано 3 тепловізори на суму 45000 грн',
                     amount: 45000,
-                    date: '2024-01-15',
-                    images: ['/uploads/report1.jpg']
+                    date: '2024-01-15'
                 },
                 {
                     id: 2,
                     title: 'Передано автівку',
-                    content: 'Передано пікап на передову для 93-ї бригади',
+                    content: 'Передано пікап на передову',
                     amount: 120000,
-                    date: '2024-01-20',
-                    images: []
+                    date: '2024-01-20'
                 }
             ],
             about: {
@@ -147,23 +162,18 @@ function initDB() {
             activity: []
         };
         
-        // Хешування пароля
-        const bcrypt = require('bcryptjs');
-        const salt = bcrypt.genSaltSync(10);
-        defaultDB.users[0].password = bcrypt.hashSync('admin', salt);
-        
         fs.writeFileSync(DB_PATH, JSON.stringify(defaultDB, null, 2));
+        console.log('✅ Базу даних створено');
     }
 }
 
 initDB();
 
-// Допоміжна функція для читання БД
+// Допоміжні функції для роботи з БД
 function readDB() {
     return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
 }
 
-// Допоміжна функція для запису БД
 function writeDB(data) {
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
 }
@@ -205,7 +215,8 @@ app.post('/api/login', (req, res) => {
             id: Date.now(),
             type: 'login',
             user: username,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            details: 'Успішний вхід в систему'
         });
         writeDB(db);
         
@@ -223,6 +234,18 @@ app.post('/api/login', (req, res) => {
 });
 
 app.post('/api/logout', (req, res) => {
+    if (req.session.userId) {
+        const db = readDB();
+        db.activity.push({
+            id: Date.now(),
+            type: 'logout',
+            user: req.session.username,
+            timestamp: new Date().toISOString(),
+            details: 'Вихід з системи'
+        });
+        writeDB(db);
+    }
+    
     req.session.destroy();
     res.json({ success: true });
 });
@@ -270,13 +293,12 @@ app.post('/api/collections', requireAuth, requireAdmin, (req, res) => {
     
     db.collections.push(newCollection);
     
-    // Логування
     db.activity.push({
         id: Date.now(),
         type: 'collection_added',
-        collection: newCollection.name,
         user: req.session.username,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        details: `Додано новий збір: ${newCollection.name}`
     });
     
     writeDB(db);
@@ -289,6 +311,15 @@ app.put('/api/collections/:id', requireAuth, requireAdmin, (req, res) => {
     
     if (index !== -1) {
         db.collections[index] = { ...db.collections[index], ...req.body };
+        
+        db.activity.push({
+            id: Date.now(),
+            type: 'collection_updated',
+            user: req.session.username,
+            timestamp: new Date().toISOString(),
+            details: `Оновлено збір: ${db.collections[index].name}`
+        });
+        
         writeDB(db);
         res.json(db.collections[index]);
     } else {
@@ -298,7 +329,17 @@ app.put('/api/collections/:id', requireAuth, requireAdmin, (req, res) => {
 
 app.delete('/api/collections/:id', requireAuth, requireAdmin, (req, res) => {
     const db = readDB();
+    const collection = db.collections.find(c => c.id === parseInt(req.params.id));
     db.collections = db.collections.filter(c => c.id !== parseInt(req.params.id));
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'collection_deleted',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Видалено збір: ${collection ? collection.name : 'невідомий'}`
+    });
+    
     writeDB(db);
     res.json({ success: true });
 });
@@ -316,7 +357,7 @@ app.get('/api/donations', (req, res) => {
     // Додаємо інформацію про збір
     donations = donations.map(d => ({
         ...d,
-        collection: db.collections.find(c => c.id === d.collectionId)
+        collectionName: db.collections.find(c => c.id === d.collectionId)?.name || 'Невідомий збір'
     }));
     
     res.json(donations);
@@ -351,6 +392,14 @@ app.put('/api/donations/:id/confirm', requireAuth, requireAdmin, (req, res) => {
             db.collections[collectionIndex].current += donation.amount;
         }
         
+        db.activity.push({
+            id: Date.now(),
+            type: 'donation_confirmed',
+            user: req.session.username,
+            timestamp: new Date().toISOString(),
+            details: `Підтверджено донат від ${donation.name} на суму ${donation.amount} грн`
+        });
+        
         writeDB(db);
         res.json(db.donations[donationIndex]);
     } else {
@@ -360,7 +409,17 @@ app.put('/api/donations/:id/confirm', requireAuth, requireAdmin, (req, res) => {
 
 app.delete('/api/donations/:id', requireAuth, requireAdmin, (req, res) => {
     const db = readDB();
+    const donation = db.donations.find(d => d.id === parseInt(req.params.id));
     db.donations = db.donations.filter(d => d.id !== parseInt(req.params.id));
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'donation_rejected',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Відхилено донат від ${donation ? donation.name : 'невідомого'}`
+    });
+    
     writeDB(db);
     res.json({ success: true });
 });
@@ -380,13 +439,32 @@ app.post('/api/reports', requireAuth, requireAdmin, (req, res) => {
     };
     
     db.reports.push(newReport);
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'report_added',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Додано звіт: ${newReport.title}`
+    });
+    
     writeDB(db);
     res.json(newReport);
 });
 
 app.delete('/api/reports/:id', requireAuth, requireAdmin, (req, res) => {
     const db = readDB();
+    const report = db.reports.find(r => r.id === parseInt(req.params.id));
     db.reports = db.reports.filter(r => r.id !== parseInt(req.params.id));
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'report_deleted',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Видалено звіт: ${report ? report.title : 'невідомий'}`
+    });
+    
     writeDB(db);
     res.json({ success: true });
 });
@@ -400,6 +478,15 @@ app.get('/api/about', (req, res) => {
 app.put('/api/about', requireAuth, requireAdmin, (req, res) => {
     const db = readDB();
     db.about = { ...db.about, ...req.body };
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'about_updated',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: 'Оновлено сторінку "Про нас"'
+    });
+    
     writeDB(db);
     res.json(db.about);
 });
@@ -413,6 +500,15 @@ app.get('/api/settings', (req, res) => {
 app.put('/api/settings', requireAuth, requireAdmin, (req, res) => {
     const db = readDB();
     db.settings = { ...db.settings, ...req.body };
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'settings_updated',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: 'Оновлено налаштування сайту'
+    });
+    
     writeDB(db);
     res.json(db.settings);
 });
@@ -422,6 +518,15 @@ app.post('/api/settings/logo', requireAuth, requireAdmin, upload.single('logo'),
         const db = readDB();
         const logoPath = '/uploads/' + req.file.filename;
         db.settings.logo = logoPath;
+        
+        db.activity.push({
+            id: Date.now(),
+            type: 'logo_updated',
+            user: req.session.username,
+            timestamp: new Date().toISOString(),
+            details: 'Оновлено логотип сайту'
+        });
+        
         writeDB(db);
         res.json({ logo: logoPath });
     } else {
@@ -440,6 +545,15 @@ app.post('/api/settings/credentials', requireAuth, requireAdmin, (req, res) => {
             const salt = bcrypt.genSaltSync(10);
             db.users[userIndex].password = bcrypt.hashSync(password, salt);
         }
+        
+        db.activity.push({
+            id: Date.now(),
+            type: 'credentials_updated',
+            user: req.session.username,
+            timestamp: new Date().toISOString(),
+            details: 'Змінено облікові дані адміністратора'
+        });
+        
         writeDB(db);
         res.json({ success: true });
     } else {
@@ -447,13 +561,21 @@ app.post('/api/settings/credentials', requireAuth, requireAdmin, (req, res) => {
     }
 });
 
-// Активність
-app.get('/api/activity', requireAuth, requireAdmin, (req, res) => {
+app.get('/api/logo', (req, res) => {
     const db = readDB();
-    res.json(db.activity.slice(-50).reverse()); // Останні 50 подій
+    if (db.settings.logo && fs.existsSync(path.join(__dirname, db.settings.logo))) {
+        res.sendFile(path.join(__dirname, db.settings.logo));
+    } else {
+        // Відправляємо SVG як відповідь
+        res.setHeader('Content-Type', 'image/svg+xml');
+        res.send(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="45" fill="#4f46e5"/>
+            <text x="50" y="70" font-size="50" text-anchor="middle" fill="white" font-family="Arial">❤️</text>
+        </svg>`);
+    }
 });
 
-// Статистика для дашборду
+// Статистика
 app.get('/api/stats', requireAuth, requireAdmin, (req, res) => {
     const db = readDB();
     
@@ -463,38 +585,52 @@ app.get('/api/stats', requireAuth, requireAdmin, (req, res) => {
         pendingDonations: db.donations.filter(d => d.status === 'pending').length,
         totalReports: db.reports.length,
         totalDonors: [...new Set(db.donations.map(d => d.name))].length,
-        averageDonation: db.donations.length ? 
-            (db.donations.reduce((sum, d) => sum + d.amount, 0) / db.donations.length).toFixed(0) : 0
+        totalCollections: db.collections.length,
+        confirmedDonations: db.donations.filter(d => d.status === 'confirmed').length
     };
     
     res.json(stats);
 });
 
-// ==================== HTML сторінки ====================
+app.get('/api/activity', requireAuth, requireAdmin, (req, res) => {
+    const db = readDB();
+    res.json(db.activity.slice(-30).reverse());
+});
+
+// ==================== Сторінки ====================
 
 // Головна сторінка
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Адмін-панель
+// Сторінка логіну адміна
+app.get('/admin-login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin-login.html'));
+});
+
+// Адмін-панель (перевірка авторизації)
 app.get('/admin', (req, res) => {
     if (req.session.userId) {
-        res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+        res.sendFile(path.join(__dirname, 'admin.html'));
     } else {
         res.redirect('/admin-login');
     }
 });
 
-// Сторінка логіну для адміна
-app.get('/admin-login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin-login.html'));
-});
-
-// Запуск сервера
+// ==================== Запуск сервера ====================
 app.listen(PORT, () => {
-    console.log(`Сервер запущено на порті ${PORT}`);
-    console.log(`Головна сторінка: http://localhost:${PORT}`);
-    console.log(`Адмін-панель: http://localhost:${PORT}/admin`);
-    console.log(`Логін: admin, Пароль: admin`);
+    console.log(`
+    ╔══════════════════════════════════════════╗
+    ║   Волонтерська організація 4.5.0         ║
+    ║   Сервер успішно запущено!                ║
+    ╠══════════════════════════════════════════╣
+    ║   Головна сторінка: http://localhost:${PORT}  ║
+    ║   Адмін-логін: http://localhost:${PORT}/admin-login ║
+    ║   Адмін-панель: http://localhost:${PORT}/admin     ║
+    ║                                              ║
+    ║   Логін: admin                               ║
+    ║   Пароль: admin                              ║
+    ╚══════════════════════════════════════════╝
+    `);
 });
