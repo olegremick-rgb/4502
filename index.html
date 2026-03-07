@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Волонтерська організація 4.5.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         :root {
@@ -27,18 +28,34 @@
             --gray-light: #e9ecef;
         }
 
+        html {
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #ffffff 0%, #e6f0ff 100%);
             min-height: 100vh;
             color: var(--dark);
+            line-height: 1.5;
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Прелоадер */
         .loader-wrapper {
             position: fixed;
             top: 0;
@@ -50,7 +67,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s;
+            transition: opacity 0.3s;
         }
 
         .loader-wrapper.fade-out {
@@ -59,18 +76,18 @@
         }
 
         .loader {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             position: relative;
         }
 
         .heart {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             background: white;
             position: relative;
             transform: rotate(45deg);
-            animation: pulse 1.5s ease-in-out infinite;
+            animation: pulse 1.2s ease-in-out infinite;
         }
 
         @keyframes pulse {
@@ -81,20 +98,22 @@
         .heart:before,
         .heart:after {
             content: '';
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             background: white;
             border-radius: 50%;
             position: absolute;
         }
 
-        .heart:before { left: -40px; }
-        .heart:after { top: -40px; }
+        .heart:before { left: -30px; }
+        .heart:after { top: -30px; }
 
+        /* Хедер */
         .header {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0,102,204,0.1);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,102,204,0.1);
             position: fixed;
             width: 100%;
             top: 0;
@@ -105,64 +124,224 @@
         .header-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 15px 20px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 8px;
             text-decoration: none;
+            flex-shrink: 0;
         }
 
         .logo-img {
-            max-height: 50px;
+            max-height: 35px;
             width: auto;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .logo-text {
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--primary);
+            display: none;
+        }
+
+        @media (min-width: 480px) {
+            .logo-text {
+                display: inline;
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .logo-text {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Мобільне меню */
+        .menu-toggle {
+            display: block;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .menu-toggle:active {
+            background: var(--accent);
+        }
+
+        @media (min-width: 768px) {
+            .menu-toggle {
+                display: none;
+            }
+        }
+
+        .nav {
+            position: fixed;
+            top: 60px;
+            left: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: calc(100vh - 60px);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav.active {
+            left: 0;
+        }
+
+        @media (min-width: 768px) {
+            .nav {
+                position: static;
+                width: auto;
+                height: auto;
+                max-width: none;
+                box-shadow: none;
+                background: transparent;
+                overflow: visible;
+            }
         }
 
         .nav-menu {
-            display: flex;
             list-style: none;
-            gap: 30px;
+            padding: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .nav-menu {
+                display: flex;
+                gap: 20px;
+                padding: 0;
+            }
         }
 
         .nav-link {
+            display: block;
+            padding: 15px;
             text-decoration: none;
             color: var(--dark);
             font-weight: 500;
+            border-radius: 8px;
             transition: all 0.3s;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 5px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--gray-light);
         }
 
-        .nav-link:hover,
+        @media (min-width: 768px) {
+            .nav-link {
+                display: inline-block;
+                padding: 8px 15px;
+                border-bottom: none;
+                font-size: 1rem;
+            }
+        }
+
+        .nav-link:active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
         .nav-link.active {
             color: var(--primary);
             background: var(--accent);
         }
 
+        /* Оверлей для мобільного меню */
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Секція авторизації */
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .login-form {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .login-input {
+            padding: 8px 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: 25px;
+            font-size: 0.85rem;
+            width: 100px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        @media (min-width: 400px) {
+            .login-input {
+                width: 120px;
+            }
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
         .btn {
-            padding: 10px 25px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 50px;
+            border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.2s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            -webkit-appearance: none;
+            appearance: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
         }
 
         .btn-primary {
@@ -170,24 +349,11 @@
             color: white;
         }
 
-        .btn-primary:hover {
+        .btn-primary:active {
             background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,102,204,0.3);
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Прихована кнопка адміна за замовчуванням */
+        /* Прихована кнопка адміна */
         .admin-btn {
             display: none !important;
         }
@@ -196,34 +362,44 @@
             display: inline-flex !important;
         }
 
-        .login-form {
+        .user-info {
             display: flex;
-            gap: 10px;
             align-items: center;
-        }
-
-        .login-input {
-            padding: 8px 15px;
-            border: 2px solid var(--gray-light);
-            border-radius: 50px;
+            gap: 8px;
+            color: var(--primary);
+            font-weight: 500;
             font-size: 0.9rem;
-            width: 120px;
         }
 
-        .login-input:focus {
-            outline: none;
-            border-color: var(--primary);
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
+        .logout-btn:active {
+            background: var(--accent);
+        }
+
+        /* Основний контент */
         main {
-            margin-top: 80px;
-            min-height: calc(100vh - 80px);
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+            padding: 0 10px;
         }
 
         .section {
             display: none;
-            padding: 60px 20px;
-            animation: fadeInUp 0.5s ease-out;
+            padding: 30px 0;
+            animation: fadeInUp 0.4s ease-out;
         }
 
         .section.active {
@@ -237,48 +413,72 @@
 
         .section-header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
+            padding: 0 10px;
         }
 
         .section-title {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
             color: var(--primary);
             position: relative;
             display: inline-block;
         }
 
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+
         .section-title:after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 50px;
+            width: 40px;
             height: 3px;
             background: var(--primary);
         }
 
         .section-subtitle {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: var(--gray);
+            padding: 0 10px;
         }
 
         /* Новини */
         .news-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 640px) {
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .news-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .news-card {
             background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,102,204,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
             border: 1px solid var(--gray-light);
-            transition: all 0.3s;
+            transition: transform 0.2s;
+        }
+
+        .news-card:active {
+            transform: scale(0.98);
         }
 
         .news-card.important {
@@ -286,24 +486,21 @@
             background: linear-gradient(to right, var(--accent), white);
         }
 
-        .news-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,102,204,0.2);
-        }
-
         .news-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .news-date {
             background: var(--accent);
-            padding: 5px 15px;
-            border-radius: 50px;
+            padding: 4px 12px;
+            border-radius: 20px;
             color: var(--primary);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 600;
         }
 
@@ -311,28 +508,137 @@
             background: var(--primary);
             color: white;
             padding: 3px 10px;
-            border-radius: 50px;
-            font-size: 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
         }
 
-        .news-media {
+        /* Збори */
+        .collections-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 640px) {
+            .collections-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .collection-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+            border: 1px solid var(--gray-light);
+        }
+
+        .collection-progress {
             margin: 15px 0;
         }
 
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.5s ease;
+        }
+
+        .collection-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .collection-requisites {
+            background: var(--accent);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px dashed var(--primary);
+            color: var(--primary);
+            word-break: break-all;
+        }
+
+        /* Звіти */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+            border: 1px solid var(--gray-light);
+        }
+
+        .report-header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .report-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .report-date {
+            background: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            align-self: flex-start;
+        }
+
+        /* Медіа сітка */
         .media-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .media-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
         }
 
         .media-item {
             position: relative;
-            aspect-ratio: 16/9;
+            aspect-ratio: 1;
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
             border: 1px solid var(--gray-light);
+        }
+
+        .media-item:active {
+            opacity: 0.8;
         }
 
         .media-item img,
@@ -353,124 +659,47 @@
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.2s;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
 
-        .media-item:hover .media-overlay {
+        .media-item:active .media-overlay {
             opacity: 1;
-        }
-
-        /* Збори */
-        .collections-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-        }
-
-        .collection-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,102,204,0.1);
-            border: 1px solid var(--gray-light);
-        }
-
-        .collection-progress {
-            margin: 20px 0;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: var(--gray-light);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary);
-            transition: width 1s ease-in-out;
-        }
-
-        .collection-stats {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            font-weight: 600;
-        }
-
-        .collection-requisites {
-            background: var(--accent);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            font-family: monospace;
-            font-size: 1.1rem;
-            text-align: center;
-            border: 1px dashed var(--primary);
-            color: var(--primary);
-        }
-
-        /* Звіти */
-        .reports-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 30px;
-        }
-
-        .report-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,102,204,0.1);
-            border: 1px solid var(--gray-light);
-        }
-
-        .report-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .report-date {
-            background: var(--accent);
-            padding: 5px 15px;
-            border-radius: 50px;
-            color: var(--primary);
-            font-size: 0.9rem;
-            font-weight: 600;
         }
 
         /* Про нас */
         .about-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: start;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
         }
 
         .about-text {
             background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,102,204,0.1);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
         }
 
         .about-description {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.6;
             color: var(--dark);
         }
 
         .about-image {
-            border-radius: 15px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,102,204,0.2);
+            box-shadow: 0 10px 20px rgba(0,102,204,0.2);
             border: 2px solid var(--primary);
         }
 
@@ -480,7 +709,7 @@
             display: block;
         }
 
-        /* Модальне вікно */
+        /* Модальні вікна */
         .modal {
             display: none;
             position: fixed;
@@ -492,6 +721,7 @@
             z-index: 2000;
             justify-content: center;
             align-items: center;
+            padding: 15px;
         }
 
         .modal.active {
@@ -500,55 +730,101 @@
 
         .modal-content {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 800px;
+            padding: 25px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 12px;
+            right: 12px;
             background: none;
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--gray);
+            padding: 5px 10px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .modal-close:active {
+            background: var(--accent);
         }
 
         .media-preview {
             max-width: 100%;
-            max-height: 500px;
+            max-height: 60vh;
             border-radius: 10px;
-            margin: 20px 0;
+            margin: 15px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         /* Футер */
         .footer {
             background: var(--dark);
             color: white;
-            padding: 60px 20px 20px;
-            margin-top: 60px;
+            padding: 40px 15px 20px;
+            margin-top: 40px;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
+            grid-template-columns: 1fr;
+            gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
+        @media (min-width: 640px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         .footer-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
             color: white;
             border-bottom: 2px solid var(--primary);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .footer-section ul {
@@ -560,37 +836,42 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 0.9rem;
+            word-break: break-word;
         }
 
         .social-links {
             display: flex;
             gap: 15px;
+            flex-wrap: wrap;
         }
 
         .social-links a {
             color: white;
-            font-size: 1.5rem;
-            transition: all 0.3s;
+            font-size: 1.3rem;
+            transition: color 0.2s;
+            padding: 5px;
         }
 
-        .social-links a:hover {
+        .social-links a:active {
             color: var(--primary);
-            transform: translateY(-3px);
         }
 
         .footer-bottom {
             text-align: center;
-            padding-top: 40px;
-            margin-top: 40px;
+            padding-top: 30px;
+            margin-top: 30px;
             border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
         }
 
+        /* Кнопка прокрутки вгору */
         .scroll-top {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
             background: var(--primary);
             color: white;
             border: none;
@@ -600,57 +881,68 @@
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            box-shadow: 0 5px 15px rgba(0,102,204,0.3);
+            box-shadow: 0 3px 10px rgba(0,102,204,0.3);
             z-index: 999;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .scroll-top:active {
+            opacity: 1;
+            transform: scale(0.95);
         }
 
         .scroll-top.show {
             display: flex;
         }
 
+        /* Сповіщення */
         .toast {
             position: fixed;
             bottom: 20px;
+            left: 20px;
             right: 20px;
             background: white;
-            padding: 15px 25px;
+            padding: 15px 20px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,102,204,0.2);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
             gap: 10px;
             z-index: 3000;
             border-left: 4px solid var(--primary);
-            animation: fadeInUp 0.3s;
+            animation: slideIn 0.3s;
+            max-width: 400px;
+            margin: 0 auto;
+            font-size: 0.95rem;
         }
 
         .toast.success { border-left-color: var(--success); }
         .toast.error { border-left-color: var(--danger); }
         .toast.warning { border-left-color: var(--warning); }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: var(--primary);
-            font-weight: 500;
+        /* Додаткові мобільні оптимізації */
+        @media (max-width: 480px) {
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            
+            h3 {
+                font-size: 1.1rem;
+            }
+            
+            p {
+                font-size: 0.95rem;
+            }
         }
 
-        .logout-btn {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        @media (max-width: 768px) {
-            .nav { display: none; }
-            .login-form { flex-direction: column; }
-            .news-grid { grid-template-columns: 1fr; }
-            .collections-grid { grid-template-columns: 1fr; }
-            .reports-grid { grid-template-columns: 1fr; }
-            .about-content { grid-template-columns: 1fr; }
+        /* Запобігання виділенню тексту при тапах */
+        .btn, .nav-link, .media-item, .modal-close, .logout-btn {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
     </style>
 </head>
@@ -663,24 +955,30 @@
 
     <header class="header">
         <div class="header-container">
+            <button class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+
             <a href="/" class="logo">
                 <img src="/api/logo" alt="Логотип" id="logoImg" class="logo-img">
                 <span class="logo-text" id="siteName">Волонтерська організація 4.5.0</span>
             </a>
             
-            <nav class="nav" id="nav">
+            <nav class="nav" id="mobileNav">
                 <ul class="nav-menu">
-                    <li><a class="nav-link active" onclick="showPage('news')">Новини штабу</a></li>
-                    <li><a class="nav-link" onclick="showPage('collections')">Збори</a></li>
-                    <li><a class="nav-link" onclick="showPage('reports')">Звіти</a></li>
-                    <li><a class="nav-link" onclick="showPage('about')">Про нас</a></li>
+                    <li><a class="nav-link active" onclick="showPage('news'); closeMobileMenu()">Новини штабу</a></li>
+                    <li><a class="nav-link" onclick="showPage('collections'); closeMobileMenu()">Збори</a></li>
+                    <li><a class="nav-link" onclick="showPage('reports'); closeMobileMenu()">Звіти</a></li>
+                    <li><a class="nav-link" onclick="showPage('about'); closeMobileMenu()">Про нас</a></li>
                 </ul>
             </nav>
 
+            <div class="nav-overlay" id="navOverlay" onclick="closeMobileMenu()"></div>
+
             <div class="auth-section">
                 <div id="loginForm" class="login-form">
-                    <input type="text" id="loginUsername" class="login-input" placeholder="Логін">
-                    <input type="password" id="loginPassword" class="login-input" placeholder="Пароль">
+                    <input type="text" id="loginUsername" class="login-input" placeholder="Логін" autocomplete="off">
+                    <input type="password" id="loginPassword" class="login-input" placeholder="Пароль" autocomplete="off">
                     <button class="btn btn-primary" onclick="login()">Увійти</button>
                 </div>
                 
@@ -692,7 +990,7 @@
                 </div>
 
                 <a href="/admin" id="adminBtn" class="btn btn-primary admin-btn">
-                    <i class="fas fa-lock"></i> Адмін-панель
+                    <i class="fas fa-lock"></i> Адмін
                 </a>
             </div>
         </div>
@@ -707,7 +1005,7 @@
                     <p class="section-subtitle">Останні події та оголошення</p>
                 </div>
                 <div class="news-grid" id="newsList">
-                    <div style="text-align: center; grid-column: 1/-1;">
+                    <div style="text-align: center; grid-column: 1/-1; padding: 40px;">
                         <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
                         <p>Завантаження новин...</p>
                     </div>
@@ -723,7 +1021,7 @@
                     <p class="section-subtitle">Разом ми сила! Кожна гривня наближає перемогу</p>
                 </div>
                 <div class="collections-grid" id="collectionsList">
-                    <div style="text-align: center; grid-column: 1/-1;">
+                    <div style="text-align: center; grid-column: 1/-1; padding: 40px;">
                         <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
                         <p>Завантаження зборів...</p>
                     </div>
@@ -739,7 +1037,7 @@
                     <p class="section-subtitle">Прозорість та відповідальність</p>
                 </div>
                 <div class="reports-grid" id="reportsList">
-                    <div style="text-align: center; grid-column: 1/-1;">
+                    <div style="text-align: center; grid-column: 1/-1; padding: 40px;">
                         <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
                         <p>Завантаження звітів...</p>
                     </div>
@@ -757,7 +1055,7 @@
                     </div>
                     
                     <div class="about-image">
-                        <img src="https://images.unsplash.com/photo-1593113598332-cd59a0c3a9a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Волонтери">
+                        <img src="https://images.unsplash.com/photo-1593113598332-cd59a0c3a9a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Волонтери" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -765,7 +1063,7 @@
     </main>
 
     <!-- Модальне вікно для перегляду медіа -->
-    <div class="modal" id="mediaModal">
+    <div class="modal" id="mediaModal" onclick="if(event.target===this) closeMediaModal()">
         <div class="modal-content">
             <button class="modal-close" onclick="closeMediaModal()">&times;</button>
             <div id="mediaModalContent"></div>
@@ -773,26 +1071,25 @@
     </div>
 
     <!-- Модальне вікно для донату -->
-    <div class="modal" id="donateModal">
+    <div class="modal" id="donateModal" onclick="if(event.target===this) closeDonateModal()">
         <div class="modal-content">
             <button class="modal-close" onclick="closeDonateModal()">&times;</button>
             <h2 style="color: var(--primary); margin-bottom: 20px;">Зробити донат</h2>
-            <div id="donateCollectionInfo"></div>
             
-            <form id="donateForm">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Ваше ім'я</label>
-                    <input type="text" id="donorName" required style="width:100%; padding:10px; border: 2px solid var(--gray-light); border-radius: 8px;">
+            <form id="donateForm" onsubmit="event.preventDefault(); submitDonation()">
+                <div class="form-group">
+                    <label>Ваше ім'я</label>
+                    <input type="text" id="donorName" required placeholder="Як до вас звертатися?">
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Сума (грн)</label>
-                    <input type="number" id="donorAmount" required min="1" style="width:100%; padding:10px; border: 2px solid var(--gray-light); border-radius: 8px;">
+                <div class="form-group">
+                    <label>Сума (грн)</label>
+                    <input type="number" id="donorAmount" required min="1" placeholder="Введіть суму">
                 </div>
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Реквізити</label>
-                    <div class="collection-requisites" id="collectionRequisites" style="padding: 15px; background: var(--accent); border-radius: 8px; text-align: center; font-family: monospace;"></div>
+                <div class="form-group">
+                    <label>Реквізити</label>
+                    <div class="collection-requisites" id="collectionRequisites"></div>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width:100%; padding: 12px;">Підтвердити донат</button>
+                <button type="submit" class="btn btn-primary" style="width:100%; padding: 14px;">Підтвердити донат</button>
             </form>
         </div>
     </div>
@@ -833,18 +1130,34 @@
         let currentCollectionId = null;
         let isAdmin = false;
 
+        // Мобільне меню
+        function toggleMobileMenu() {
+            const nav = document.getElementById('mobileNav');
+            const overlay = document.getElementById('navOverlay');
+            nav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobileNav').classList.remove('active');
+            document.getElementById('navOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Ініціалізація
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 document.getElementById('loader').classList.add('fade-out');
-            }, 1000);
+            }, 800);
             
             checkSession();
             loadData();
             setupScroll();
             setupYear();
-            setupForm();
         });
 
+        // Перевірка сесії
         async function checkSession() {
             try {
                 const res = await fetch('/api/session');
@@ -877,9 +1190,10 @@
             document.getElementById('currentUser').textContent = username;
         }
 
+        // Логін
         async function login() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
             
             if (!username || !password) {
                 showToast('Введіть логін та пароль', 'warning');
@@ -905,7 +1219,6 @@
                     
                     showToast('Вхід виконано успішно', 'success');
                     
-                    // Очистити поля
                     document.getElementById('loginUsername').value = '';
                     document.getElementById('loginPassword').value = '';
                 } else {
@@ -916,6 +1229,7 @@
             }
         }
 
+        // Вихід
         async function logout() {
             try {
                 await fetch('/api/logout', { method: 'POST' });
@@ -927,6 +1241,7 @@
             }
         }
 
+        // Завантаження даних
         async function loadData() {
             try {
                 await Promise.all([
@@ -941,6 +1256,7 @@
             }
         }
 
+        // Завантаження налаштувань
         async function loadSettings() {
             try {
                 const res = await fetch('/api/settings');
@@ -954,13 +1270,14 @@
                 
                 const social = document.getElementById('socialLinks');
                 social.innerHTML = Object.entries(data.social).map(([key, url]) => 
-                    `<a href="${url}" target="_blank"><i class="fab fa-${key}"></i></a>`
+                    `<a href="${url}" target="_blank" rel="noopener noreferrer"><i class="fab fa-${key}"></i></a>`
                 ).join('');
             } catch (error) {
                 console.error('Помилка завантаження налаштувань:', error);
             }
         }
 
+        // Завантаження новин
         async function loadNews() {
             try {
                 const res = await fetch('/api/news');
@@ -969,7 +1286,7 @@
                 const container = document.getElementById('newsList');
                 
                 if (data.length === 0) {
-                    container.innerHTML = '<div style="text-align:center">Немає новин</div>';
+                    container.innerHTML = '<div style="text-align:center; padding:40px;">Немає новин</div>';
                     return;
                 }
                 
@@ -984,19 +1301,25 @@
                         
                         ${news.media && news.media.length > 0 ? `
                             <div class="news-media">
-                                <h4 style="margin-bottom: 10px; color: var(--primary);">Медіа:</h4>
                                 <div class="media-grid">
-                                    ${news.media.map((m, index) => `
+                                    ${news.media.slice(0, 4).map(m => `
                                         <div class="media-item" onclick="openMedia('${m.url}', '${m.type}')">
                                             ${m.type === 'photo' 
-                                                ? `<img src="${m.url}" alt="${m.caption || 'Фото'}">`
-                                                : `<video src="${m.url}"></video>`
+                                                ? `<img src="${m.url}" alt="Фото" loading="lazy">`
+                                                : `<video src="${m.url}" preload="metadata"></video>`
                                             }
                                             <div class="media-overlay">
                                                 <i class="fas fa-${m.type === 'photo' ? 'camera' : 'video'}"></i>
                                             </div>
                                         </div>
                                     `).join('')}
+                                    ${news.media.length > 4 ? `
+                                        <div class="media-item" onclick="openMedia('${news.media[4].url}', '${news.media[4].type}')">
+                                            <div style="width:100%; height:100%; background: var(--primary); color:white; display:flex; align-items:center; justify-content:center;">
+                                                +${news.media.length - 4}
+                                            </div>
+                                        </div>
+                                    ` : ''}
                                 </div>
                             </div>
                         ` : ''}
@@ -1007,6 +1330,7 @@
             }
         }
 
+        // Завантаження зборів
         async function loadCollections() {
             try {
                 const res = await fetch('/api/collections');
@@ -1015,7 +1339,7 @@
                 const container = document.getElementById('collectionsList');
                 
                 if (data.length === 0) {
-                    container.innerHTML = '<div style="text-align:center">Немає активних зборів</div>';
+                    container.innerHTML = '<div style="text-align:center; padding:40px;">Немає активних зборів</div>';
                     return;
                 }
                 
@@ -1034,14 +1358,14 @@
                                     <span>${c.current.toLocaleString()} грн</span>
                                     <span>${percent}%</span>
                                 </div>
-                                <div style="color: var(--gray);">Ціль: ${c.target.toLocaleString()} грн</div>
+                                <div style="color: var(--gray); font-size:0.9rem;">Ціль: ${c.target.toLocaleString()} грн</div>
                             </div>
                             
                             <div class="collection-requisites">
                                 <i class="fas fa-credit-card"></i> ${c.requisites}
                             </div>
                             
-                            <button class="btn btn-primary" style="width:100%;" onclick="openDonateModal(${c.id}, '${c.requisites}')">
+                            <button class="btn btn-primary" style="width:100%; padding:12px;" onclick="openDonateModal(${c.id}, '${c.requisites}')">
                                 <i class="fas fa-heart"></i> Задонатити
                             </button>
                         </div>
@@ -1052,6 +1376,7 @@
             }
         }
 
+        // Завантаження звітів
         async function loadReports() {
             try {
                 const res = await fetch('/api/reports');
@@ -1060,7 +1385,7 @@
                 const container = document.getElementById('reportsList');
                 
                 if (data.length === 0) {
-                    container.innerHTML = '<div style="text-align:center">Ще немає звітів</div>';
+                    container.innerHTML = '<div style="text-align:center; padding:40px;">Ще немає звітів</div>';
                     return;
                 }
                 
@@ -1075,19 +1400,25 @@
                         
                         ${r.media && r.media.length > 0 ? `
                             <div class="report-media" style="margin-top: 15px;">
-                                <h4 style="margin-bottom: 10px; color: var(--primary);">Медіа:</h4>
                                 <div class="media-grid">
-                                    ${r.media.map((m, index) => `
+                                    ${r.media.slice(0, 4).map(m => `
                                         <div class="media-item" onclick="openMedia('${m.url}', '${m.type}')">
                                             ${m.type === 'photo' 
-                                                ? `<img src="${m.url}" alt="${m.caption || 'Фото'}">`
-                                                : `<video src="${m.url}"></video>`
+                                                ? `<img src="${m.url}" alt="Фото" loading="lazy">`
+                                                : `<video src="${m.url}" preload="metadata"></video>`
                                             }
                                             <div class="media-overlay">
                                                 <i class="fas fa-${m.type === 'photo' ? 'camera' : 'video'}"></i>
                                             </div>
                                         </div>
                                     `).join('')}
+                                    ${r.media.length > 4 ? `
+                                        <div class="media-item" onclick="openMedia('${r.media[4].url}', '${r.media[4].type}')">
+                                            <div style="width:100%; height:100%; background: var(--primary); color:white; display:flex; align-items:center; justify-content:center;">
+                                                +${r.media.length - 4}
+                                            </div>
+                                        </div>
+                                    ` : ''}
                                 </div>
                             </div>
                         ` : ''}
@@ -1098,17 +1429,18 @@
             }
         }
 
+        // Завантаження інформації про нас
         async function loadAbout() {
             try {
                 const res = await fetch('/api/about');
                 const data = await res.json();
-                
                 document.getElementById('aboutContent').innerHTML = data.content.replace(/\n/g, '<br>');
             } catch (error) {
                 console.error('Помилка завантаження інформації:', error);
             }
         }
 
+        // Навігація по сторінках
         function showPage(page) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(page).classList.add('active');
@@ -1116,70 +1448,73 @@
             event.target.classList.add('active');
         }
 
+        // Донат
         function openDonateModal(id, requisites) {
             currentCollectionId = id;
             document.getElementById('collectionRequisites').textContent = requisites;
             document.getElementById('donateModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeDonateModal() {
             document.getElementById('donateModal').classList.remove('active');
             document.getElementById('donateForm').reset();
+            document.body.style.overflow = '';
         }
 
+        async function submitDonation() {
+            const name = document.getElementById('donorName').value.trim();
+            const amount = parseFloat(document.getElementById('donorAmount').value);
+            
+            if (!name || !amount || amount <= 0) {
+                showToast('Введіть коректні дані', 'warning');
+                return;
+            }
+            
+            try {
+                const res = await fetch('/api/donations', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ collectionId: currentCollectionId, name, amount })
+                });
+                
+                if (res.ok) {
+                    showToast('Донат прийнято! Очікуйте підтвердження', 'success');
+                    closeDonateModal();
+                } else {
+                    showToast('Помилка при створенні донату', 'error');
+                }
+            } catch (error) {
+                showToast('Помилка сервера', 'error');
+            }
+        }
+
+        // Медіа
         function openMedia(url, type) {
             const modal = document.getElementById('mediaModal');
             const content = document.getElementById('mediaModalContent');
             
             if (type === 'photo') {
-                content.innerHTML = `<img src="${url}" class="media-preview" alt="Медіа">`;
+                content.innerHTML = `<img src="${url}" class="media-preview" alt="Медіа" style="width:100%;">`;
             } else {
-                content.innerHTML = `<video src="${url}" class="media-preview" controls></video>`;
+                content.innerHTML = `<video src="${url}" class="media-preview" controls style="width:100%;"></video>`;
             }
             
             modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeMediaModal() {
             document.getElementById('mediaModal').classList.remove('active');
             document.getElementById('mediaModalContent').innerHTML = '';
+            document.body.style.overflow = '';
         }
 
-        function setupForm() {
-            document.getElementById('donateForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const name = document.getElementById('donorName').value;
-                const amount = parseFloat(document.getElementById('donorAmount').value);
-                
-                if (!name || !amount || amount <= 0) {
-                    showToast('Введіть коректні дані', 'warning');
-                    return;
-                }
-                
-                try {
-                    const res = await fetch('/api/donations', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ collectionId: currentCollectionId, name, amount })
-                    });
-                    
-                    if (res.ok) {
-                        showToast('Донат прийнято! Очікуйте підтвердження', 'success');
-                        closeDonateModal();
-                    } else {
-                        showToast('Помилка при створенні донату', 'error');
-                    }
-                } catch (error) {
-                    showToast('Помилка сервера', 'error');
-                }
-            });
-        }
-
+        // Прокрутка
         function setupScroll() {
             window.addEventListener('scroll', () => {
                 const btn = document.getElementById('scrollTop');
-                if (window.scrollY > 500) {
+                if (window.scrollY > 300) {
                     btn.classList.add('show');
                 } else {
                     btn.classList.remove('show');
@@ -1191,6 +1526,7 @@
             document.getElementById('currentYear').textContent = new Date().getFullYear();
         }
 
+        // Сповіщення
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
@@ -1202,25 +1538,10 @@
             document.getElementById('toastContainer').appendChild(toast);
             
             setTimeout(() => {
-                toast.remove();
+                toast.style.animation = 'slideIn 0.3s reverse';
+                setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
-
-        // Закриття модальних вікон
-        window.addEventListener('click', (e) => {
-            const donateModal = document.getElementById('donateModal');
-            const mediaModal = document.getElementById('mediaModal');
-            
-            if (e.target === donateModal) closeDonateModal();
-            if (e.target === mediaModal) closeMediaModal();
-        });
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeDonateModal();
-                closeMediaModal();
-            }
-        });
     </script>
 </body>
 </html>
