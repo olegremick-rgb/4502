@@ -58,7 +58,7 @@ const newsStorage = multer.diskStorage({
 
 const uploadPhoto = multer({ 
     storage: photoStorage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
@@ -70,7 +70,7 @@ const uploadPhoto = multer({
 
 const uploadVideo = multer({ 
     storage: videoStorage,
-    limits: { fileSize: 100 * 1024 * 1024 }, // 100MB
+    limits: { fileSize: 100 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('video/')) {
             cb(null, true);
@@ -82,7 +82,7 @@ const uploadVideo = multer({
 
 const uploadNews = multer({ 
     storage: newsStorage,
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
+    limits: { fileSize: 50 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
             cb(null, true);
@@ -109,7 +109,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         secure: false, 
-        maxAge: 24 * 60 * 60 * 1000 // 24 години
+        maxAge: 24 * 60 * 60 * 1000
     }
 }));
 
@@ -155,13 +155,7 @@ async function initDB() {
                     target: 50000,
                     current: 15750,
                     requisites: '4149 4999 9999 9999',
-                    media: [
-                        {
-                            type: 'photo',
-                            url: '/uploads/photos/example1.jpg',
-                            caption: 'Тепловізори'
-                        }
-                    ],
+                    media: [],
                     createdAt: '2024-01-10',
                     status: 'active'
                 },
@@ -202,13 +196,7 @@ async function initDB() {
                     content: 'Придбано 3 тепловізори на суму 45000 грн',
                     amount: 45000,
                     date: '2024-01-15',
-                    media: [
-                        {
-                            type: 'photo',
-                            url: '/uploads/photos/report1.jpg',
-                            caption: 'Тепловізори перед відправкою'
-                        }
-                    ]
+                    media: []
                 },
                 {
                     id: 2,
@@ -216,13 +204,7 @@ async function initDB() {
                     content: 'Передано пікап на передову',
                     amount: 120000,
                     date: '2024-01-20',
-                    media: [
-                        {
-                            type: 'video',
-                            url: '/uploads/videos/report1.mp4',
-                            caption: 'Відео передачі автівки'
-                        }
-                    ]
+                    media: []
                 }
             ],
             news: [
@@ -231,13 +213,7 @@ async function initDB() {
                     title: 'Вітання з Різдвом',
                     content: 'Вітаємо всіх з Різдвом! Дякуємо за підтримку.',
                     date: '2024-01-07',
-                    media: [
-                        {
-                            type: 'photo',
-                            url: '/uploads/news/christmas.jpg',
-                            caption: 'Різдвяне привітання'
-                        }
-                    ],
+                    media: [],
                     important: true
                 },
                 {
@@ -251,11 +227,8 @@ async function initDB() {
             ],
             about: {
                 content: 'Ми - волонтерська організація 4.5.0, яка допомагає військовим з 2022 року. Наша мета - забезпечити наших захисників усім необхідним для виконання бойових завдань.\n\nКожна гривня, яку ви жертвуєте, йде на потреби військових. Ми публікуємо детальні звіти про всі витрати.',
-                stats: {
-                    totalRaised: 1500000,
-                    successfulCollections: 45,
-                    helpedSoldiers: 1200
-                }
+                history: 'Наша організація була заснована в 2022 році групою небайдужих волонтерів. За цей час ми допомогли багатьом військовим підрозділам отримати необхідне обладнання та техніку.',
+                mission: 'Допомога українській армії шляхом збору коштів на необхідне обладнання та забезпечення.'
             },
             activity: []
         };
@@ -427,7 +400,6 @@ app.delete('/api/collections/:id', requireAuth, requireAdmin, async (req, res) =
     const db = await readDB();
     const collection = db.collections.find(c => c.id === parseInt(req.params.id));
     
-    // Видаляємо медіа файли
     if (collection && collection.media) {
         for (const media of collection.media) {
             const filePath = path.join(__dirname, media.url);
@@ -466,50 +438,6 @@ app.post('/api/collections/:id/photos', requireAuth, requireAdmin, uploadPhoto.a
         db.collections[collectionIndex].media = [...(db.collections[collectionIndex].media || []), ...files];
         await writeDB(db);
         res.json({ success: true, files });
-    } else {
-        res.status(404).json({ error: 'Збір не знайдено' });
-    }
-});
-
-app.post('/api/collections/:id/videos', requireAuth, requireAdmin, uploadVideo.single('video'), async (req, res) => {
-    const db = await readDB();
-    const collectionIndex = db.collections.findIndex(c => c.id === parseInt(req.params.id));
-    
-    if (collectionIndex !== -1 && req.file) {
-        const video = {
-            type: 'video',
-            url: '/uploads/videos/' + req.file.filename,
-            caption: req.body.caption || ''
-        };
-        
-        db.collections[collectionIndex].media = [...(db.collections[collectionIndex].media || []), video];
-        await writeDB(db);
-        res.json({ success: true, video });
-    } else {
-        res.status(404).json({ error: 'Збір не знайдено' });
-    }
-});
-
-app.delete('/api/collections/:id/media/:mediaIndex', requireAuth, requireAdmin, async (req, res) => {
-    const db = await readDB();
-    const collectionIndex = db.collections.findIndex(c => c.id === parseInt(req.params.id));
-    
-    if (collectionIndex !== -1) {
-        const mediaIndex = parseInt(req.params.mediaIndex);
-        if (mediaIndex >= 0 && mediaIndex < db.collections[collectionIndex].media.length) {
-            const media = db.collections[collectionIndex].media[mediaIndex];
-            
-            const filePath = path.join(__dirname, media.url);
-            if (await fs.pathExists(filePath)) {
-                await fs.remove(filePath);
-            }
-            
-            db.collections[collectionIndex].media.splice(mediaIndex, 1);
-            await writeDB(db);
-            res.json({ success: true });
-        } else {
-            res.status(404).json({ error: 'Медіа не знайдено' });
-        }
     } else {
         res.status(404).json({ error: 'Збір не знайдено' });
     }
@@ -641,50 +569,6 @@ app.post('/api/reports/:id/photos', requireAuth, requireAdmin, uploadPhoto.array
     }
 });
 
-app.post('/api/reports/:id/videos', requireAuth, requireAdmin, uploadVideo.single('video'), async (req, res) => {
-    const db = await readDB();
-    const reportIndex = db.reports.findIndex(r => r.id === parseInt(req.params.id));
-    
-    if (reportIndex !== -1 && req.file) {
-        const video = {
-            type: 'video',
-            url: '/uploads/videos/' + req.file.filename,
-            caption: req.body.caption || ''
-        };
-        
-        db.reports[reportIndex].media = [...(db.reports[reportIndex].media || []), video];
-        await writeDB(db);
-        res.json({ success: true, video });
-    } else {
-        res.status(404).json({ error: 'Звіт не знайдено' });
-    }
-});
-
-app.delete('/api/reports/:id/media/:mediaIndex', requireAuth, requireAdmin, async (req, res) => {
-    const db = await readDB();
-    const reportIndex = db.reports.findIndex(r => r.id === parseInt(req.params.id));
-    
-    if (reportIndex !== -1) {
-        const mediaIndex = parseInt(req.params.mediaIndex);
-        if (mediaIndex >= 0 && mediaIndex < db.reports[reportIndex].media.length) {
-            const media = db.reports[reportIndex].media[mediaIndex];
-            
-            const filePath = path.join(__dirname, media.url);
-            if (await fs.pathExists(filePath)) {
-                await fs.remove(filePath);
-            }
-            
-            db.reports[reportIndex].media.splice(mediaIndex, 1);
-            await writeDB(db);
-            res.json({ success: true });
-        } else {
-            res.status(404).json({ error: 'Медіа не знайдено' });
-        }
-    } else {
-        res.status(404).json({ error: 'Звіт не знайдено' });
-    }
-});
-
 app.delete('/api/reports/:id', requireAuth, requireAdmin, async (req, res) => {
     const db = await readDB();
     const report = db.reports.find(r => r.id === parseInt(req.params.id));
@@ -712,30 +596,28 @@ app.delete('/api/reports/:id', requireAuth, requireAdmin, async (req, res) => {
     res.json({ success: true });
 });
 
-// ==================== Новини штабу ====================
+// ==================== Новини ====================
 app.get('/api/news', async (req, res) => {
     const db = await readDB();
     res.json(db.news.sort((a, b) => new Date(b.date) - new Date(a.date)));
 });
 
-app.get('/api/news/:id', async (req, res) => {
+app.post('/api/news', requireAuth, requireAdmin, uploadNews.array('media', 10), async (req, res) => {
     const db = await readDB();
-    const news = db.news.find(n => n.id === parseInt(req.params.id));
-    if (news) {
-        res.json(news);
-    } else {
-        res.status(404).json({ error: 'Новину не знайдено' });
-    }
-});
-
-app.post('/api/news', requireAuth, requireAdmin, async (req, res) => {
-    const db = await readDB();
+    
+    const files = req.files ? req.files.map(file => ({
+        type: file.mimetype.startsWith('image/') ? 'photo' : 'video',
+        url: '/uploads/news/' + file.filename,
+        caption: ''
+    })) : [];
+    
     const newNews = {
         id: Date.now(),
-        ...req.body,
-        media: [],
-        date: new Date().toISOString().split('T')[0],
-        important: req.body.important || false
+        title: req.body.title,
+        content: req.body.content,
+        important: req.body.important === 'true',
+        media: files,
+        date: new Date().toISOString().split('T')[0]
     };
     
     db.news.push(newNews);
@@ -750,72 +632,6 @@ app.post('/api/news', requireAuth, requireAdmin, async (req, res) => {
     
     await writeDB(db);
     res.json(newNews);
-});
-
-app.put('/api/news/:id', requireAuth, requireAdmin, async (req, res) => {
-    const db = await readDB();
-    const index = db.news.findIndex(n => n.id === parseInt(req.params.id));
-    
-    if (index !== -1) {
-        db.news[index] = { ...db.news[index], ...req.body };
-        
-        db.activity.push({
-            id: Date.now(),
-            type: 'news_updated',
-            user: req.session.username,
-            timestamp: new Date().toISOString(),
-            details: `Оновлено новину: ${db.news[index].title}`
-        });
-        
-        await writeDB(db);
-        res.json(db.news[index]);
-    } else {
-        res.status(404).json({ error: 'Новину не знайдено' });
-    }
-});
-
-app.post('/api/news/:id/media', requireAuth, requireAdmin, uploadNews.array('media', 10), async (req, res) => {
-    const db = await readDB();
-    const newsIndex = db.news.findIndex(n => n.id === parseInt(req.params.id));
-    
-    if (newsIndex !== -1) {
-        const files = req.files.map(file => ({
-            type: file.mimetype.startsWith('image/') ? 'photo' : 'video',
-            url: '/uploads/news/' + file.filename,
-            caption: req.body.caption || ''
-        }));
-        
-        db.news[newsIndex].media = [...(db.news[newsIndex].media || []), ...files];
-        await writeDB(db);
-        res.json({ success: true, files });
-    } else {
-        res.status(404).json({ error: 'Новину не знайдено' });
-    }
-});
-
-app.delete('/api/news/:id/media/:mediaIndex', requireAuth, requireAdmin, async (req, res) => {
-    const db = await readDB();
-    const newsIndex = db.news.findIndex(n => n.id === parseInt(req.params.id));
-    
-    if (newsIndex !== -1) {
-        const mediaIndex = parseInt(req.params.mediaIndex);
-        if (mediaIndex >= 0 && mediaIndex < db.news[newsIndex].media.length) {
-            const media = db.news[newsIndex].media[mediaIndex];
-            
-            const filePath = path.join(__dirname, media.url);
-            if (await fs.pathExists(filePath)) {
-                await fs.remove(filePath);
-            }
-            
-            db.news[newsIndex].media.splice(mediaIndex, 1);
-            await writeDB(db);
-            res.json({ success: true });
-        } else {
-            res.status(404).json({ error: 'Медіа не знайдено' });
-        }
-    } else {
-        res.status(404).json({ error: 'Новину не знайдено' });
-    }
 });
 
 app.delete('/api/news/:id', requireAuth, requireAdmin, async (req, res) => {
@@ -960,12 +776,7 @@ app.get('/api/stats', requireAuth, requireAdmin, async (req, res) => {
         pendingDonations: db.donations.filter(d => d.status === 'pending').length,
         totalReports: db.reports.length,
         totalNews: db.news.length,
-        totalDonors: [...new Set(db.donations.map(d => d.name))].length,
-        totalCollections: db.collections.length,
-        confirmedDonations: db.donations.filter(d => d.status === 'confirmed').length,
-        totalMedia: db.collections.reduce((sum, c) => sum + (c.media?.length || 0), 0) +
-                   db.reports.reduce((sum, r) => sum + (r.media?.length || 0), 0) +
-                   db.news.reduce((sum, n) => sum + (n.media?.length || 0), 0)
+        totalDonors: [...new Set(db.donations.map(d => d.name))].length
     };
     
     res.json(stats);
@@ -1001,7 +812,6 @@ app.listen(PORT, () => {
     ║                                          ║
     ║   Головна сторінка: http://localhost:${PORT}  ║
     ║   Адмін-логін: http://localhost:${PORT}/admin-login ║
-    ║   Адмін-панель: http://localhost:${PORT}/admin     ║
     ║                                          ║
     ║   Логін: admin                               ║
     ║   Пароль: admin                              ║
