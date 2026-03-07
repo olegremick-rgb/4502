@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вхід в адмін-панель | Волонтерська організація 4.5.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .login-footer a:hover {
+            color: #764ba2;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert.show {
+            display: flex;
+        }
+
+        .alert.error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert.success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+
+        .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn.loading .btn-text {
+            display: none;
+        }
+
+        .btn.loading .loader {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23667eea'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='white' font-family='Arial'%3E❤️%3C/text%3E%3C/svg%3E" alt="Лого">
+                <h1>Адмін-панель</h1>
+                <p>Волонтерська організація 4.5.0</p>
+            </div>
+
+            <div class="alert error" id="errorAlert">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorMessage"></span>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Логін</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" placeholder="Введіть логін" required autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Введіть пароль" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="loginBtn">
+                    <span class="btn-text">Увійти</span>
+                    <span class="loader"></span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <a href="/">← Повернутися на сайт</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Валідація
+            if (!username || !password) {
+                showError('Будь ласка, заповніть всі поля');
+                return;
+            }
+            
+            // Показуємо завантаження
+            loginBtn.classList.add('loading');
+            loginBtn.disabled = true;
+            errorAlert.classList.remove('show');
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Успішний вхід
+                    window.location.href = '/admin';
+                } else {
+                    // Помилка
+                    showError(data.error || 'Невірний логін або пароль');
+                }
+            } catch (error) {
+                showError('Помилка з\'єднання з сервером');
+            } finally {
+                // Ховаємо завантаження
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+            }
+        });
+        
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorAlert').classList.add('show');
+        }
+        
+        // Автоматичне приховування помилки при введенні
+        document.getElementById('username').addEventListener('input', hideError);
+        document.getElementById('password').addEventListener('input', hideError);
+        
+        function hideError() {
+            document.getElementById('errorAlert').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
