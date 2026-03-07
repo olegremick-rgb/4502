@@ -39,6 +39,8 @@
             background: var(--dark);
             color: white;
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar.collapsed {
@@ -49,6 +51,10 @@
             padding: 20px;
             text-align: center;
             border-bottom: 1px solid var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
         }
 
         .sidebar-nav ul {
@@ -64,6 +70,10 @@
             text-decoration: none;
             cursor: pointer;
             transition: all 0.3s;
+            border: none;
+            background: none;
+            width: 100%;
+            font-size: 1rem;
         }
 
         .nav-item:hover,
@@ -94,8 +104,15 @@
             margin-left: auto;
         }
 
+        .sidebar-footer {
+            padding: 20px 0;
+            border-top: 1px solid var(--primary);
+        }
+
         .admin-main {
             flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .admin-header {
@@ -132,8 +149,25 @@
             color: white;
         }
 
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #fee;
+            transform: scale(1.1);
+        }
+
         .admin-content {
             padding: 30px;
+            flex: 1;
         }
 
         .admin-page {
@@ -223,11 +257,16 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: 500;
+            transition: all 0.3s;
         }
 
         .btn-primary {
             background: var(--primary);
             color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
         }
 
         .btn-success {
@@ -370,6 +409,31 @@
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+
+        /* Сповіщення */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 3000;
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
     </style>
 </head>
 <body>
@@ -379,6 +443,7 @@
                 <i class="fas fa-hand-holding-heart fa-3x"></i>
                 <h2>Volunteer 4.5.0</h2>
             </div>
+            
             <nav class="sidebar-nav">
                 <ul>
                     <li><a class="nav-item active" onclick="showPage('dashboard')"><i class="fas fa-chart-pie"></i><span>Дашборд</span></a></li>
@@ -390,6 +455,17 @@
                     <li><a class="nav-item" onclick="showPage('settings')"><i class="fas fa-cog"></i><span>Налаштування</span></a></li>
                 </ul>
             </nav>
+
+            <div class="sidebar-footer">
+                <a href="/" class="nav-item" target="_blank">
+                    <i class="fas fa-home"></i>
+                    <span>На сайт</span>
+                </a>
+                <button class="nav-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Вийти</span>
+                </button>
+            </div>
         </aside>
 
         <main class="admin-main">
@@ -397,11 +473,15 @@
                 <button class="menu-toggle" onclick="toggleSidebar()">
                     <i class="fas fa-bars"></i>
                 </button>
+                
                 <div class="user-info">
-                    <div id="adminUsername">admin</div>
+                    <span id="adminUsername">admin</span>
                     <div class="user-avatar">
                         <i class="fas fa-user-shield"></i>
                     </div>
+                    <button class="logout-btn" onclick="logout()" title="Вийти">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
                 </div>
             </header>
 
@@ -409,7 +489,13 @@
                 <!-- Дашборд -->
                 <div id="dashboardPage" class="admin-page active">
                     <h1 class="page-title">Дашборд</h1>
-                    <div class="stats-cards" id="statsCards"></div>
+                    <div class="stats-cards" id="statsCards">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-spinner fa-spin"></i></div>
+                            <div><h3>Завантаження...</h3></div>
+                        </div>
+                    </div>
+                    
                     <div class="activity-list">
                         <h3>Остання активність</h3>
                         <div id="activityList"></div>
@@ -629,6 +715,8 @@
         </div>
     </div>
 
+    <div id="toastContainer"></div>
+
     <script>
         let currentNewsId = null;
         let currentCollectionId = null;
@@ -645,12 +733,26 @@
         });
 
         async function checkAuth() {
-            const res = await fetch('/api/session');
-            const data = await res.json();
-            if (!data.authenticated || data.user.role !== 'superadmin') {
+            try {
+                const res = await fetch('/api/session');
+                const data = await res.json();
+                
+                if (!data.authenticated || data.user.role !== 'superadmin') {
+                    window.location.href = '/admin-login';
+                } else {
+                    document.getElementById('adminUsername').textContent = data.user.username;
+                }
+            } catch (error) {
                 window.location.href = '/admin-login';
-            } else {
-                document.getElementById('adminUsername').textContent = data.user.username;
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = '/admin-login';
+            } catch (error) {
+                showToast('Помилка при виході', 'error');
             }
         }
 
@@ -718,8 +820,7 @@
                         <td>${news.important ? 'Так' : 'Ні'}</td>
                         <td>${news.media?.length || 0}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary" onclick="editNews(${news.id})">Ред</button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})">Видал</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})">Видалити</button>
                         </td>
                     </tr>
                 `).join('');
@@ -729,7 +830,6 @@
         }
 
         function openNewsModal() {
-            currentNewsId = null;
             document.getElementById('newsTitle').value = '';
             document.getElementById('newsContent').value = '';
             document.getElementById('newsImportant').checked = false;
@@ -759,13 +859,13 @@
                 });
                 
                 if (res.ok) {
-                    alert('Новину додано');
+                    showToast('Новину додано', 'success');
                     closeNewsModal();
                     loadNews();
                     loadDashboard();
                 }
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
@@ -773,10 +873,11 @@
             if (!confirm('Видалити новину?')) return;
             try {
                 await fetch('/api/news/' + id, { method: 'DELETE' });
+                showToast('Новину видалено', 'success');
                 loadNews();
                 loadDashboard();
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
@@ -797,8 +898,7 @@
                             <td>${percent}%</td>
                             <td>${c.media?.length || 0}</td>
                             <td>
-                                <button class="btn btn-sm btn-primary" onclick="openCollectionMediaModal(${c.id})">+ Медіа</button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteCollection(${c.id})">Видал</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteCollection(${c.id})">Видалити</button>
                             </td>
                         </tr>
                     `;
@@ -839,7 +939,6 @@
                 if (res.ok) {
                     const collection = await res.json();
                     
-                    // Завантажуємо фото
                     const photos = document.getElementById('collectionPhotos').files;
                     if (photos.length > 0) {
                         const formData = new FormData();
@@ -852,13 +951,13 @@
                         });
                     }
                     
-                    alert('Збір додано');
+                    showToast('Збір додано', 'success');
                     closeCollectionModal();
                     loadCollections();
                     loadDashboard();
                 }
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
@@ -866,10 +965,11 @@
             if (!confirm('Видалити збір?')) return;
             try {
                 await fetch('/api/collections/' + id, { method: 'DELETE' });
+                showToast('Збір видалено', 'success');
                 loadCollections();
                 loadDashboard();
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
@@ -889,8 +989,8 @@
                         <td><span class="status-badge status-${d.status}">${d.status}</span></td>
                         <td>
                             ${d.status === 'pending' ? 
-                                `<button class="btn btn-sm btn-success" onclick="confirmDonation(${d.id})">Підтв</button>` : ''}
-                            <button class="btn btn-sm btn-danger" onclick="deleteDonation(${d.id})">Видал</button>
+                                `<button class="btn btn-sm btn-success" onclick="confirmDonation(${d.id})">Підтвердити</button>` : ''}
+                            <button class="btn btn-sm btn-danger" onclick="deleteDonation(${d.id})">Видалити</button>
                         </td>
                     </tr>
                 `).join('');
@@ -902,11 +1002,12 @@
         async function confirmDonation(id) {
             try {
                 await fetch('/api/donations/' + id + '/confirm', { method: 'PUT' });
+                showToast('Донат підтверджено', 'success');
                 loadDonations();
                 loadCollections();
                 loadDashboard();
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
@@ -914,10 +1015,11 @@
             if (!confirm('Видалити донат?')) return;
             try {
                 await fetch('/api/donations/' + id, { method: 'DELETE' });
+                showToast('Донат видалено', 'success');
                 loadDonations();
                 loadDashboard();
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
@@ -935,8 +1037,7 @@
                         <td>${r.date}</td>
                         <td>${r.media?.length || 0}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary" onclick="openReportMediaModal(${r.id})">+ Медіа</button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteReport(${r.id})">Видал</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteReport(${r.id})">Видалити</button>
                         </td>
                     </tr>
                 `).join('');
@@ -980,8 +1081,6 @@
                         for (let file of media) {
                             if (file.type.startsWith('image/')) {
                                 formData.append('photos', file);
-                            } else {
-                                formData.append('videos', file);
                             }
                         }
                         
@@ -993,13 +1092,13 @@
                         }
                     }
                     
-                    alert('Звіт додано');
+                    showToast('Звіт додано', 'success');
                     closeReportModal();
                     loadReports();
                     loadDashboard();
                 }
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
@@ -1007,10 +1106,11 @@
             if (!confirm('Видалити звіт?')) return;
             try {
                 await fetch('/api/reports/' + id, { method: 'DELETE' });
+                showToast('Звіт видалено', 'success');
                 loadReports();
                 loadDashboard();
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
@@ -1032,9 +1132,9 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ content: document.getElementById('aboutText').value })
                 });
-                alert('Збережено');
+                showToast('Збережено', 'success');
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
@@ -1043,7 +1143,10 @@
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
             
-            if (!username && !password) return;
+            if (!username && !password) {
+                showToast('Введіть нові дані', 'warning');
+                return;
+            }
             
             try {
                 await fetch('/api/settings/credentials', {
@@ -1051,15 +1154,20 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ username, password })
                 });
-                alert('Змінено');
+                showToast('Змінено', 'success');
+                document.getElementById('newUsername').value = '';
+                document.getElementById('newPassword').value = '';
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
         }
 
         async function uploadLogo() {
             const file = document.getElementById('logoUpload').files[0];
-            if (!file) return;
+            if (!file) {
+                showToast('Виберіть файл', 'warning');
+                return;
+            }
             
             const formData = new FormData();
             formData.append('logo', file);
@@ -1069,10 +1177,25 @@
                     method: 'POST',
                     body: formData
                 });
-                alert('Логотип завантажено');
+                showToast('Логотип завантажено', 'success');
             } catch (error) {
-                alert('Помилка');
+                showToast('Помилка', 'error');
             }
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.getElementById('toastContainer').appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
     </script>
 </body>
