@@ -131,7 +131,7 @@ async function initDB() {
                 }
             ],
             settings: {
-                siteName: 'Волонтерська організація 4.5.0',
+                siteName: 'Волонтерський штаб 4.5.0',
                 logo: null,
                 primaryColor: '#0066cc',
                 secondaryColor: '#ffffff',
@@ -140,12 +140,12 @@ async function initDB() {
                     email: 'info@volunteer450.org',
                     address: 'м. Київ, Україна'
                 },
-                social: {
-                    facebook: 'https://facebook.com/volunteer450',
-                    instagram: 'https://instagram.com/volunteer450',
-                    telegram: 'https://t.me/volunteer450',
-                    youtube: 'https://youtube.com/volunteer450'
-                }
+                social: [
+                    { platform: 'facebook', url: 'https://facebook.com/volunteer450', icon: 'facebook', active: true },
+                    { platform: 'instagram', url: 'https://instagram.com/volunteer450', icon: 'instagram', active: true },
+                    { platform: 'telegram', url: 'https://t.me/volunteer450', icon: 'telegram', active: true },
+                    { platform: 'youtube', url: 'https://youtube.com/volunteer450', icon: 'youtube', active: true }
+                ]
             },
             collections: [
                 {
@@ -226,7 +226,7 @@ async function initDB() {
                 }
             ],
             about: {
-                content: 'Ми - волонтерська організація 4.5.0, яка допомагає військовим з 2022 року. Наша мета - забезпечити наших захисників усім необхідним для виконання бойових завдань.\n\nКожна гривня, яку ви жертвуєте, йде на потреби військових. Ми публікуємо детальні звіти про всі витрати. Ми працюємо цілодобово, щоб наблизити перемогу. Долучайтеся до нашої команди!'
+                content: 'Ми - волонтерський штаб 4.5.0, який допомагає військовим з 2022 року. Наша мета - забезпечити наших захисників усім необхідним для виконання бойових завдань.\n\nКожна гривня, яку ви жертвуєте, йде на потреби військових. Ми публікуємо детальні звіти про всі витрати. Ми працюємо цілодобово, щоб наблизити перемогу. Долучайтеся до нашої команди!'
             },
             activity: []
         };
@@ -703,6 +703,73 @@ app.put('/api/settings', requireAuth, requireAdmin, async (req, res) => {
     res.json(db.settings);
 });
 
+// ==================== Соціальні мережі ====================
+app.get('/api/social', async (req, res) => {
+    const db = await readDB();
+    res.json(db.settings.social.filter(s => s.active));
+});
+
+app.post('/api/social', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    const newSocial = {
+        id: Date.now(),
+        ...req.body,
+        active: true
+    };
+    
+    db.settings.social.push(newSocial);
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'social_added',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Додано соціальну мережу: ${newSocial.platform}`
+    });
+    
+    await writeDB(db);
+    res.json(newSocial);
+});
+
+app.put('/api/social/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    const index = db.settings.social.findIndex(s => s.id === parseInt(req.params.id));
+    
+    if (index !== -1) {
+        db.settings.social[index] = { ...db.settings.social[index], ...req.body };
+        
+        db.activity.push({
+            id: Date.now(),
+            type: 'social_updated',
+            user: req.session.username,
+            timestamp: new Date().toISOString(),
+            details: `Оновлено соціальну мережу: ${db.settings.social[index].platform}`
+        });
+        
+        await writeDB(db);
+        res.json(db.settings.social[index]);
+    } else {
+        res.status(404).json({ error: 'Соціальну мережу не знайдено' });
+    }
+});
+
+app.delete('/api/social/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    const social = db.settings.social.find(s => s.id === parseInt(req.params.id));
+    db.settings.social = db.settings.social.filter(s => s.id !== parseInt(req.params.id));
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'social_deleted',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Видалено соціальну мережу: ${social ? social.platform : 'невідома'}`
+    });
+    
+    await writeDB(db);
+    res.json({ success: true });
+});
+
 app.post('/api/settings/logo', requireAuth, requireAdmin, uploadPhoto.single('logo'), async (req, res) => {
     if (req.file) {
         const db = await readDB();
@@ -774,7 +841,8 @@ app.get('/api/stats', requireAuth, requireAdmin, async (req, res) => {
         pendingDonations: db.donations.filter(d => d.status === 'pending').length,
         totalReports: db.reports.length,
         totalNews: db.news.length,
-        totalDonors: [...new Set(db.donations.map(d => d.name))].length
+        totalDonors: [...new Set(db.donations.map(d => d.name))].length,
+        totalSocial: db.settings.social.filter(s => s.active).length
     };
     
     res.json(stats);
@@ -806,7 +874,7 @@ app.get('/admin', (req, res) => {
 app.listen(PORT, () => {
     console.log(`
     ╔══════════════════════════════════════════╗
-    ║   Волонтерська організація 4.5.0         ║
+    ║   Волонтерський штаб 4.5.0               ║
     ║                                          ║
     ║   Головна сторінка: http://localhost:${PORT}  ║
     ║   Адмін-логін: http://localhost:${PORT}/admin-login ║
