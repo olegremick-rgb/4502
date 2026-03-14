@@ -2341,11 +2341,8 @@
                 const socialList = document.getElementById('socialList');
                 
                 if (data.social && data.social.length > 0) {
-                    socialList.innerHTML = data.social.map(s => {
-                        // Переконуємось що у кожного є id
-                        const socialId = s.id || Date.now() + Math.random();
-                        return `
-                        <div class="social-item" id="social-${socialId}">
+                    socialList.innerHTML = data.social.map(s => `
+                        <div class="social-item" id="social-${s.id}">
                             <div class="social-icon">
                                 <i class="fab fa-${s.icon}"></i>
                             </div>
@@ -2362,7 +2359,7 @@
                                 </button>
                             </div>
                         </div>
-                    `}).join('');
+                    `).join('');
                 } else {
                     socialList.innerHTML = '<div class="info-message"><i class="fas fa-share-alt"></i><p>Немає доданих соціальних мереж</p></div>';
                 }
