@@ -1033,6 +1033,49 @@
             color: var(--primary);
         }
 
+        /* ==================== КОНТАКТИ ==================== */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--gray-light);
+        }
+
+        .contact-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .contact-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .contact-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
         /* ==================== СОЦІАЛЬНІ МЕРЕЖІ ==================== */
         .social-item {
             display: flex;
@@ -1241,6 +1284,7 @@
                     <li><button class="nav-item" onclick="showPage('donations')"><i class="fas fa-money-bill-wave"></i><span>Донати</span><span class="badge" id="pendingBadge">0</span></button></li>
                     <li><button class="nav-item" onclick="showPage('reports')"><i class="fas fa-file-alt"></i><span>Звіти</span></button></li>
                     <li><button class="nav-item" onclick="showPage('about')"><i class="fas fa-info-circle"></i><span>Про нас</span></button></li>
+                    <li><button class="nav-item" onclick="showPage('contacts')"><i class="fas fa-address-book"></i><span>Контакти</span></button></li>
                     <li><button class="nav-item" onclick="showPage('social')"><i class="fas fa-share-alt"></i><span>Соцмережі</span></button></li>
                     <li><button class="nav-item" onclick="showPage('settings')"><i class="fas fa-cog"></i><span>Налаштування</span></button></li>
                 </ul>
@@ -1447,6 +1491,41 @@
                         <textarea id="aboutText" rows="10" style="width:100%; padding:15px; margin-bottom:20px; border:2px solid var(--gray-light); border-radius:12px; font-size:1rem;"></textarea>
                         <button class="btn btn-primary btn-block" onclick="saveAbout()">
                             <i class="fas fa-save"></i> Зберегти
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Контакти -->
+                <div id="contactsPage" class="admin-page">
+                    <h2 class="page-title">Контакти</h2>
+                    <div class="settings-card">
+                        <h3><i class="fas fa-address-book"></i> Редагування контактів</h3>
+                        
+                        <div class="contacts-grid">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <input type="text" id="contactPhone" class="contact-input" placeholder="Номер телефону">
+                            </div>
+                            
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <input type="email" id="contactEmail" class="contact-input" placeholder="Email адреса">
+                            </div>
+                            
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <input type="text" id="contactAddress" class="contact-input" placeholder="Адреса">
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary btn-block" onclick="saveContacts()">
+                            <i class="fas fa-save"></i> Зберегти контакти
                         </button>
                     </div>
                 </div>
@@ -1737,6 +1816,7 @@
             loadDonations();
             loadReports();
             loadAbout();
+            loadContacts();
             loadSocial();
         });
 
@@ -1817,6 +1897,7 @@
                 report_added: 'file-alt',
                 report_deleted: 'trash-alt',
                 about_updated: 'info-circle',
+                contacts_updated: 'address-book',
                 settings_updated: 'cog',
                 logo_updated: 'image',
                 credentials_updated: 'lock',
@@ -2332,6 +2413,63 @@
             }
         }
 
+        // ==================== Контакти ====================
+        async function loadContacts() {
+            try {
+                const res = await fetch('/api/settings');
+                const data = await res.json();
+                
+                document.getElementById('contactPhone').value = data.contacts.phone || '';
+                document.getElementById('contactEmail').value = data.contacts.email || '';
+                document.getElementById('contactAddress').value = data.contacts.address || '';
+            } catch (error) {
+                console.error('Помилка завантаження контактів:', error);
+                showToast('Помилка завантаження контактів', 'error');
+            }
+        }
+
+        async function saveContacts() {
+            try {
+                // Отримуємо поточні налаштування
+                const settingsRes = await fetch('/api/settings');
+                const settings = await settingsRes.json();
+                
+                // Оновлюємо контакти
+                const updatedSettings = {
+                    ...settings,
+                    contacts: {
+                        phone: document.getElementById('contactPhone').value,
+                        email: document.getElementById('contactEmail').value,
+                        address: document.getElementById('contactAddress').value
+                    }
+                };
+                
+                const res = await fetch('/api/settings', {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(updatedSettings)
+                });
+                
+                if (res.ok) {
+                    showToast('Контакти збережено', 'success');
+                    
+                    // Додаємо активність
+                    await fetch('/api/activity', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            type: 'contacts_updated',
+                            details: 'Оновлено контактну інформацію'
+                        })
+                    });
+                } else {
+                    showToast('Помилка при збереженні', 'error');
+                }
+            } catch (error) {
+                showToast('Помилка сервера', 'error');
+            }
+        }
+
         // ==================== Соціальні мережі ====================
         async function loadSocial() {
             try {
@@ -2406,18 +2544,28 @@
                 return;
             }
             
-            const data = {
+            // Отримуємо поточні налаштування
+            const settingsRes = await fetch('/api/settings');
+            const settings = await settingsRes.json();
+            
+            // Створюємо нову соцмережу з унікальним ID
+            const newSocial = {
+                id: Date.now(),
                 platform: selectedPlatform,
                 icon: selectedIcon,
                 url: url,
                 active: document.getElementById('socialActive').checked
             };
             
+            // Додаємо до масиву
+            settings.social = settings.social || [];
+            settings.social.push(newSocial);
+            
             try {
-                const res = await fetch('/api/social', {
-                    method: 'POST',
+                const res = await fetch('/api/settings', {
+                    method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({ social: settings.social })
                 });
                 
                 if (res.ok) {
@@ -2472,23 +2620,26 @@
             if (!confirm('Видалити соціальну мережу?')) return;
             
             try {
-                console.log('Видалення соцмережі з ID:', id);
+                // Отримуємо поточні налаштування
+                const res = await fetch('/api/settings');
+                const data = await res.json();
                 
-                // Використовуємо спеціальний ендпоінт для видалення соцмереж
-                const res = await fetch('/api/social/' + id, { 
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                // Фільтруємо видалену соцмережу
+                data.social = data.social.filter(s => s.id !== id);
+                
+                // Відправляємо оновлені налаштування
+                const updateRes = await fetch('/api/settings', {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ social: data.social })
                 });
                 
-                if (res.ok) {
+                if (updateRes.ok) {
                     showToast('Соціальну мережу видалено', 'success');
                     loadSocial(); // Перезавантажуємо список
                     loadDashboard(); // Оновлюємо дашборд
                 } else {
-                    const errorData = await res.json();
-                    console.error('Помилка видалення:', errorData);
+                    const errorData = await updateRes.json();
                     showToast(errorData.error || 'Помилка при видаленні', 'error');
                 }
             } catch (error) {
