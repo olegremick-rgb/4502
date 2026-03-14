@@ -2341,8 +2341,11 @@
                 const socialList = document.getElementById('socialList');
                 
                 if (data.social && data.social.length > 0) {
-                    socialList.innerHTML = data.social.map(s => `
-                        <div class="social-item">
+                    socialList.innerHTML = data.social.map(s => {
+                        // Переконуємось що у кожного є id
+                        const socialId = s.id || Date.now() + Math.random();
+                        return `
+                        <div class="social-item" id="social-${socialId}">
                             <div class="social-icon">
                                 <i class="fab fa-${s.icon}"></i>
                             </div>
@@ -2359,12 +2362,13 @@
                                 </button>
                             </div>
                         </div>
-                    `).join('');
+                    `}).join('');
                 } else {
                     socialList.innerHTML = '<div class="info-message"><i class="fas fa-share-alt"></i><p>Немає доданих соціальних мереж</p></div>';
                 }
             } catch (error) {
                 console.error('Помилка завантаження соцмереж:', error);
+                document.getElementById('socialList').innerHTML = '<div class="info-message"><i class="fas fa-exclamation-circle"></i><p>Помилка завантаження</p></div>';
                 showToast('Помилка завантаження', 'error');
             }
         }
@@ -2425,21 +2429,29 @@
                     loadSocial();
                     loadDashboard();
                 } else {
-                    showToast('Помилка при додаванні', 'error');
+                    const errorData = await res.json();
+                    showToast(errorData.error || 'Помилка при додаванні', 'error');
                 }
             } catch (error) {
+                console.error('Помилка:', error);
                 showToast('Помилка сервера', 'error');
             }
         }
 
         async function toggleSocial(id) {
             try {
+                // Отримуємо поточні налаштування
                 const res = await fetch('/api/settings');
                 const data = await res.json();
-                const social = data.social.find(s => s.id === id);
                 
-                if (social) {
-                    social.active = !social.active;
+                // Знаходимо потрібну соцмережу
+                const socialIndex = data.social.findIndex(s => s.id === id);
+                
+                if (socialIndex !== -1) {
+                    // Змінюємо статус
+                    data.social[socialIndex].active = !data.social[socialIndex].active;
+                    
+                    // Відправляємо оновлені налаштування
                     const updateRes = await fetch('/api/settings', {
                         method: 'PUT',
                         headers: {'Content-Type': 'application/json'},
@@ -2448,11 +2460,14 @@
                     
                     if (updateRes.ok) {
                         showToast('Статус змінено', 'success');
-                        loadSocial();
+                        loadSocial(); // Перезавантажуємо список
+                    } else {
+                        showToast('Помилка при зміні статусу', 'error');
                     }
                 }
             } catch (error) {
-                showToast('Помилка', 'error');
+                console.error('Помилка:', error);
+                showToast('Помилка сервера', 'error');
             }
         }
 
@@ -2460,14 +2475,28 @@
             if (!confirm('Видалити соціальну мережу?')) return;
             
             try {
-                const res = await fetch('/api/social/' + id, { method: 'DELETE' });
+                console.log('Видалення соцмережі з ID:', id);
+                
+                // Використовуємо спеціальний ендпоінт для видалення соцмереж
+                const res = await fetch('/api/social/' + id, { 
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
                 if (res.ok) {
-                    showToast('Видалено', 'success');
-                    loadSocial();
-                    loadDashboard();
+                    showToast('Соціальну мережу видалено', 'success');
+                    loadSocial(); // Перезавантажуємо список
+                    loadDashboard(); // Оновлюємо дашборд
+                } else {
+                    const errorData = await res.json();
+                    console.error('Помилка видалення:', errorData);
+                    showToast(errorData.error || 'Помилка при видаленні', 'error');
                 }
             } catch (error) {
-                showToast('Помилка', 'error');
+                console.error('Помилка:', error);
+                showToast('Помилка сервера', 'error');
             }
         }
 
@@ -2493,7 +2522,8 @@
                     document.getElementById('newUsername').value = '';
                     document.getElementById('newPassword').value = '';
                 } else {
-                    showToast('Помилка при зміні', 'error');
+                    const errorData = await res.json();
+                    showToast(errorData.error || 'Помилка при зміні', 'error');
                 }
             } catch (error) {
                 showToast('Помилка сервера', 'error');
@@ -2519,7 +2549,8 @@
                 if (res.ok) {
                     showToast('Логотип завантажено', 'success');
                 } else {
-                    showToast('Помилка при завантаженні', 'error');
+                    const errorData = await res.json();
+                    showToast(errorData.error || 'Помилка при завантаженні', 'error');
                 }
             } catch (error) {
                 showToast('Помилка сервера', 'error');
