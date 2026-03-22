@@ -15,10 +15,12 @@ const uploadsDir = path.join(__dirname, 'uploads');
 const photosDir = path.join(uploadsDir, 'photos');
 const videosDir = path.join(uploadsDir, 'videos');
 const newsDir = path.join(uploadsDir, 'news');
+const volunteersDir = path.join(uploadsDir, 'volunteers');
 
 fs.ensureDirSync(photosDir);
 fs.ensureDirSync(videosDir);
 fs.ensureDirSync(newsDir);
+fs.ensureDirSync(volunteersDir);
 
 // Налаштування multer для фото (до 50 файлів)
 const photoStorage = multer.diskStorage({
@@ -56,9 +58,21 @@ const newsStorage = multer.diskStorage({
     }
 });
 
+// Налаштування multer для фото волонтерів
+const volunteerStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, volunteersDir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, 'volunteer-' + uniqueSuffix + ext);
+    }
+});
+
 const uploadPhoto = multer({ 
     storage: photoStorage,
-    limits: { fileSize: 10 * 1024 * 1024, files: 50 }, // до 50 фото по 10MB
+    limits: { fileSize: 10 * 1024 * 1024, files: 50 },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
@@ -70,7 +84,7 @@ const uploadPhoto = multer({
 
 const uploadVideo = multer({ 
     storage: videoStorage,
-    limits: { fileSize: 100 * 1024 * 1024, files: 10 }, // до 10 відео по 100MB
+    limits: { fileSize: 100 * 1024 * 1024, files: 10 },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('video/')) {
             cb(null, true);
@@ -82,12 +96,24 @@ const uploadVideo = multer({
 
 const uploadNews = multer({ 
     storage: newsStorage,
-    limits: { fileSize: 50 * 1024 * 1024, files: 50 }, // до 50 файлів по 50MB
+    limits: { fileSize: 50 * 1024 * 1024, files: 50 },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
             cb(null, true);
         } else {
             cb(new Error('Тільки зображення та відео дозволені'));
+        }
+    }
+});
+
+const uploadVolunteer = multer({ 
+    storage: volunteerStorage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Тільки зображення дозволені'));
         }
     }
 });
@@ -145,7 +171,42 @@ async function initDB() {
             collections: [],
             donations: [],
             reports: [],
-            news: [],
+            news: [
+                {
+                    id: 1,
+                    title: 'Ласкаво просимо до Волонтерського штабу 4.5.0!',
+                    content: 'Ми раді вітати вас на нашому сайті. Тут ви можете дізнатися про актуальні збори, новини та звіти нашої діяльності. Разом до перемоги!',
+                    important: true,
+                    media: [],
+                    date: new Date().toISOString().split('T')[0]
+                }
+            ],
+            volunteers: [
+                {
+                    id: 1,
+                    name: 'Олена Петренко',
+                    role: 'Координатор штабу',
+                    description: 'Координатор волонтерського штабу, відповідає за логістику та розподіл допомоги. Має 5 років досвіду в благодійній діяльності.',
+                    photo: null,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    name: 'Іван Коваленко',
+                    role: 'Водій-волонтер',
+                    description: 'Доставляє допомогу військовим на передову. За плечима понад 50 виїздів у зону бойових дій.',
+                    photo: null,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    name: 'Марія Шевченко',
+                    role: 'PR-менеджер',
+                    description: 'Відповідає за комунікацію з донорами та ведення соціальних мереж. Допомагає розповідати про нашу роботу.',
+                    photo: null,
+                    createdAt: new Date().toISOString()
+                }
+            ],
             about: {
                 content: 'Ми - волонтерський штаб 4.5.0, який допомагає військовим з 2022 року. Наша мета - забезпечити наших захисників усім необхідним для виконання бойових завдань.\n\nКожна гривня, яку ви жертвуєте, йде на потреби військових. Ми публікуємо детальні звіти про всі витрати. Ми працюємо цілодобово, щоб наблизити перемогу. Долучайтеся до нашої команди!'
             },
@@ -342,7 +403,7 @@ app.delete('/api/collections/:id', requireAuth, requireAdmin, async (req, res) =
     res.json({ success: true });
 });
 
-// Медіа для зборів (до 50 фото)
+// Медіа для зборів
 app.post('/api/collections/:id/photos', requireAuth, requireAdmin, uploadPhoto.array('photos', 50), async (req, res) => {
     const db = await readDB();
     const collectionIndex = db.collections.findIndex(c => c.id === parseInt(req.params.id));
@@ -626,9 +687,9 @@ app.post('/api/news', requireAuth, requireAdmin, uploadNews.array('media', 50), 
         id: Date.now(),
         title: req.body.title,
         content: req.body.content,
-        important: req.body.important === 'true',
+        important: req.body.important === 'true' || req.body.important === true,
         media: files,
-        date: new Date().toISOString().split('T')[0]
+        date: req.body.date || new Date().toISOString().split('T')[0]
     };
     
     db.news.push(newNews);
@@ -732,6 +793,137 @@ app.delete('/api/news/:id', requireAuth, requireAdmin, async (req, res) => {
         user: req.session.username,
         timestamp: new Date().toISOString(),
         details: `Видалено новину: ${news ? news.title : 'невідома'}`
+    });
+    
+    await writeDB(db);
+    res.json({ success: true });
+});
+
+// ==================== Волонтери ====================
+app.get('/api/volunteers', async (req, res) => {
+    const db = await readDB();
+    if (!db.volunteers) {
+        db.volunteers = [];
+        await writeDB(db);
+    }
+    res.json(db.volunteers);
+});
+
+app.get('/api/volunteers/:id', async (req, res) => {
+    const db = await readDB();
+    const volunteer = db.volunteers?.find(v => v.id === parseInt(req.params.id));
+    if (volunteer) {
+        res.json(volunteer);
+    } else {
+        res.status(404).json({ error: 'Волонтера не знайдено' });
+    }
+});
+
+app.post('/api/volunteers', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    
+    if (!db.volunteers) {
+        db.volunteers = [];
+    }
+    
+    const newVolunteer = {
+        id: Date.now(),
+        name: req.body.name,
+        role: req.body.role || 'Волонтер',
+        description: req.body.description || '',
+        photo: null,
+        createdAt: new Date().toISOString()
+    };
+    
+    db.volunteers.push(newVolunteer);
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'volunteer_added',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Додано волонтера: ${newVolunteer.name}`
+    });
+    
+    await writeDB(db);
+    res.json(newVolunteer);
+});
+
+app.put('/api/volunteers/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    const index = db.volunteers?.findIndex(v => v.id === parseInt(req.params.id));
+    
+    if (index !== -1 && index !== undefined) {
+        db.volunteers[index] = { 
+            ...db.volunteers[index], 
+            ...req.body,
+            updatedAt: new Date().toISOString()
+        };
+        
+        db.activity.push({
+            id: Date.now(),
+            type: 'volunteer_updated',
+            user: req.session.username,
+            timestamp: new Date().toISOString(),
+            details: `Оновлено волонтера: ${db.volunteers[index].name}`
+        });
+        
+        await writeDB(db);
+        res.json(db.volunteers[index]);
+    } else {
+        res.status(404).json({ error: 'Волонтера не знайдено' });
+    }
+});
+
+app.post('/api/volunteers/:id/photo', requireAuth, requireAdmin, uploadVolunteer.single('photo'), async (req, res) => {
+    const db = await readDB();
+    const index = db.volunteers?.findIndex(v => v.id === parseInt(req.params.id));
+    
+    if (index !== -1 && index !== undefined && req.file) {
+        if (db.volunteers[index].photo) {
+            const oldPhotoPath = path.join(__dirname, db.volunteers[index].photo);
+            if (await fs.pathExists(oldPhotoPath)) {
+                await fs.remove(oldPhotoPath);
+            }
+        }
+        
+        const photoPath = '/uploads/volunteers/' + req.file.filename;
+        db.volunteers[index].photo = photoPath;
+        
+        db.activity.push({
+            id: Date.now(),
+            type: 'volunteer_photo_updated',
+            user: req.session.username,
+            timestamp: new Date().toISOString(),
+            details: `Оновлено фото волонтера: ${db.volunteers[index].name}`
+        });
+        
+        await writeDB(db);
+        res.json({ success: true, photo: photoPath });
+    } else {
+        res.status(404).json({ error: 'Волонтера не знайдено або фото не завантажено' });
+    }
+});
+
+app.delete('/api/volunteers/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    const volunteer = db.volunteers?.find(v => v.id === parseInt(req.params.id));
+    
+    if (volunteer && volunteer.photo) {
+        const photoPath = path.join(__dirname, volunteer.photo);
+        if (await fs.pathExists(photoPath)) {
+            await fs.remove(photoPath);
+        }
+    }
+    
+    db.volunteers = db.volunteers?.filter(v => v.id !== parseInt(req.params.id)) || [];
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'volunteer_deleted',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Видалено волонтера: ${volunteer ? volunteer.name : 'невідомий'}`
     });
     
     await writeDB(db);
@@ -920,6 +1112,7 @@ app.get('/api/stats', requireAuth, requireAdmin, async (req, res) => {
         pendingDonations: db.donations.filter(d => d.status === 'pending').length,
         totalReports: db.reports.length,
         totalNews: db.news.length,
+        totalVolunteers: db.volunteers?.length || 0,
         totalDonors: [...new Set(db.donations.map(d => d.name))].length,
         totalSocial: db.settings.social.filter(s => s.active).length,
         totalMedia: db.collections.reduce((sum, c) => sum + (c.media?.length || 0), 0) +
@@ -961,8 +1154,8 @@ app.listen(PORT, () => {
     ║   Головна сторінка: http://localhost:${PORT}  ║
     ║   Адмін-логін: http://localhost:${PORT}/admin-login ║
     ║                                          ║
-    ║   Логін: admin                               ║
-    ║   Пароль: admin                              ║
+    ║   Логін: admin                           ║
+    ║   Пароль: admin                          ║
     ╚══════════════════════════════════════════╝
     `);
 });
