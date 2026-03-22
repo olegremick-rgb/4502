@@ -6,6 +6,7 @@
     <title>Волонтерський штаб 4.5.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* ВСІ ОРИГІНАЛЬНІ СТИЛІ ЗАЛИШАЮТЬСЯ */
         * {
             margin: 0;
             padding: 0;
@@ -60,7 +61,6 @@
             50% { transform: rotate(45deg) scale(1.1); }
         }
 
-        /* Прелоадер */
         .loader-wrapper {
             position: fixed;
             top: 0;
@@ -108,7 +108,6 @@
         .heart:before { left: -30px; }
         .heart:after { top: -30px; }
 
-        /* Хедер */
         .header {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
@@ -165,7 +164,6 @@
             }
         }
 
-        /* Мобільне меню */
         .menu-toggle {
             display: block;
             background: none;
@@ -264,7 +262,6 @@
             background: var(--accent);
         }
 
-        /* Оверлей для мобільного меню */
         .nav-overlay {
             display: none;
             position: fixed;
@@ -283,7 +280,6 @@
             opacity: 1;
         }
 
-        /* Секція авторизації */
         .auth-section {
             display: flex;
             align-items: center;
@@ -363,7 +359,6 @@
             color: white;
         }
 
-        /* Прихована кнопка адміна */
         .admin-btn {
             display: none !important;
         }
@@ -398,7 +393,6 @@
             background: var(--accent);
         }
 
-        /* Основний контент */
         main {
             margin-top: 70px;
             min-height: calc(100vh - 70px);
@@ -535,6 +529,66 @@
 
         .news-media {
             margin-top: 15px;
+        }
+
+        /* Медіа сітка для всіх файлів */
+        .media-grid-full {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .media-grid-full {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        @media (min-width: 768px) {
+            .media-grid-full {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        .media-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--gray-light);
+        }
+
+        .media-item:active {
+            opacity: 0.8;
+        }
+
+        .media-item img,
+        .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,102,204,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .media-item:active .media-overlay {
+            opacity: 1;
         }
 
         /* Збори */
@@ -708,69 +762,74 @@
             margin-bottom: 15px;
         }
 
-        /* Медіа сітка */
-        .media-grid {
+        /* Волонтери */
+        .volunteers-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 8px;
-            margin-top: 12px;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 30px;
+            padding: 0 10px;
         }
 
-        @media (min-width: 480px) {
-            .media-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        @media (min-width: 640px) {
+            .volunteers-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        .media-item {
-            position: relative;
-            aspect-ratio: 1;
-            border-radius: 8px;
+        @media (min-width: 1024px) {
+            .volunteers-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .volunteer-card {
+            background: white;
+            border-radius: 16px;
             overflow: hidden;
-            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+            transition: transform 0.3s;
             border: 1px solid var(--gray-light);
         }
 
-        .media-item:active {
-            opacity: 0.8;
+        .volunteer-card:hover {
+            transform: translateY(-5px);
         }
 
-        .media-item img,
-        .media-item video {
+        .volunteer-photo {
+            width: 100%;
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: var(--accent);
+        }
+
+        .volunteer-photo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .media-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,102,204,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s;
-            color: white;
+        .volunteer-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .volunteer-name {
             font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 5px;
         }
 
-        .media-item:active .media-overlay {
-            opacity: 1;
+        .volunteer-role {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
         }
 
-        .media-more {
-            width: 100%;
-            height: 100%;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
+        .volunteer-description {
+            color: var(--dark);
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         /* Про нас */
@@ -1003,7 +1062,6 @@
             color: rgba(255,255,255,0.6);
         }
 
-        /* Кнопка прокрутки вгору */
         .scroll-top {
             position: fixed;
             bottom: 20px;
@@ -1034,7 +1092,6 @@
             display: flex;
         }
 
-        /* Сповіщення */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -1059,7 +1116,6 @@
         .toast.error { border-left-color: var(--danger); }
         .toast.warning { border-left-color: var(--warning); }
 
-        /* Завантаження */
         .loading-spinner {
             text-align: center;
             padding: 40px;
@@ -1080,7 +1136,6 @@
             box-shadow: 0 5px 15px rgba(0,102,204,0.1);
         }
 
-        /* Додаткові мобільні оптимізації */
         @media (max-width: 480px) {
             .btn {
                 padding: 8px 12px;
@@ -1096,7 +1151,6 @@
             }
         }
 
-        /* Запобігання виділенню тексту при тапах */
         .btn, .nav-link, .media-item, .modal-close, .logout-btn, .donate-btn {
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -1105,14 +1159,12 @@
     </style>
 </head>
 <body>
-    <!-- Прелоадер -->
     <div class="loader-wrapper" id="loader">
         <div class="loader">
             <div class="heart"></div>
         </div>
     </div>
 
-    <!-- Хедер -->
     <header class="header">
         <div class="header-container">
             <button class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()">
@@ -1156,7 +1208,6 @@
         </div>
     </header>
 
-    <!-- Основний контент -->
     <main>
         <!-- Новини штабу -->
         <section id="news" class="section active">
@@ -1219,6 +1270,18 @@
                         <img src="https://images.unsplash.com/photo-1593113598332-cd59a0c3a9a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Волонтери" loading="lazy">
                     </div>
                 </div>
+                
+                <!-- Секція волонтерів -->
+                <div class="section-header" style="margin-top: 50px;">
+                    <h2 class="section-title">Наша команда</h2>
+                    <p class="section-subtitle">Люди, які роблять цей світ кращим</p>
+                </div>
+                <div class="volunteers-grid" id="volunteersList">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Завантаження волонтерів...</p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -1262,7 +1325,6 @@
         </div>
     </div>
 
-    <!-- Футер -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -1292,12 +1354,10 @@
         </div>
     </footer>
 
-    <!-- Кнопка прокрутки вгору -->
     <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <!-- Контейнер для сповіщень -->
     <div id="toastContainer"></div>
 
     <script>
@@ -1322,12 +1382,10 @@
 
         // ==================== Ініціалізація ====================
         document.addEventListener('DOMContentLoaded', () => {
-            // Ховаємо прелоадер через 1 секунду
             setTimeout(() => {
                 document.getElementById('loader').classList.add('fade-out');
             }, 800);
             
-            // Завантажуємо дані
             checkSession();
             loadData();
             setupScroll();
@@ -1396,8 +1454,6 @@
                     }
                     
                     showToast('Вхід виконано успішно', 'success');
-                    
-                    // Очищаємо поля
                     document.getElementById('loginUsername').value = '';
                     document.getElementById('loginPassword').value = '';
                 } else {
@@ -1428,7 +1484,8 @@
                     loadNews(),
                     loadCollections(),
                     loadReports(),
-                    loadAbout()
+                    loadAbout(),
+                    loadVolunteers()
                 ]);
             } catch (error) {
                 showToast('Помилка завантаження даних', 'error');
@@ -1447,7 +1504,6 @@
                 document.getElementById('contactEmail').textContent = data.contacts.email;
                 document.getElementById('contactAddress').textContent = data.contacts.address;
                 
-                // Відображення соціальних мереж
                 const socialLinks = document.getElementById('socialLinks');
                 if (data.social && data.social.length > 0) {
                     const activeSocial = data.social.filter(s => s.active);
@@ -1466,7 +1522,7 @@
             }
         }
 
-        // ==================== Завантаження новин ====================
+        // ==================== Завантаження новин (з усіма медіа) ====================
         async function loadNews() {
             try {
                 const res = await fetch('/api/news');
@@ -1480,10 +1536,11 @@
                 }
                 
                 container.innerHTML = data.map(news => {
+                    // Показуємо ВСІ медіа файли, а не тільки перші 4
                     const mediaHtml = news.media && news.media.length > 0 ? `
                         <div class="news-media">
-                            <div class="media-grid">
-                                ${news.media.slice(0, 4).map(m => `
+                            <div class="media-grid-full">
+                                ${news.media.map(m => `
                                     <div class="media-item" onclick="openMedia('${m.url}', '${m.type}')">
                                         ${m.type === 'photo' 
                                             ? `<img src="${m.url}" alt="Фото" loading="lazy">`
@@ -1494,11 +1551,6 @@
                                         </div>
                                     </div>
                                 `).join('')}
-                                ${news.media.length > 4 ? `
-                                    <div class="media-item" onclick="openMedia('${news.media[4].url}', '${news.media[4].type}')">
-                                        <div class="media-more">+${news.media.length - 4}</div>
-                                    </div>
-                                ` : ''}
                             </div>
                         </div>
                     ` : '';
@@ -1509,8 +1561,8 @@
                                 <span class="news-date">${news.date}</span>
                                 ${news.important ? '<span class="news-badge">Важливо</span>' : ''}
                             </div>
-                            <h3 class="news-title">${news.title}</h3>
-                            <p class="news-content">${news.content}</p>
+                            <h3 class="news-title">${escapeHtml(news.title)}</h3>
+                            <p class="news-content">${escapeHtml(news.content).replace(/\n/g, '<br>')}</p>
                             ${mediaHtml}
                         </div>
                     `;
@@ -1538,8 +1590,8 @@
                     const percent = ((c.current / c.target) * 100).toFixed(1);
                     return `
                         <div class="collection-card">
-                            <h3 class="collection-title">${c.name}</h3>
-                            <p class="collection-description">${c.description}</p>
+                            <h3 class="collection-title">${escapeHtml(c.name)}</h3>
+                            <p class="collection-description">${escapeHtml(c.description)}</p>
                             
                             <div class="collection-progress">
                                 <div class="progress-bar">
@@ -1553,10 +1605,10 @@
                             </div>
                             
                             <div class="collection-requisites">
-                                <i class="fas fa-credit-card"></i> ${c.requisites}
+                                <i class="fas fa-credit-card"></i> ${escapeHtml(c.requisites)}
                             </div>
                             
-                            <button class="donate-btn" onclick="openDonateModal(${c.id}, '${c.name}', '${c.requisites}')">
+                            <button class="donate-btn" onclick="openDonateModal(${c.id}, '${escapeHtml(c.name)}', '${escapeHtml(c.requisites)}')">
                                 <i class="fas fa-heart"></i> Задонатити
                             </button>
                         </div>
@@ -1568,7 +1620,7 @@
             }
         }
 
-        // ==================== Завантаження звітів ====================
+        // ==================== Завантаження звітів (з усіма медіа) ====================
         async function loadReports() {
             try {
                 const res = await fetch('/api/reports');
@@ -1581,14 +1633,14 @@
                     return;
                 }
                 
-                // Сортуємо від нових до старих
                 const sortedData = data.sort((a,b) => new Date(b.date) - new Date(a.date));
                 
                 container.innerHTML = sortedData.map(r => {
+                    // Показуємо ВСІ медіа файли
                     const mediaHtml = r.media && r.media.length > 0 ? `
                         <div class="report-media">
-                            <div class="media-grid">
-                                ${r.media.slice(0, 4).map(m => `
+                            <div class="media-grid-full">
+                                ${r.media.map(m => `
                                     <div class="media-item" onclick="openMedia('${m.url}', '${m.type}')">
                                         ${m.type === 'photo' 
                                             ? `<img src="${m.url}" alt="Фото" loading="lazy">`
@@ -1599,11 +1651,6 @@
                                         </div>
                                     </div>
                                 `).join('')}
-                                ${r.media.length > 4 ? `
-                                    <div class="media-item" onclick="openMedia('${r.media[4].url}', '${r.media[4].type}')">
-                                        <div class="media-more">+${r.media.length - 4}</div>
-                                    </div>
-                                ` : ''}
                             </div>
                         </div>
                     ` : '';
@@ -1611,10 +1658,10 @@
                     return `
                         <div class="report-card">
                             <div class="report-header">
-                                <h3 class="report-title">${r.title}</h3>
+                                <h3 class="report-title">${escapeHtml(r.title)}</h3>
                                 <span class="report-date">${r.date}</span>
                             </div>
-                            <p class="report-content">${r.content}</p>
+                            <p class="report-content">${escapeHtml(r.content).replace(/\n/g, '<br>')}</p>
                             ${r.amount ? `<p class="report-amount">Сума: ${r.amount.toLocaleString()} грн</p>` : ''}
                             ${mediaHtml}
                         </div>
@@ -1631,10 +1678,44 @@
             try {
                 const res = await fetch('/api/about');
                 const data = await res.json();
-                document.getElementById('aboutContent').innerHTML = data.content.replace(/\n/g, '<br>');
+                document.getElementById('aboutContent').innerHTML = escapeHtml(data.content).replace(/\n/g, '<br>');
             } catch (error) {
                 console.error('Помилка завантаження інформації:', error);
                 document.getElementById('aboutContent').innerHTML = 'Інформація тимчасово недоступна';
+            }
+        }
+
+        // ==================== Завантаження волонтерів ====================
+        async function loadVolunteers() {
+            try {
+                const res = await fetch('/api/volunteers');
+                const data = await res.json();
+                
+                const container = document.getElementById('volunteersList');
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-message">Інформація про волонтерів незабаром з\'явиться</div>';
+                    return;
+                }
+                
+                container.innerHTML = data.map(v => `
+                    <div class="volunteer-card">
+                        <div class="volunteer-photo">
+                            ${v.photo 
+                                ? `<img src="${v.photo}" alt="${escapeHtml(v.name)}" loading="lazy">`
+                                : `<img src="https://via.placeholder.com/300x300?text=Волонтер" alt="Волонтер">`
+                            }
+                        </div>
+                        <div class="volunteer-info">
+                            <h3 class="volunteer-name">${escapeHtml(v.name)}</h3>
+                            <p class="volunteer-role">${escapeHtml(v.role || 'Волонтер')}</p>
+                            <p class="volunteer-description">${escapeHtml(v.description || '').replace(/\n/g, '<br>')}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Помилка завантаження волонтерів:', error);
+                document.getElementById('volunteersList').innerHTML = '<div class="empty-message">Помилка завантаження волонтерів</div>';
             }
         }
 
@@ -1653,7 +1734,7 @@
         function openDonateModal(id, name, requisites) {
             currentCollectionId = id;
             document.getElementById('donateCollectionInfo').innerHTML = `
-                <h3>${name}</h3>
+                <h3>${escapeHtml(name)}</h3>
             `;
             document.getElementById('collectionRequisites').textContent = requisites;
             document.getElementById('donateModal').classList.add('active');
@@ -1706,7 +1787,7 @@
             if (type === 'photo') {
                 content.innerHTML = `<img src="${url}" class="media-preview" alt="Медіа">`;
             } else {
-                content.innerHTML = `<video src="${url}" class="media-preview" controls></video>`;
+                content.innerHTML = `<video src="${url}" class="media-preview" controls autoplay></video>`;
             }
             
             modal.classList.add('active');
@@ -1735,13 +1816,21 @@
             document.getElementById('currentYear').textContent = new Date().getFullYear();
         }
 
+        // ==================== Допоміжні функції ====================
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         // ==================== Сповіщення ====================
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.innerHTML = `
                 <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                <span>${message}</span>
+                <span>${escapeHtml(message)}</span>
             `;
             
             document.getElementById('toastContainer').appendChild(toast);
@@ -1752,7 +1841,7 @@
             }, 3000);
         }
 
-        // ==================== Закриття модальних вікон ====================
+        // Закриття модальних вікон по Escape
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeDonateModal();
@@ -1761,4 +1850,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
