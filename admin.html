@@ -1,3 +1,4 @@
+ 
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -6,6 +7,7 @@
     <title>Адмін-панель | Волонтерський штаб 4.5.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Весь CSS з попереднього файлу залишається без змін */
         * {
             margin: 0;
             padding: 0;
@@ -49,7 +51,6 @@
             color: var(--dark);
         }
 
-        /* Стилізація скролбару */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -69,7 +70,6 @@
             background: var(--primary);
         }
 
-        /* Анімації */
         @keyframes slideIn {
             from { transform: translateX(-100%); }
             to { transform: translateX(0); }
@@ -98,7 +98,6 @@
             overflow: hidden;
         }
 
-        /* ==================== САЙДБАР ==================== */
         .sidebar {
             width: 280px;
             background: linear-gradient(180deg, var(--dark) 0%, var(--darker) 100%);
@@ -232,7 +231,6 @@
             background: rgba(0,0,0,0.2);
         }
 
-        /* Оверлей для мобільного меню */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -252,7 +250,6 @@
             opacity: 1;
         }
 
-        /* ==================== ОСНОВНИЙ КОНТЕНТ ==================== */
         .admin-main {
             flex: 1;
             display: flex;
@@ -389,7 +386,6 @@
             transform: scale(0.95);
         }
 
-        /* ==================== КОНТЕНТ ==================== */
         .admin-content {
             padding: 20px;
             overflow-y: auto;
@@ -448,7 +444,6 @@
             }
         }
 
-        /* ==================== КАРТКИ СТАТИСТИКИ ==================== */
         .stats-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -523,7 +518,6 @@
             }
         }
 
-        /* ==================== ТАБЛИЦІ ==================== */
         .table-container {
             background: white;
             border-radius: 16px;
@@ -569,7 +563,6 @@
             background: var(--light);
         }
 
-        /* ==================== МОБІЛЬНІ КАРТКИ ==================== */
         .mobile-cards {
             display: none;
         }
@@ -648,7 +641,6 @@
             }
         }
 
-        /* ==================== КНОПКИ ==================== */
         .btn {
             padding: 12px 24px;
             border: none;
@@ -724,7 +716,6 @@
             cursor: not-allowed;
         }
 
-        /* ==================== СТАТУСИ ==================== */
         .status-badge {
             display: inline-block;
             padding: 6px 12px;
@@ -754,7 +745,6 @@
             border: 1px solid var(--info);
         }
 
-        /* ==================== МОДАЛЬНІ ВІКНА ==================== */
         .modal {
             display: none;
             position: fixed;
@@ -797,7 +787,7 @@
             .modal-content {
                 border-radius: 20px;
                 width: 90%;
-                max-width: 550px;
+                max-width: 700px;
                 animation: fadeIn 0.3s;
             }
         }
@@ -837,7 +827,6 @@
             padding-bottom: 10px;
         }
 
-        /* ==================== ФОРМИ ==================== */
         .form-group {
             margin-bottom: 20px;
         }
@@ -890,12 +879,16 @@
             padding: 14px;
         }
 
-        /* ==================== МЕДІА СІТКА ==================== */
         .media-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
             margin: 15px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: var(--light);
+            border-radius: 12px;
         }
 
         .media-item {
@@ -940,6 +933,7 @@
             opacity: 0;
             transition: all 0.3s;
             box-shadow: var(--shadow);
+            z-index: 10;
         }
 
         .media-item:hover .media-delete {
@@ -951,7 +945,12 @@
             background: #c82333;
         }
 
-        /* ==================== АКТИВНІСТЬ ==================== */
+        .media-count {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
         .activity-list {
             background: white;
             border-radius: 16px;
@@ -991,7 +990,6 @@
             color: white;
         }
 
-        /* ==================== НАЛАШТУВАННЯ ==================== */
         .settings-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -1033,7 +1031,6 @@
             color: var(--primary);
         }
 
-        /* ==================== КОНТАКТИ ==================== */
         .contacts-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -1065,9 +1062,9 @@
 
         .contact-input {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: 2px solid var(--gray-light);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.95rem;
         }
 
@@ -1076,7 +1073,6 @@
             border-color: var(--primary);
         }
 
-        /* ==================== СОЦІАЛЬНІ МЕРЕЖІ ==================== */
         .social-item {
             display: flex;
             align-items: center;
@@ -1130,7 +1126,6 @@
             gap: 8px;
         }
 
-        /* ==================== ПЛАТФОРМИ ДЛЯ ВИБОРУ ==================== */
         .platform-select {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -1178,7 +1173,6 @@
             font-weight: 600;
         }
 
-        /* ==================== ІНФОРМАЦІЙНІ ПОВІДОМЛЕННЯ ==================== */
         .info-message {
             text-align: center;
             padding: 40px 20px;
@@ -1207,7 +1201,6 @@
             margin-bottom: 10px;
         }
 
-        /* ==================== СПОВІЩЕННЯ ==================== */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -1251,7 +1244,6 @@
             font-size: 1.3rem;
         }
 
-        /* ==================== ЧЕКБОКС ==================== */
         .checkbox-label {
             display: flex;
             align-items: center;
@@ -1265,11 +1257,22 @@
             height: 20px;
             cursor: pointer;
         }
+        
+        .current-media {
+            margin-top: 15px;
+            border-top: 1px solid var(--gray-light);
+            padding-top: 15px;
+        }
+        
+        .current-media h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
     <div class="admin-container">
-        <!-- Сайдбар -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-hand-holding-heart"></i>
@@ -1302,10 +1305,8 @@
             </div>
         </aside>
 
-        <!-- Оверлей для мобільного меню -->
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-        <!-- Основний контент -->
         <main class="admin-main">
             <header class="admin-header">
                 <button class="menu-toggle" onclick="toggleSidebar()">
@@ -1329,7 +1330,6 @@
             </header>
 
             <div class="admin-content">
-                <!-- Дашборд -->
                 <div id="dashboardPage" class="admin-page active">
                     <h2 class="page-title">Дашборд</h2>
                     <div class="stats-cards" id="statsCards">
@@ -1348,7 +1348,6 @@
                     </div>
                 </div>
 
-                <!-- Новини -->
                 <div id="newsPage" class="admin-page">
                     <div class="page-header">
                         <h2 class="page-title">Новини штабу</h2>
@@ -1357,7 +1356,6 @@
                         </button>
                     </div>
                     
-                    <!-- Десктопна таблиця -->
                     <div class="table-container">
                         <table>
                             <thead>
@@ -1371,20 +1369,14 @@
                                 </tr>
                             </thead>
                             <tbody id="newsTableBody">
-                                <tr>
-                                    <td colspan="6" style="text-align: center; padding: 40px;">
-                                        <i class="fas fa-spinner fa-spin"></i> Завантаження...
-                                    </td>
-                                </tr>
+                                <tr><td colspan="6" style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin"></i> Завантаження...</td></tr>
                             </tbody>
                         </table>
                     </div>
                     
-                    <!-- Мобільні картки -->
                     <div class="mobile-cards" id="newsMobileCards"></div>
                 </div>
 
-                <!-- Збори -->
                 <div id="collectionsPage" class="admin-page">
                     <div class="page-header">
                         <h2 class="page-title">Збори</h2>
@@ -1407,11 +1399,7 @@
                                 </tr>
                             </thead>
                             <tbody id="collectionsTableBody">
-                                <tr>
-                                    <td colspan="7" style="text-align: center; padding: 40px;">
-                                        <i class="fas fa-spinner fa-spin"></i> Завантаження...
-                                    </td>
-                                </tr>
+                                <tr><td colspan="7" style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin"></i> Завантаження...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1419,7 +1407,6 @@
                     <div class="mobile-cards" id="collectionsMobileCards"></div>
                 </div>
 
-                <!-- Донати -->
                 <div id="donationsPage" class="admin-page">
                     <h2 class="page-title">Донати</h2>
                     
@@ -1437,11 +1424,7 @@
                                 </tr>
                             </thead>
                             <tbody id="donationsTableBody">
-                                <tr>
-                                    <td colspan="7" style="text-align: center; padding: 40px;">
-                                        <i class="fas fa-spinner fa-spin"></i> Завантаження...
-                                    </td>
-                                </tr>
+                                <tr><td colspan="7" style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin"></i> Завантаження...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1449,7 +1432,6 @@
                     <div class="mobile-cards" id="donationsMobileCards"></div>
                 </div>
 
-                <!-- Звіти -->
                 <div id="reportsPage" class="admin-page">
                     <div class="page-header">
                         <h2 class="page-title">Звіти</h2>
@@ -1471,11 +1453,7 @@
                                 </tr>
                             </thead>
                             <tbody id="reportsTableBody">
-                                <tr>
-                                    <td colspan="6" style="text-align: center; padding: 40px;">
-                                        <i class="fas fa-spinner fa-spin"></i> Завантаження...
-                                    </td>
-                                </tr>
+                                <tr><td colspan="6" style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin"></i> Завантаження...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1483,7 +1461,6 @@
                     <div class="mobile-cards" id="reportsMobileCards"></div>
                 </div>
 
-                <!-- Про нас -->
                 <div id="aboutPage" class="admin-page">
                     <h2 class="page-title">Про нас</h2>
                     <div class="settings-card">
@@ -1495,7 +1472,6 @@
                     </div>
                 </div>
 
-                <!-- Контакти -->
                 <div id="contactsPage" class="admin-page">
                     <h2 class="page-title">Контакти</h2>
                     <div class="settings-card">
@@ -1503,23 +1479,15 @@
                         
                         <div class="contacts-grid">
                             <div class="contact-item">
-                                <div class="contact-icon">
-                                    <i class="fas fa-phone"></i>
-                                </div>
+                                <div class="contact-icon"><i class="fas fa-phone"></i></div>
                                 <input type="text" id="contactPhone" class="contact-input" placeholder="Номер телефону">
                             </div>
-                            
                             <div class="contact-item">
-                                <div class="contact-icon">
-                                    <i class="fas fa-envelope"></i>
-                                </div>
+                                <div class="contact-icon"><i class="fas fa-envelope"></i></div>
                                 <input type="email" id="contactEmail" class="contact-input" placeholder="Email адреса">
                             </div>
-                            
                             <div class="contact-item">
-                                <div class="contact-icon">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </div>
+                                <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 <input type="text" id="contactAddress" class="contact-input" placeholder="Адреса">
                             </div>
                         </div>
@@ -1530,7 +1498,6 @@
                     </div>
                 </div>
 
-                <!-- Соціальні мережі -->
                 <div id="socialPage" class="admin-page">
                     <div class="page-header">
                         <h2 class="page-title">Соціальні мережі</h2>
@@ -1542,15 +1509,11 @@
                     <div class="settings-card">
                         <h3><i class="fas fa-share-alt"></i> Список соцмереж</h3>
                         <div id="socialList">
-                            <div class="loading-spinner">
-                                <i class="fas fa-spinner fa-spin"></i>
-                                <p>Завантаження...</p>
-                            </div>
+                            <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження...</p></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Налаштування -->
                 <div id="settingsPage" class="admin-page">
                     <h2 class="page-title">Налаштування</h2>
                     <div class="settings-grid">
@@ -1579,7 +1542,8 @@
     <div class="modal" id="newsModal" onclick="if(event.target===this) closeNewsModal()">
         <div class="modal-content">
             <button class="modal-close" onclick="closeNewsModal()">&times;</button>
-            <h2><i class="fas fa-newspaper"></i> Додати новину</h2>
+            <h2 id="newsModalTitle"><i class="fas fa-newspaper"></i> Додати новину</h2>
+            <input type="hidden" id="editNewsId" value="">
             <div class="form-group">
                 <label>Заголовок</label>
                 <input type="text" id="newsTitle" required placeholder="Введіть заголовок новини">
@@ -1594,11 +1558,16 @@
                 </label>
             </div>
             <div class="form-group">
-                <label>Медіа файли</label>
+                <label>Додати медіа (до 50 файлів)</label>
                 <input type="file" id="newsMedia" accept="image/*,video/*" multiple>
+                <div class="media-count">Можна вибрати до 50 файлів</div>
+            </div>
+            <div id="currentNewsMedia" class="current-media" style="display:none;">
+                <h4>Поточні медіа:</h4>
+                <div class="media-grid" id="existingNewsMedia"></div>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-primary" onclick="saveNews()">
+                <button class="btn btn-primary" id="saveNewsBtn" onclick="saveNews()">
                     <i class="fas fa-save"></i> Зберегти
                 </button>
                 <button class="btn btn-danger" onclick="closeNewsModal()">
@@ -1612,7 +1581,8 @@
     <div class="modal" id="collectionModal" onclick="if(event.target===this) closeCollectionModal()">
         <div class="modal-content">
             <button class="modal-close" onclick="closeCollectionModal()">&times;</button>
-            <h2><i class="fas fa-hand-holding-heart"></i> Додати збір</h2>
+            <h2 id="collectionModalTitle"><i class="fas fa-hand-holding-heart"></i> Додати збір</h2>
+            <input type="hidden" id="editCollectionId" value="">
             <div class="form-group">
                 <label>Назва</label>
                 <input type="text" id="collectionName" required placeholder="Назва збору">
@@ -1630,11 +1600,16 @@
                 <input type="text" id="collectionRequisites" required placeholder="Номер картки">
             </div>
             <div class="form-group">
-                <label>Фото</label>
+                <label>Додати фото (до 50 файлів)</label>
                 <input type="file" id="collectionPhotos" accept="image/*" multiple>
+                <div class="media-count">Можна вибрати до 50 фото</div>
+            </div>
+            <div id="currentCollectionMedia" class="current-media" style="display:none;">
+                <h4>Поточні фото:</h4>
+                <div class="media-grid" id="existingCollectionMedia"></div>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-primary" onclick="saveCollection()">
+                <button class="btn btn-primary" id="saveCollectionBtn" onclick="saveCollection()">
                     <i class="fas fa-save"></i> Зберегти
                 </button>
                 <button class="btn btn-danger" onclick="closeCollectionModal()">
@@ -1648,7 +1623,8 @@
     <div class="modal" id="reportModal" onclick="if(event.target===this) closeReportModal()">
         <div class="modal-content">
             <button class="modal-close" onclick="closeReportModal()">&times;</button>
-            <h2><i class="fas fa-file-alt"></i> Додати звіт</h2>
+            <h2 id="reportModalTitle"><i class="fas fa-file-alt"></i> Додати звіт</h2>
+            <input type="hidden" id="editReportId" value="">
             <div class="form-group">
                 <label>Назва</label>
                 <input type="text" id="reportTitle" required placeholder="Назва звіту">
@@ -1662,11 +1638,16 @@
                 <input type="number" id="reportAmount" required placeholder="0">
             </div>
             <div class="form-group">
-                <label>Медіа файли</label>
+                <label>Додати медіа (до 50 файлів)</label>
                 <input type="file" id="reportMedia" accept="image/*,video/*" multiple>
+                <div class="media-count">Можна вибрати до 50 файлів</div>
+            </div>
+            <div id="currentReportMedia" class="current-media" style="display:none;">
+                <h4>Поточні медіа:</h4>
+                <div class="media-grid" id="existingReportMedia"></div>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-primary" onclick="saveReport()">
+                <button class="btn btn-primary" id="saveReportBtn" onclick="saveReport()">
                     <i class="fas fa-save"></i> Зберегти
                 </button>
                 <button class="btn btn-danger" onclick="closeReportModal()">
@@ -1681,80 +1662,41 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeSocialModal()">&times;</button>
             <h2><i class="fas fa-share-alt"></i> Додати соціальну мережу</h2>
-            
             <div class="form-group">
                 <label>Виберіть платформу</label>
                 <div class="platform-select" id="platformSelect">
-                    <div class="platform-option" onclick="selectPlatform('facebook', 'facebook')">
-                        <i class="fab fa-facebook"></i>
-                        <span>Facebook</span>
-                    </div>
-                    <div class="platform-option" onclick="selectPlatform('instagram', 'instagram')">
-                        <i class="fab fa-instagram"></i>
-                        <span>Instagram</span>
-                    </div>
-                    <div class="platform-option" onclick="selectPlatform('telegram', 'telegram')">
-                        <i class="fab fa-telegram"></i>
-                        <span>Telegram</span>
-                    </div>
-                    <div class="platform-option" onclick="selectPlatform('youtube', 'youtube')">
-                        <i class="fab fa-youtube"></i>
-                        <span>YouTube</span>
-                    </div>
-                    <div class="platform-option" onclick="selectPlatform('tiktok', 'tiktok')">
-                        <i class="fab fa-tiktok"></i>
-                        <span>TikTok</span>
-                    </div>
-                    <div class="platform-option" onclick="selectPlatform('twitter', 'twitter')">
-                        <i class="fab fa-twitter"></i>
-                        <span>Twitter</span>
-                    </div>
-                    <div class="platform-option" onclick="selectPlatform('linkedin', 'linkedin')">
-                        <i class="fab fa-linkedin"></i>
-                        <span>LinkedIn</span>
-                    </div>
-                    <div class="platform-option" onclick="selectPlatform('github', 'github')">
-                        <i class="fab fa-github"></i>
-                        <span>GitHub</span>
-                    </div>
+                    <div class="platform-option" onclick="selectPlatform('facebook', 'facebook')"><i class="fab fa-facebook"></i><span>Facebook</span></div>
+                    <div class="platform-option" onclick="selectPlatform('instagram', 'instagram')"><i class="fab fa-instagram"></i><span>Instagram</span></div>
+                    <div class="platform-option" onclick="selectPlatform('telegram', 'telegram')"><i class="fab fa-telegram"></i><span>Telegram</span></div>
+                    <div class="platform-option" onclick="selectPlatform('youtube', 'youtube')"><i class="fab fa-youtube"></i><span>YouTube</span></div>
+                    <div class="platform-option" onclick="selectPlatform('tiktok', 'tiktok')"><i class="fab fa-tiktok"></i><span>TikTok</span></div>
+                    <div class="platform-option" onclick="selectPlatform('twitter', 'twitter')"><i class="fab fa-twitter"></i><span>Twitter</span></div>
+                    <div class="platform-option" onclick="selectPlatform('linkedin', 'linkedin')"><i class="fab fa-linkedin"></i><span>LinkedIn</span></div>
+                    <div class="platform-option" onclick="selectPlatform('github', 'github')"><i class="fab fa-github"></i><span>GitHub</span></div>
                 </div>
             </div>
-            
             <div class="form-group">
                 <label>Посилання</label>
                 <input type="url" id="socialUrl" required placeholder="https://...">
             </div>
-            
             <div class="form-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="socialActive" checked> Активна
-                </label>
+                <label class="checkbox-label"><input type="checkbox" id="socialActive" checked> Активна</label>
             </div>
-            
             <div class="modal-actions">
-                <button class="btn btn-primary" onclick="saveSocial()">
-                    <i class="fas fa-save"></i> Зберегти
-                </button>
-                <button class="btn btn-danger" onclick="closeSocialModal()">
-                    <i class="fas fa-times"></i> Скасувати
-                </button>
+                <button class="btn btn-primary" onclick="saveSocial()"><i class="fas fa-save"></i> Зберегти</button>
+                <button class="btn btn-danger" onclick="closeSocialModal()"><i class="fas fa-times"></i> Скасувати</button>
             </div>
         </div>
     </div>
 
-    <!-- Контейнер для сповіщень -->
     <div id="toastContainer"></div>
 
     <script>
-        // Глобальні змінні
-        let currentNewsId = null;
-        let currentCollectionId = null;
-        let currentReportId = null;
-        let currentSocialId = null;
+        let currentEditId = null;
+        let editType = null;
         let selectedPlatform = null;
         let selectedIcon = null;
 
-        // ==================== Сайдбар ====================
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -1762,12 +1704,10 @@
             overlay.classList.toggle('active');
         }
 
-        // ==================== Авторизація ====================
         async function checkAuth() {
             try {
                 const res = await fetch('/api/session');
                 const data = await res.json();
-                
                 if (!data.authenticated || data.user.role !== 'superadmin') {
                     window.location.href = '/admin-login';
                 } else {
@@ -1782,32 +1722,23 @@
             try {
                 await fetch('/api/logout', { method: 'POST' });
                 showToast('Ви вийшли з системи', 'success');
-                setTimeout(() => {
-                    window.location.href = '/admin-login';
-                }, 1000);
+                setTimeout(() => window.location.href = '/admin-login', 1000);
             } catch (error) {
                 showToast('Помилка при виході', 'error');
             }
         }
 
-        // ==================== Навігація ====================
         function showPage(page) {
             document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
             document.getElementById(page + 'Page').classList.add('active');
-            
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             if (event && event.target) {
                 const target = event.target.closest('.nav-item');
                 if (target) target.classList.add('active');
             }
-            
-            // Закриваємо сайдбар на мобільних
-            if (window.innerWidth < 1024) {
-                toggleSidebar();
-            }
+            if (window.innerWidth < 1024) toggleSidebar();
         }
 
-        // ==================== Завантаження даних ====================
         document.addEventListener('DOMContentLoaded', () => {
             checkAuth();
             loadDashboard();
@@ -1820,103 +1751,37 @@
             loadSocial();
         });
 
-        // ==================== Дашборд ====================
         async function loadDashboard() {
             try {
-                const [statsRes, activityRes] = await Promise.all([
-                    fetch('/api/stats'),
-                    fetch('/api/activity')
-                ]);
-                
+                const [statsRes, activityRes] = await Promise.all([fetch('/api/stats'), fetch('/api/activity')]);
                 const stats = await statsRes.json();
                 const activity = await activityRes.json();
                 
                 document.getElementById('statsCards').innerHTML = `
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                        <div class="stat-details">
-                            <h3>Активні збори</h3>
-                            <div class="stat-number">${stats.activeCollections}</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
-                        <div class="stat-details">
-                            <h3>Зібрано</h3>
-                            <div class="stat-number">${stats.totalRaised.toLocaleString()} грн</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                        <div class="stat-details">
-                            <h3>Очікують</h3>
-                            <div class="stat-number">${stats.pendingDonations}</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
-                        <div class="stat-details">
-                            <h3>Новини</h3>
-                            <div class="stat-number">${stats.totalNews}</div>
-                        </div>
-                    </div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-hand-holding-heart"></i></div><div class="stat-details"><h3>Активні збори</h3><div class="stat-number">${stats.activeCollections}</div></div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div><div class="stat-details"><h3>Зібрано</h3><div class="stat-number">${stats.totalRaised.toLocaleString()} грн</div></div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-details"><h3>Очікують</h3><div class="stat-number">${stats.pendingDonations}</div></div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-newspaper"></i></div><div class="stat-details"><h3>Новини</h3><div class="stat-number">${stats.totalNews}</div></div></div>
                 `;
-                
                 document.getElementById('pendingBadge').textContent = stats.pendingDonations;
                 
                 if (activity.length === 0) {
                     document.getElementById('activityList').innerHTML = '<div class="activity-item">Немає активності</div>';
                 } else {
-                    document.getElementById('activityList').innerHTML = activity.map(a => `
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-${getActivityIcon(a.type)}"></i>
-                            </div>
-                            <div>
-                                <strong>${new Date(a.timestamp).toLocaleString()}</strong><br>
-                                ${a.details}
-                            </div>
-                        </div>
-                    `).join('');
+                    document.getElementById('activityList').innerHTML = activity.map(a => `<div class="activity-item"><div class="activity-icon"><i class="fas fa-${getActivityIcon(a.type)}"></i></div><div><strong>${new Date(a.timestamp).toLocaleString()}</strong><br>${a.details}</div></div>`).join('');
                 }
-            } catch (error) {
-                console.error('Помилка завантаження дашборду:', error);
-                showToast('Помилка завантаження дашборду', 'error');
-            }
+            } catch (error) { showToast('Помилка завантаження дашборду', 'error'); }
         }
 
         function getActivityIcon(type) {
-            const icons = {
-                login: 'sign-in-alt',
-                logout: 'sign-out-alt',
-                collection_added: 'plus-circle',
-                collection_updated: 'edit',
-                collection_deleted: 'trash',
-                donation_confirmed: 'check-circle',
-                donation_rejected: 'times-circle',
-                report_added: 'file-alt',
-                report_deleted: 'trash-alt',
-                about_updated: 'info-circle',
-                contacts_updated: 'address-book',
-                settings_updated: 'cog',
-                logo_updated: 'image',
-                credentials_updated: 'lock',
-                news_added: 'newspaper',
-                news_deleted: 'trash',
-                social_added: 'share-alt',
-                social_updated: 'edit',
-                social_deleted: 'trash'
-            };
+            const icons = { login: 'sign-in-alt', logout: 'sign-out-alt', collection_added: 'plus-circle', collection_updated: 'edit', collection_deleted: 'trash', donation_confirmed: 'check-circle', donation_rejected: 'times-circle', report_added: 'file-alt', report_updated: 'edit', report_deleted: 'trash-alt', about_updated: 'info-circle', contacts_updated: 'address-book', settings_updated: 'cog', logo_updated: 'image', credentials_updated: 'lock', news_added: 'newspaper', news_updated: 'edit', news_deleted: 'trash', social_added: 'share-alt', social_updated: 'edit', social_deleted: 'trash' };
             return icons[type] || 'info-circle';
         }
 
-        // ==================== Новини ====================
         async function loadNews() {
             try {
                 const res = await fetch('/api/news');
                 const data = await res.json();
-                
-                // Десктопна таблиця
                 document.getElementById('newsTableBody').innerHTML = data.map(news => `
                     <tr>
                         <td>${news.id}</td>
@@ -1924,251 +1789,179 @@
                         <td>${news.title}</td>
                         <td>${news.important ? 'Так' : 'Ні'}</td>
                         <td>${news.media?.length || 0}</td>
-                        <td>
-                            <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})">
-                                <i class="fas fa-trash"></i> Видалити
-                            </button>
-                        </td>
+                        <td><button class="btn btn-sm btn-primary" onclick="editNews(${news.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})"><i class="fas fa-trash"></i> Вид</button></td>
                     </tr>
                 `).join('');
-                
-                // Мобільні картки
                 document.getElementById('newsMobileCards').innerHTML = data.map(news => `
-                    <div class="mobile-card">
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">ID:</span>
-                            <span class="mobile-card-value">${news.id}</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Дата:</span>
-                            <span class="mobile-card-value">${news.date}</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Заголовок:</span>
-                            <span class="mobile-card-value">${news.title}</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Важливо:</span>
-                            <span class="mobile-card-value">${news.important ? 'Так' : 'Ні'}</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Медіа:</span>
-                            <span class="mobile-card-value">${news.media?.length || 0}</span>
-                        </div>
-                        <div class="mobile-card-actions">
-                            <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})">
-                                <i class="fas fa-trash"></i> Видалити
-                            </button>
-                        </div>
-                    </div>
+                    <div class="mobile-card"><div class="mobile-card-row"><span class="mobile-card-label">Дата:</span><span class="mobile-card-value">${news.date}</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Заголовок:</span><span class="mobile-card-value">${news.title}</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Важливо:</span><span class="mobile-card-value">${news.important ? 'Так' : 'Ні'}</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Медіа:</span><span class="mobile-card-value">${news.media?.length || 0}</span></div>
+                    <div class="mobile-card-actions"><button class="btn btn-sm btn-primary" onclick="editNews(${news.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})"><i class="fas fa-trash"></i> Вид</button></div></div>
                 `).join('');
-            } catch (error) {
-                console.error('Помилка завантаження новин:', error);
-                showToast('Помилка завантаження новин', 'error');
-            }
+            } catch (error) { showToast('Помилка завантаження новин', 'error'); }
         }
 
         function openNewsModal() {
+            document.getElementById('editNewsId').value = '';
             document.getElementById('newsTitle').value = '';
             document.getElementById('newsContent').value = '';
             document.getElementById('newsImportant').checked = false;
             document.getElementById('newsMedia').value = '';
+            document.getElementById('currentNewsMedia').style.display = 'none';
+            document.getElementById('newsModalTitle').innerHTML = '<i class="fas fa-newspaper"></i> Додати новину';
+            document.getElementById('saveNewsBtn').innerHTML = '<i class="fas fa-save"></i> Зберегти';
             document.getElementById('newsModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeNewsModal() {
-            document.getElementById('newsModal').classList.remove('active');
-            document.body.style.overflow = '';
+        async function editNews(id) {
+            try {
+                const res = await fetch('/api/news/' + id);
+                const news = await res.json();
+                document.getElementById('editNewsId').value = id;
+                document.getElementById('newsTitle').value = news.title;
+                document.getElementById('newsContent').value = news.content;
+                document.getElementById('newsImportant').checked = news.important;
+                document.getElementById('newsModalTitle').innerHTML = '<i class="fas fa-edit"></i> Редагувати новину';
+                document.getElementById('saveNewsBtn').innerHTML = '<i class="fas fa-save"></i> Оновити';
+                
+                if (news.media && news.media.length > 0) {
+                    document.getElementById('currentNewsMedia').style.display = 'block';
+                    document.getElementById('existingNewsMedia').innerHTML = news.media.map((m, idx) => `
+                        <div class="media-item">
+                            ${m.type === 'photo' ? `<img src="${m.url}" alt="Фото">` : `<video src="${m.url}"></video>`}
+                            <button class="media-delete" onclick="event.stopPropagation(); deleteNewsMedia(${id}, ${idx})"><i class="fas fa-times"></i></button>
+                        </div>
+                    `).join('');
+                } else {
+                    document.getElementById('currentNewsMedia').style.display = 'none';
+                }
+                document.getElementById('newsModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } catch (error) { showToast('Помилка завантаження', 'error'); }
+        }
+
+        async function deleteNewsMedia(newsId, mediaIndex) {
+            if (!confirm('Видалити медіа?')) return;
+            try {
+                const res = await fetch(`/api/news/${newsId}/media/${mediaIndex}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Медіа видалено', 'success'); editNews(newsId); }
+            } catch (error) { showToast('Помилка', 'error'); }
         }
 
         async function saveNews() {
+            const id = document.getElementById('editNewsId').value;
             const formData = new FormData();
             formData.append('title', document.getElementById('newsTitle').value);
             formData.append('content', document.getElementById('newsContent').value);
             formData.append('important', document.getElementById('newsImportant').checked);
-            
             const media = document.getElementById('newsMedia').files;
-            for (let file of media) {
-                formData.append('media', file);
-            }
+            for (let file of media) formData.append('media', file);
             
             try {
-                const res = await fetch('/api/news', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (res.ok) {
-                    showToast('Новину додано', 'success');
-                    closeNewsModal();
-                    loadNews();
-                    loadDashboard();
-                } else {
-                    showToast('Помилка при додаванні новини', 'error');
-                }
-            } catch (error) {
-                showToast('Помилка сервера', 'error');
-            }
+                const url = id ? `/api/news/${id}` : '/api/news';
+                const method = id ? 'PUT' : 'POST';
+                const res = await fetch(url, { method, body: formData });
+                if (res.ok) { showToast(id ? 'Новину оновлено' : 'Новину додано', 'success'); closeNewsModal(); loadNews(); loadDashboard(); }
+                else showToast('Помилка', 'error');
+            } catch (error) { showToast('Помилка сервера', 'error'); }
         }
 
-        async function deleteNews(id) {
-            if (!confirm('Видалити новину?')) return;
-            try {
-                const res = await fetch('/api/news/' + id, { method: 'DELETE' });
-                if (res.ok) {
-                    showToast('Новину видалено', 'success');
-                    loadNews();
-                    loadDashboard();
-                }
-            } catch (error) {
-                showToast('Помилка', 'error');
-            }
-        }
+        function closeNewsModal() { document.getElementById('newsModal').classList.remove('active'); document.body.style.overflow = ''; }
+        async function deleteNews(id) { if (confirm('Видалити новину?')) { try { await fetch('/api/news/' + id, { method: 'DELETE' }); showToast('Новину видалено', 'success'); loadNews(); loadDashboard(); } catch (error) { showToast('Помилка', 'error'); } } }
 
-        // ==================== Збори ====================
         async function loadCollections() {
             try {
                 const res = await fetch('/api/collections');
                 const data = await res.json();
-                
-                // Десктопна таблиця
                 document.getElementById('collectionsTableBody').innerHTML = data.map(c => {
                     const percent = ((c.current / c.target) * 100).toFixed(1);
-                    return `
-                        <tr>
-                            <td>${c.id}</td>
-                            <td>${c.name}</td>
-                            <td>${c.target.toLocaleString()}</td>
-                            <td>${c.current.toLocaleString()}</td>
-                            <td>${percent}%</td>
-                            <td>${c.media?.length || 0}</td>
-                            <td>
-                                <button class="btn btn-sm btn-danger" onclick="deleteCollection(${c.id})">
-                                    <i class="fas fa-trash"></i> Видалити
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+                    return `<tr><td>${c.id}</td><td>${c.name}</td><td>${c.target.toLocaleString()}</td><td>${c.current.toLocaleString()}</td><td>${percent}%</td><td>${c.media?.length || 0}</td><td><button class="btn btn-sm btn-primary" onclick="editCollection(${c.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteCollection(${c.id})"><i class="fas fa-trash"></i> Вид</button></td></tr>`;
                 }).join('');
-                
-                // Мобільні картки
                 document.getElementById('collectionsMobileCards').innerHTML = data.map(c => {
                     const percent = ((c.current / c.target) * 100).toFixed(1);
-                    return `
-                        <div class="mobile-card">
-                            <div class="mobile-card-row">
-                                <span class="mobile-card-label">Назва:</span>
-                                <span class="mobile-card-value">${c.name}</span>
-                            </div>
-                            <div class="mobile-card-row">
-                                <span class="mobile-card-label">Ціль:</span>
-                                <span class="mobile-card-value">${c.target.toLocaleString()} грн</span>
-                            </div>
-                            <div class="mobile-card-row">
-                                <span class="mobile-card-label">Зібрано:</span>
-                                <span class="mobile-card-value">${c.current.toLocaleString()} грн</span>
-                            </div>
-                            <div class="mobile-card-row">
-                                <span class="mobile-card-label">Прогрес:</span>
-                                <span class="mobile-card-value">${percent}%</span>
-                            </div>
-                            <div class="mobile-card-row">
-                                <span class="mobile-card-label">Медіа:</span>
-                                <span class="mobile-card-value">${c.media?.length || 0}</span>
-                            </div>
-                            <div class="mobile-card-actions">
-                                <button class="btn btn-sm btn-danger" onclick="deleteCollection(${c.id})">
-                                    <i class="fas fa-trash"></i> Видалити
-                                </button>
-                            </div>
-                        </div>
-                    `;
+                    return `<div class="mobile-card"><div class="mobile-card-row"><span class="mobile-card-label">Назва:</span><span class="mobile-card-value">${c.name}</span></div><div class="mobile-card-row"><span class="mobile-card-label">Ціль:</span><span class="mobile-card-value">${c.target.toLocaleString()} грн</span></div><div class="mobile-card-row"><span class="mobile-card-label">Зібрано:</span><span class="mobile-card-value">${c.current.toLocaleString()} грн</span></div><div class="mobile-card-row"><span class="mobile-card-label">Прогрес:</span><span class="mobile-card-value">${percent}%</span></div><div class="mobile-card-row"><span class="mobile-card-label">Медіа:</span><span class="mobile-card-value">${c.media?.length || 0}</span></div><div class="mobile-card-actions"><button class="btn btn-sm btn-primary" onclick="editCollection(${c.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteCollection(${c.id})"><i class="fas fa-trash"></i> Вид</button></div></div>`;
                 }).join('');
-            } catch (error) {
-                console.error('Помилка завантаження зборів:', error);
-                showToast('Помилка завантаження зборів', 'error');
-            }
+            } catch (error) { showToast('Помилка завантаження зборів', 'error'); }
         }
 
         function openCollectionModal() {
+            document.getElementById('editCollectionId').value = '';
             document.getElementById('collectionName').value = '';
             document.getElementById('collectionDesc').value = '';
             document.getElementById('collectionTarget').value = '';
             document.getElementById('collectionRequisites').value = '';
             document.getElementById('collectionPhotos').value = '';
+            document.getElementById('currentCollectionMedia').style.display = 'none';
+            document.getElementById('collectionModalTitle').innerHTML = '<i class="fas fa-hand-holding-heart"></i> Додати збір';
+            document.getElementById('saveCollectionBtn').innerHTML = '<i class="fas fa-save"></i> Зберегти';
             document.getElementById('collectionModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeCollectionModal() {
-            document.getElementById('collectionModal').classList.remove('active');
-            document.body.style.overflow = '';
+        async function editCollection(id) {
+            try {
+                const res = await fetch('/api/collections/' + id);
+                const c = await res.json();
+                document.getElementById('editCollectionId').value = id;
+                document.getElementById('collectionName').value = c.name;
+                document.getElementById('collectionDesc').value = c.description;
+                document.getElementById('collectionTarget').value = c.target;
+                document.getElementById('collectionRequisites').value = c.requisites;
+                document.getElementById('collectionModalTitle').innerHTML = '<i class="fas fa-edit"></i> Редагувати збір';
+                document.getElementById('saveCollectionBtn').innerHTML = '<i class="fas fa-save"></i> Оновити';
+                if (c.media && c.media.length > 0) {
+                    document.getElementById('currentCollectionMedia').style.display = 'block';
+                    document.getElementById('existingCollectionMedia').innerHTML = c.media.map((m, idx) => `
+                        <div class="media-item"><img src="${m.url}" alt="Фото"><button class="media-delete" onclick="event.stopPropagation(); deleteCollectionMedia(${id}, ${idx})"><i class="fas fa-times"></i></button></div>
+                    `).join('');
+                } else { document.getElementById('currentCollectionMedia').style.display = 'none'; }
+                document.getElementById('collectionModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } catch (error) { showToast('Помилка завантаження', 'error'); }
+        }
+
+        async function deleteCollectionMedia(collectionId, mediaIndex) {
+            if (!confirm('Видалити фото?')) return;
+            try {
+                const res = await fetch(`/api/collections/${collectionId}/media/${mediaIndex}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Фото видалено', 'success'); editCollection(collectionId); }
+            } catch (error) { showToast('Помилка', 'error'); }
         }
 
         async function saveCollection() {
-            const data = {
-                name: document.getElementById('collectionName').value,
-                description: document.getElementById('collectionDesc').value,
-                target: parseFloat(document.getElementById('collectionTarget').value),
-                requisites: document.getElementById('collectionRequisites').value
-            };
-            
+            const id = document.getElementById('editCollectionId').value;
+            const data = { name: document.getElementById('collectionName').value, description: document.getElementById('collectionDesc').value, target: parseFloat(document.getElementById('collectionTarget').value), requisites: document.getElementById('collectionRequisites').value };
             try {
-                const res = await fetch('/api/collections', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(data)
-                });
-                
-                if (res.ok) {
-                    const collection = await res.json();
-                    
-                    const photos = document.getElementById('collectionPhotos').files;
-                    if (photos.length > 0) {
-                        const formData = new FormData();
-                        for (let file of photos) {
-                            formData.append('photos', file);
-                        }
-                        await fetch('/api/collections/' + collection.id + '/photos', {
-                            method: 'POST',
-                            body: formData
-                        });
-                    }
-                    
-                    showToast('Збір додано', 'success');
-                    closeCollectionModal();
-                    loadCollections();
-                    loadDashboard();
+                let collection;
+                if (id) {
+                    const res = await fetch(`/api/collections/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                    collection = await res.json();
                 } else {
-                    showToast('Помилка при додаванні збору', 'error');
+                    const res = await fetch('/api/collections', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                    collection = await res.json();
                 }
-            } catch (error) {
-                showToast('Помилка сервера', 'error');
-            }
+                const photos = document.getElementById('collectionPhotos').files;
+                if (photos.length > 0) {
+                    const formData = new FormData();
+                    for (let file of photos) formData.append('photos', file);
+                    await fetch('/api/collections/' + collection.id + '/photos', { method: 'POST', body: formData });
+                }
+                showToast(id ? 'Збір оновлено' : 'Збір додано', 'success');
+                closeCollectionModal();
+                loadCollections();
+                loadDashboard();
+            } catch (error) { showToast('Помилка', 'error'); }
         }
 
-        async function deleteCollection(id) {
-            if (!confirm('Видалити збір?')) return;
-            try {
-                const res = await fetch('/api/collections/' + id, { method: 'DELETE' });
-                if (res.ok) {
-                    showToast('Збір видалено', 'success');
-                    loadCollections();
-                    loadDashboard();
-                }
-            } catch (error) {
-                showToast('Помилка', 'error');
-            }
-        }
+        function closeCollectionModal() { document.getElementById('collectionModal').classList.remove('active'); document.body.style.overflow = ''; }
+        async function deleteCollection(id) { if (confirm('Видалити збір?')) { try { await fetch('/api/collections/' + id, { method: 'DELETE' }); showToast('Збір видалено', 'success'); loadCollections(); loadDashboard(); } catch (error) { showToast('Помилка', 'error'); } } }
 
-        // ==================== Донати ====================
         async function loadDonations() {
             try {
                 const res = await fetch('/api/donations');
                 const data = await res.json();
-                
-                // Десктопна таблиця
                 document.getElementById('donationsTableBody').innerHTML = data.map(d => `
                     <tr>
                         <td>${d.id}</td>
@@ -2177,93 +1970,24 @@
                         <td>${d.amount.toLocaleString()} грн</td>
                         <td>${new Date(d.createdAt).toLocaleDateString()}</td>
                         <td><span class="status-badge status-${d.status}">${d.status === 'pending' ? 'Очікує' : 'Підтверджено'}</span></td>
-                        <td>
-                            ${d.status === 'pending' ? 
-                                `<button class="btn btn-sm btn-success" onclick="confirmDonation(${d.id})">
-                                    <i class="fas fa-check"></i> Підтв
-                                </button>` : ''}
-                            <button class="btn btn-sm btn-danger" onclick="deleteDonation(${d.id})">
-                                <i class="fas fa-trash"></i> Видал
-                            </button>
-                        </td>
+                        <td>${d.status === 'pending' ? `<button class="btn btn-sm btn-success" onclick="confirmDonation(${d.id})"><i class="fas fa-check"></i> Підтв</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteDonation(${d.id})"><i class="fas fa-trash"></i> Вид</button></td>
                     </tr>
                 `).join('');
-                
-                // Мобільні картки
                 document.getElementById('donationsMobileCards').innerHTML = data.map(d => `
-                    <div class="mobile-card">
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Ім'я:</span>
-                            <span class="mobile-card-value">${d.name}</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Збір:</span>
-                            <span class="mobile-card-value">${d.collectionName || 'Н/Д'}</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Сума:</span>
-                            <span class="mobile-card-value">${d.amount.toLocaleString()} грн</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Дата:</span>
-                            <span class="mobile-card-value">${new Date(d.createdAt).toLocaleDateString()}</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Статус:</span>
-                            <span class="mobile-card-value"><span class="status-badge status-${d.status}">${d.status === 'pending' ? 'Очікує' : 'Підтверджено'}</span></span>
-                        </div>
-                        <div class="mobile-card-actions">
-                            ${d.status === 'pending' ? 
-                                `<button class="btn btn-sm btn-success" onclick="confirmDonation(${d.id})">
-                                    <i class="fas fa-check"></i> Підтвердити
-                                </button>` : ''}
-                            <button class="btn btn-sm btn-danger" onclick="deleteDonation(${d.id})">
-                                <i class="fas fa-trash"></i> Видалити
-                            </button>
-                        </div>
-                    </div>
+                    <div class="mobile-card"><div class="mobile-card-row"><span class="mobile-card-label">Ім'я:</span><span class="mobile-card-value">${d.name}</span></div><div class="mobile-card-row"><span class="mobile-card-label">Збір:</span><span class="mobile-card-value">${d.collectionName || 'Н/Д'}</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Сума:</span><span class="mobile-card-value">${d.amount.toLocaleString()} грн</span></div><div class="mobile-card-row"><span class="mobile-card-label">Статус:</span><span class="mobile-card-value"><span class="status-badge status-${d.status}">${d.status === 'pending' ? 'Очікує' : 'Підтверджено'}</span></span></div>
+                    <div class="mobile-card-actions">${d.status === 'pending' ? `<button class="btn btn-sm btn-success" onclick="confirmDonation(${d.id})">Підтвердити</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteDonation(${d.id})">Видалити</button></div></div>
                 `).join('');
-            } catch (error) {
-                console.error('Помилка завантаження донатів:', error);
-                showToast('Помилка завантаження донатів', 'error');
-            }
+            } catch (error) { showToast('Помилка завантаження донатів', 'error'); }
         }
 
-        async function confirmDonation(id) {
-            try {
-                const res = await fetch('/api/donations/' + id + '/confirm', { method: 'PUT' });
-                if (res.ok) {
-                    showToast('Донат підтверджено', 'success');
-                    loadDonations();
-                    loadCollections();
-                    loadDashboard();
-                }
-            } catch (error) {
-                showToast('Помилка', 'error');
-            }
-        }
+        async function confirmDonation(id) { try { await fetch('/api/donations/' + id + '/confirm', { method: 'PUT' }); showToast('Донат підтверджено', 'success'); loadDonations(); loadCollections(); loadDashboard(); } catch (error) { showToast('Помилка', 'error'); } }
+        async function deleteDonation(id) { if (confirm('Видалити донат?')) { try { await fetch('/api/donations/' + id, { method: 'DELETE' }); showToast('Донат видалено', 'success'); loadDonations(); loadDashboard(); } catch (error) { showToast('Помилка', 'error'); } } }
 
-        async function deleteDonation(id) {
-            if (!confirm('Видалити донат?')) return;
-            try {
-                const res = await fetch('/api/donations/' + id, { method: 'DELETE' });
-                if (res.ok) {
-                    showToast('Донат видалено', 'success');
-                    loadDonations();
-                    loadDashboard();
-                }
-            } catch (error) {
-                showToast('Помилка', 'error');
-            }
-        }
-
-        // ==================== Звіти ====================
         async function loadReports() {
             try {
                 const res = await fetch('/api/reports');
                 const data = await res.json();
-                
-                // Десктопна таблиця
                 document.getElementById('reportsTableBody').innerHTML = data.map(r => `
                     <tr>
                         <td>${r.id}</td>
@@ -2271,456 +1995,210 @@
                         <td>${r.amount.toLocaleString()} грн</td>
                         <td>${r.date}</td>
                         <td>${r.media?.length || 0}</td>
-                        <td>
-                            <button class="btn btn-sm btn-danger" onclick="deleteReport(${r.id})">
-                                <i class="fas fa-trash"></i> Видалити
-                            </button>
-                        </td>
+                        <td><button class="btn btn-sm btn-primary" onclick="editReport(${r.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteReport(${r.id})"><i class="fas fa-trash"></i> Вид</button></td>
                     </tr>
                 `).join('');
-                
-                // Мобільні картки
                 document.getElementById('reportsMobileCards').innerHTML = data.map(r => `
-                    <div class="mobile-card">
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Назва:</span>
-                            <span class="mobile-card-value">${r.title}</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Сума:</span>
-                            <span class="mobile-card-value">${r.amount.toLocaleString()} грн</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Дата:</span>
-                            <span class="mobile-card-value">${r.date}</span>
-                        </div>
-                        <div class="mobile-card-row">
-                            <span class="mobile-card-label">Медіа:</span>
-                            <span class="mobile-card-value">${r.media?.length || 0}</span>
-                        </div>
-                        <div class="mobile-card-actions">
-                            <button class="btn btn-sm btn-danger" onclick="deleteReport(${r.id})">
-                                <i class="fas fa-trash"></i> Видалити
-                            </button>
-                        </div>
-                    </div>
+                    <div class="mobile-card"><div class="mobile-card-row"><span class="mobile-card-label">Назва:</span><span class="mobile-card-value">${r.title}</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Сума:</span><span class="mobile-card-value">${r.amount.toLocaleString()} грн</span></div><div class="mobile-card-row"><span class="mobile-card-label">Дата:</span><span class="mobile-card-value">${r.date}</span></div>
+                    <div class="mobile-card-row"><span class="mobile-card-label">Медіа:</span><span class="mobile-card-value">${r.media?.length || 0}</span></div>
+                    <div class="mobile-card-actions"><button class="btn btn-sm btn-primary" onclick="editReport(${r.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteReport(${r.id})"><i class="fas fa-trash"></i> Вид</button></div></div>
                 `).join('');
-            } catch (error) {
-                console.error('Помилка завантаження звітів:', error);
-                showToast('Помилка завантаження звітів', 'error');
-            }
+            } catch (error) { showToast('Помилка завантаження звітів', 'error'); }
         }
 
         function openReportModal() {
+            document.getElementById('editReportId').value = '';
             document.getElementById('reportTitle').value = '';
             document.getElementById('reportContent').value = '';
             document.getElementById('reportAmount').value = '';
             document.getElementById('reportMedia').value = '';
+            document.getElementById('currentReportMedia').style.display = 'none';
+            document.getElementById('reportModalTitle').innerHTML = '<i class="fas fa-file-alt"></i> Додати звіт';
+            document.getElementById('saveReportBtn').innerHTML = '<i class="fas fa-save"></i> Зберегти';
             document.getElementById('reportModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeReportModal() {
-            document.getElementById('reportModal').classList.remove('active');
-            document.body.style.overflow = '';
+        async function editReport(id) {
+            try {
+                const res = await fetch('/api/reports/' + id);
+                const r = await res.json();
+                document.getElementById('editReportId').value = id;
+                document.getElementById('reportTitle').value = r.title;
+                document.getElementById('reportContent').value = r.content;
+                document.getElementById('reportAmount').value = r.amount;
+                document.getElementById('reportModalTitle').innerHTML = '<i class="fas fa-edit"></i> Редагувати звіт';
+                document.getElementById('saveReportBtn').innerHTML = '<i class="fas fa-save"></i> Оновити';
+                if (r.media && r.media.length > 0) {
+                    document.getElementById('currentReportMedia').style.display = 'block';
+                    document.getElementById('existingReportMedia').innerHTML = r.media.map((m, idx) => `
+                        <div class="media-item">
+                            ${m.type === 'photo' ? `<img src="${m.url}" alt="Фото">` : `<video src="${m.url}"></video>`}
+                            <button class="media-delete" onclick="event.stopPropagation(); deleteReportMedia(${id}, ${idx})"><i class="fas fa-times"></i></button>
+                        </div>
+                    `).join('');
+                } else { document.getElementById('currentReportMedia').style.display = 'none'; }
+                document.getElementById('reportModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } catch (error) { showToast('Помилка завантаження', 'error'); }
+        }
+
+        async function deleteReportMedia(reportId, mediaIndex) {
+            if (!confirm('Видалити медіа?')) return;
+            try {
+                const res = await fetch(`/api/reports/${reportId}/media/${mediaIndex}`, { method: 'DELETE' });
+                if (res.ok) { showToast('Медіа видалено', 'success'); editReport(reportId); }
+            } catch (error) { showToast('Помилка', 'error'); }
         }
 
         async function saveReport() {
-            const data = {
-                title: document.getElementById('reportTitle').value,
-                content: document.getElementById('reportContent').value,
-                amount: parseFloat(document.getElementById('reportAmount').value)
-            };
-            
+            const id = document.getElementById('editReportId').value;
+            const data = { title: document.getElementById('reportTitle').value, content: document.getElementById('reportContent').value, amount: parseFloat(document.getElementById('reportAmount').value) };
             try {
-                const res = await fetch('/api/reports', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(data)
-                });
-                
-                if (res.ok) {
-                    const report = await res.json();
-                    
-                    const media = document.getElementById('reportMedia').files;
-                    if (media.length > 0) {
-                        const formData = new FormData();
-                        for (let file of media) {
-                            if (file.type.startsWith('image/')) {
-                                formData.append('photos', file);
-                            }
-                        }
-                        
-                        if (formData.has('photos')) {
-                            await fetch('/api/reports/' + report.id + '/photos', {
-                                method: 'POST',
-                                body: formData
-                            });
-                        }
+                let report;
+                if (id) {
+                    const res = await fetch(`/api/reports/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                    report = await res.json();
+                } else {
+                    const res = await fetch('/api/reports', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                    report = await res.json();
+                }
+                const media = document.getElementById('reportMedia').files;
+                if (media.length > 0) {
+                    const formData = new FormData();
+                    for (let file of media) {
+                        if (file.type.startsWith('image/')) formData.append('photos', file);
+                        if (file.type.startsWith('video/')) formData.append('videos', file);
                     }
-                    
-                    showToast('Звіт додано', 'success');
-                    closeReportModal();
-                    loadReports();
-                    loadDashboard();
-                } else {
-                    showToast('Помилка при додаванні звіту', 'error');
-                }
-            } catch (error) {
-                showToast('Помилка сервера', 'error');
-            }
-        }
-
-        async function deleteReport(id) {
-            if (!confirm('Видалити звіт?')) return;
-            try {
-                const res = await fetch('/api/reports/' + id, { method: 'DELETE' });
-                if (res.ok) {
-                    showToast('Звіт видалено', 'success');
-                    loadReports();
-                    loadDashboard();
-                }
-            } catch (error) {
-                showToast('Помилка', 'error');
-            }
-        }
-
-        // ==================== Про нас ====================
-        async function loadAbout() {
-            try {
-                const res = await fetch('/api/about');
-                const data = await res.json();
-                document.getElementById('aboutText').value = data.content;
-            } catch (error) {
-                console.error('Помилка завантаження:', error);
-                showToast('Помилка завантаження', 'error');
-            }
-        }
-
-        async function saveAbout() {
-            try {
-                const res = await fetch('/api/about', {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ content: document.getElementById('aboutText').value })
-                });
-                
-                if (res.ok) {
-                    showToast('Збережено', 'success');
-                }
-            } catch (error) {
-                showToast('Помилка', 'error');
-            }
-        }
-
-        // ==================== Контакти ====================
-        async function loadContacts() {
-            try {
-                const res = await fetch('/api/settings');
-                const data = await res.json();
-                
-                document.getElementById('contactPhone').value = data.contacts.phone || '';
-                document.getElementById('contactEmail').value = data.contacts.email || '';
-                document.getElementById('contactAddress').value = data.contacts.address || '';
-            } catch (error) {
-                console.error('Помилка завантаження контактів:', error);
-                showToast('Помилка завантаження контактів', 'error');
-            }
-        }
-
-        async function saveContacts() {
-            try {
-                // Отримуємо поточні налаштування
-                const settingsRes = await fetch('/api/settings');
-                const settings = await settingsRes.json();
-                
-                // Оновлюємо контакти
-                const updatedSettings = {
-                    ...settings,
-                    contacts: {
-                        phone: document.getElementById('contactPhone').value,
-                        email: document.getElementById('contactEmail').value,
-                        address: document.getElementById('contactAddress').value
-                    }
-                };
-                
-                const res = await fetch('/api/settings', {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(updatedSettings)
-                });
-                
-                if (res.ok) {
-                    showToast('Контакти збережено', 'success');
-                    
-                    // Додаємо активність
-                    await fetch('/api/activity', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            type: 'contacts_updated',
-                            details: 'Оновлено контактну інформацію'
-                        })
-                    });
-                } else {
-                    showToast('Помилка при збереженні', 'error');
-                }
-            } catch (error) {
-                showToast('Помилка сервера', 'error');
-            }
-        }
-
-        // ==================== Соціальні мережі ====================
-        async function loadSocial() {
-            try {
-                const res = await fetch('/api/settings');
-                const data = await res.json();
-                
-                const socialList = document.getElementById('socialList');
-                
-                if (data.social && data.social.length > 0) {
-                    socialList.innerHTML = data.social.map(s => `
-                        <div class="social-item" id="social-${s.id}">
-                            <div class="social-icon">
-                                <i class="fab fa-${s.icon}"></i>
-                            </div>
-                            <div class="social-info">
-                                <div class="social-name">${s.platform}</div>
-                                <div class="social-url">${s.url}</div>
-                            </div>
-                            <div class="social-actions">
-                                <button class="btn btn-sm ${s.active ? 'btn-success' : 'btn-warning'}" onclick="toggleSocial(${s.id})">
-                                    ${s.active ? 'Активна' : 'Неактивна'}
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteSocial(${s.id})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    socialList.innerHTML = '<div class="info-message"><i class="fas fa-share-alt"></i><p>Немає доданих соціальних мереж</p></div>';
-                }
-            } catch (error) {
-                console.error('Помилка завантаження соцмереж:', error);
-                document.getElementById('socialList').innerHTML = '<div class="info-message"><i class="fas fa-exclamation-circle"></i><p>Помилка завантаження</p></div>';
-                showToast('Помилка завантаження', 'error');
-            }
-        }
-
-        function selectPlatform(platform, icon) {
-            document.querySelectorAll('.platform-option').forEach(opt => opt.classList.remove('selected'));
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('selected');
-            }
-            selectedPlatform = platform;
-            selectedIcon = icon;
-        }
-
-        function openSocialModal() {
-            selectedPlatform = null;
-            selectedIcon = null;
-            document.querySelectorAll('.platform-option').forEach(opt => opt.classList.remove('selected'));
-            document.getElementById('socialUrl').value = '';
-            document.getElementById('socialActive').checked = true;
-            document.getElementById('socialModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSocialModal() {
-            document.getElementById('socialModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        async function saveSocial() {
-            if (!selectedPlatform) {
-                showToast('Виберіть платформу', 'warning');
-                return;
-            }
-            
-            const url = document.getElementById('socialUrl').value;
-            if (!url) {
-                showToast('Введіть посилання', 'warning');
-                return;
-            }
-            
-            // Отримуємо поточні налаштування
-            const settingsRes = await fetch('/api/settings');
-            const settings = await settingsRes.json();
-            
-            // Створюємо нову соцмережу з унікальним ID
-            const newSocial = {
-                id: Date.now(),
-                platform: selectedPlatform,
-                icon: selectedIcon,
-                url: url,
-                active: document.getElementById('socialActive').checked
-            };
-            
-            // Додаємо до масиву
-            settings.social = settings.social || [];
-            settings.social.push(newSocial);
-            
-            try {
-                const res = await fetch('/api/settings', {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ social: settings.social })
-                });
-                
-                if (res.ok) {
-                    showToast('Соціальну мережу додано', 'success');
-                    closeSocialModal();
-                    loadSocial();
-                    loadDashboard();
-                } else {
-                    const errorData = await res.json();
-                    showToast(errorData.error || 'Помилка при додаванні', 'error');
-                }
-            } catch (error) {
-                console.error('Помилка:', error);
-                showToast('Помилка сервера', 'error');
-            }
-        }
-
-        async function toggleSocial(id) {
-            try {
-                // Отримуємо поточні налаштування
-                const res = await fetch('/api/settings');
-                const data = await res.json();
-                
-                // Знаходимо потрібну соцмережу
-                const socialIndex = data.social.findIndex(s => s.id === id);
-                
-                if (socialIndex !== -1) {
-                    // Змінюємо статус
-                    data.social[socialIndex].active = !data.social[socialIndex].active;
-                    
-                    // Відправляємо оновлені налаштування
-                    const updateRes = await fetch('/api/settings', {
-                        method: 'PUT',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ social: data.social })
-                    });
-                    
-                    if (updateRes.ok) {
-                        showToast('Статус змінено', 'success');
-                        loadSocial(); // Перезавантажуємо список
-                    } else {
-                        showToast('Помилка при зміні статусу', 'error');
+                    if (formData.has('photos') || formData.has('videos')) {
+                        await fetch('/api/reports/' + report.id + '/media', { method: 'POST', body: formData });
                     }
                 }
-            } catch (error) {
-                console.error('Помилка:', error);
-                showToast('Помилка сервера', 'error');
-            }
+                showToast(id ? 'Звіт оновлено' : 'Звіт додано', 'success');
+                closeReportModal();
+                loadReports();
+                loadDashboard();
+            } catch (error) { showToast('Помилка', 'error'); }
         }
 
-        async function deleteSocial(id) {
-            if (!confirm('Видалити соціальну мережу?')) return;
-            
-            try {
-                // Отримуємо поточні налаштування
-                const res = await fetch('/api/settings');
-                const data = await res.json();
-                
-                // Фільтруємо видалену соцмережу
-                data.social = data.social.filter(s => s.id !== id);
-                
-                // Відправляємо оновлені налаштування
-                const updateRes = await fetch('/api/settings', {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ social: data.social })
-                });
-                
-                if (updateRes.ok) {
-                    showToast('Соціальну мережу видалено', 'success');
-                    loadSocial(); // Перезавантажуємо список
-                    loadDashboard(); // Оновлюємо дашборд
-                } else {
-                    const errorData = await updateRes.json();
-                    showToast(errorData.error || 'Помилка при видаленні', 'error');
-                }
-            } catch (error) {
-                console.error('Помилка:', error);
-                showToast('Помилка сервера', 'error');
-            }
+        function closeReportModal() { document.getElementById('reportModal').classList.remove('active'); document.body.style.overflow = ''; }
+        async function deleteReport(id) { if (confirm('Видалити звіт?')) { try { await fetch('/api/reports/' + id, { method: 'DELETE' }); showToast('Звіт видалено', 'success'); loadReports(); loadDashboard(); } catch (error) { showToast('Помилка', 'error'); } } }
+
+        async function loadAbout() { try { const res = await fetch('/api/about'); const data = await res.json(); document.getElementById('aboutText').value = data.content; } catch (error) { showToast('Помилка завантаження', 'error'); } }
+        async function saveAbout() { try { await fetch('/api/about', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: document.getElementById('aboutText').value }) }); showToast('Збережено', 'success'); } catch (error) { showToast('Помилка', 'error'); } }
+
+        async function loadContacts() { try { const res = await fetch('/api/settings'); const data = await res.json(); document.getElementById('contactPhone').value = data.contacts?.phone || ''; document.getElementById('contactEmail').value = data.contacts?.email || ''; document.getElementById('contactAddress').value = data.contacts?.address || ''; } catch (error) { showToast('Помилка завантаження контактів', 'error'); } }
+        
+        async function saveContacts() { 
+            try { 
+                const res = await fetch('/api/settings'); 
+                const settings = await res.json(); 
+                settings.contacts = { 
+                    phone: document.getElementById('contactPhone').value, 
+                    email: document.getElementById('contactEmail').value, 
+                    address: document.getElementById('contactAddress').value 
+                }; 
+                await fetch('/api/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }); 
+                showToast('Контакти збережено', 'success'); 
+            } catch (error) { showToast('Помилка', 'error'); } 
         }
 
-        // ==================== Налаштування ====================
-        async function changeCredentials() {
-            const username = document.getElementById('newUsername').value;
-            const password = document.getElementById('newPassword').value;
-            
-            if (!username && !password) {
-                showToast('Введіть нові дані', 'warning');
-                return;
-            }
-            
-            try {
-                const res = await fetch('/api/settings/credentials', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ username, password })
-                });
-                
-                if (res.ok) {
-                    showToast('Змінено', 'success');
-                    document.getElementById('newUsername').value = '';
-                    document.getElementById('newPassword').value = '';
-                } else {
-                    const errorData = await res.json();
-                    showToast(errorData.error || 'Помилка при зміні', 'error');
-                }
-            } catch (error) {
-                showToast('Помилка сервера', 'error');
-            }
+        async function loadSocial() { 
+            try { 
+                const res = await fetch('/api/settings'); 
+                const data = await res.json(); 
+                const socialList = document.getElementById('socialList'); 
+                if (data.social && data.social.length > 0) { 
+                    socialList.innerHTML = data.social.map(s => `<div class="social-item"><div class="social-icon"><i class="fab fa-${s.icon}"></i></div><div class="social-info"><div class="social-name">${s.platform}</div><div class="social-url">${s.url}</div></div><div class="social-actions"><button class="btn btn-sm ${s.active ? 'btn-success' : 'btn-warning'}" onclick="toggleSocial(${s.id})">${s.active ? 'Активна' : 'Неактивна'}</button><button class="btn btn-sm btn-danger" onclick="deleteSocial(${s.id})"><i class="fas fa-trash"></i></button></div></div>`).join(''); 
+                } else { 
+                    socialList.innerHTML = '<div class="info-message"><i class="fas fa-share-alt"></i><p>Немає доданих соціальних мереж</p></div>'; 
+                } 
+            } catch (error) { showToast('Помилка завантаження', 'error'); } 
+        }
+        
+        function selectPlatform(platform, icon) { 
+            document.querySelectorAll('.platform-option').forEach(opt => opt.classList.remove('selected')); 
+            if (event && event.currentTarget) event.currentTarget.classList.add('selected'); 
+            selectedPlatform = platform; 
+            selectedIcon = icon; 
+        }
+        
+        function openSocialModal() { 
+            selectedPlatform = null; 
+            selectedIcon = null; 
+            document.querySelectorAll('.platform-option').forEach(opt => opt.classList.remove('selected')); 
+            document.getElementById('socialUrl').value = ''; 
+            document.getElementById('socialActive').checked = true; 
+            document.getElementById('socialModal').classList.add('active'); 
+            document.body.style.overflow = 'hidden'; 
+        }
+        
+        function closeSocialModal() { document.getElementById('socialModal').classList.remove('active'); document.body.style.overflow = ''; }
+        
+        async function saveSocial() { 
+            if (!selectedPlatform) { showToast('Виберіть платформу', 'warning'); return; } 
+            const url = document.getElementById('socialUrl').value; 
+            if (!url) { showToast('Введіть посилання', 'warning'); return; } 
+            try { 
+                const res = await fetch('/api/social', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ platform: selectedPlatform, icon: selectedIcon, url: url, active: document.getElementById('socialActive').checked }) }); 
+                if (res.ok) { showToast('Соціальну мережу додано', 'success'); closeSocialModal(); loadSocial(); loadDashboard(); } 
+                else { showToast('Помилка при додаванні', 'error'); } 
+            } catch (error) { showToast('Помилка сервера', 'error'); } 
+        }
+        
+        async function toggleSocial(id) { 
+            try { 
+                const res = await fetch('/api/settings'); 
+                const data = await res.json(); 
+                const socialIndex = data.social.findIndex(s => s.id === id); 
+                if (socialIndex !== -1) { 
+                    data.social[socialIndex].active = !data.social[socialIndex].active; 
+                    const updateRes = await fetch('/api/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ social: data.social }) }); 
+                    if (updateRes.ok) { showToast('Статус змінено', 'success'); loadSocial(); } 
+                } 
+            } catch (error) { showToast('Помилка', 'error'); } 
+        }
+        
+        async function deleteSocial(id) { 
+            if (!confirm('Видалити соціальну мережу?')) return; 
+            try { 
+                const res = await fetch('/api/social/' + id, { method: 'DELETE' }); 
+                if (res.ok) { showToast('Соціальну мережу видалено', 'success'); loadSocial(); loadDashboard(); } 
+                else { showToast('Помилка при видаленні', 'error'); } 
+            } catch (error) { showToast('Помилка сервера', 'error'); } 
         }
 
-        async function uploadLogo() {
-            const file = document.getElementById('logoUpload').files[0];
-            if (!file) {
-                showToast('Виберіть файл', 'warning');
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('logo', file);
-            
-            try {
-                const res = await fetch('/api/settings/logo', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (res.ok) {
-                    showToast('Логотип завантажено', 'success');
-                } else {
-                    const errorData = await res.json();
-                    showToast(errorData.error || 'Помилка при завантаженні', 'error');
-                }
-            } catch (error) {
-                showToast('Помилка сервера', 'error');
-            }
+        async function changeCredentials() { 
+            const username = document.getElementById('newUsername').value; 
+            const password = document.getElementById('newPassword').value; 
+            if (!username && !password) { showToast('Введіть нові дані', 'warning'); return; } 
+            try { 
+                const res = await fetch('/api/settings/credentials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) }); 
+                if (res.ok) { showToast('Облікові дані змінено', 'success'); document.getElementById('newUsername').value = ''; document.getElementById('newPassword').value = ''; } 
+                else { showToast('Помилка при зміні', 'error'); } 
+            } catch (error) { showToast('Помилка сервера', 'error'); } 
+        }
+        
+        async function uploadLogo() { 
+            const file = document.getElementById('logoUpload').files[0]; 
+            if (!file) { showToast('Виберіть файл', 'warning'); return; } 
+            const formData = new FormData(); 
+            formData.append('logo', file); 
+            try { 
+                const res = await fetch('/api/settings/logo', { method: 'POST', body: formData }); 
+                if (res.ok) { showToast('Логотип завантажено', 'success'); } 
+                else { showToast('Помилка при завантаженні', 'error'); } 
+            } catch (error) { showToast('Помилка сервера', 'error'); } 
         }
 
-        // ==================== Сповіщення ====================
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                <span>${message}</span>
-            `;
-            
-            document.getElementById('toastContainer').appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideIn 0.3s reverse';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+        function showToast(message, type = 'info') { 
+            const toast = document.createElement('div'); 
+            toast.className = `toast ${type}`; 
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i><span>${message}</span>`; 
+            document.getElementById('toastContainer').appendChild(toast); 
+            setTimeout(() => { toast.style.animation = 'slideIn 0.3s reverse'; setTimeout(() => toast.remove(), 300); }, 3000); 
         }
     </script>
 </body>
-</html>
+                            </html>
