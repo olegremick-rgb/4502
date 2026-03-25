@@ -6,6 +6,7 @@
     <title>Адмін-панель | Волонтерський штаб 4.5.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Всі стилі залишаються без змін */
         * {
             margin: 0;
             padding: 0;
@@ -1143,6 +1144,11 @@
             border-top: 1px solid var(--gray-light);
             padding-top: 15px;
         }
+
+        .btn-refresh {
+            background: var(--gray);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -1220,12 +1226,19 @@
                 <div id="newsPage" class="admin-page">
                     <div class="page-header">
                         <h2 class="page-title">Новини</h2>
-                        <button class="btn btn-primary" onclick="openNewsModal()"><i class="fas fa-plus"></i> Додати новину</button>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-primary" onclick="openNewsModal()"><i class="fas fa-plus"></i> Додати новину</button>
+                            <button class="btn btn-refresh" onclick="loadNews()"><i class="fas fa-sync-alt"></i> Оновити</button>
+                        </div>
                     </div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th>ID</th><th>Дата</th><th>Заголовок</th><th>Важливо</th><th>Медіа</th><th>Дії</th></tr></thead>
-                            <tbody id="newsTableBody"><tr><td colspan="6" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td>}</tbody>
+                            <thead>
+                                <tr><th>ID</th><th>Дата</th><th>Заголовок</th><th>Важливо</th><th>Медіа</th><th>Дії</th></tr>
+                            </thead>
+                            <tbody id="newsTableBody">
+                                <tr><td colspan="6" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Завантаження...</td></tr>
+                            </tbody>
                         </table>
                     </div>
                     <div class="mobile-cards" id="newsMobileCards"></div>
@@ -1238,8 +1251,9 @@
                         <button class="btn btn-primary" onclick="openCollectionModal()"><i class="fas fa-plus"></i> Додати збір</button>
                     </div>
                     <div class="table-container">
-                        <table><thead><tr><th>ID</th><th>Назва</th><th>Ціль</th><th>Зібрано</th><th>%</th><th>Реквізити</th><th>Медіа</th><th>Дії</th></tr></thead>
-                        <tbody id="collectionsTableBody">}<td colspan="8" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tbody>
+                        <table>
+                            <thead><tr><th>ID</th><th>Назва</th><th>Ціль</th><th>Зібрано</th><th>%</th><th>Реквізити</th><th>Медіа</th><th>Дії</th></tr></thead>
+                            <tbody id="collectionsTableBody"><tr><td colspan="8" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody>
                         </table>
                     </div>
                     <div class="mobile-cards" id="collectionsMobileCards"></div>
@@ -1249,8 +1263,9 @@
                 <div id="donationsPage" class="admin-page">
                     <h2 class="page-title">Донати</h2>
                     <div class="table-container">
-                        <table><thead><tr><th>ID</th><th>Ім'я</th><th>Збір</th><th>Сума</th><th>Дата</th><th>Статус</th><th>Дії</th></tr></thead>
-                        <tbody id="donationsTableBody">}</tbody>
+                        <table>
+                            <thead><tr><th>ID</th><th>Ім'я</th><th>Збір</th><th>Сума</th><th>Дата</th><th>Статус</th><th>Дії</th></tr></thead>
+                            <tbody id="donationsTableBody"><tr><td colspan="7" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody>
                         </table>
                     </div>
                     <div class="mobile-cards" id="donationsMobileCards"></div>
@@ -1263,8 +1278,9 @@
                         <button class="btn btn-primary" onclick="openReportModal()"><i class="fas fa-plus"></i> Додати звіт</button>
                     </div>
                     <div class="table-container">
-                        <table><thead><tr><th>ID</th><th>Назва</th><th>Сума</th><th>Дата</th><th>Медіа</th><th>Дії</th></tr></thead>
-                        <tbody id="reportsTableBody">}</tbody>
+                        <table>
+                            <thead><tr><th>ID</th><th>Назва</th><th>Сума</th><th>Дата</th><th>Медіа</th><th>Дії</th></tr></thead>
+                            <tbody id="reportsTableBody"><tr><td colspan="6" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody>
                         </table>
                     </div>
                     <div class="mobile-cards" id="reportsMobileCards"></div>
@@ -1341,8 +1357,6 @@
         </main>
     </div>
 
-    <!-- Модальні вікна будуть додані в JavaScript динамічно для спрощення коду -->
-    
     <div id="toastContainer"></div>
 
     <script>
@@ -1434,32 +1448,87 @@
         // ==================== НОВИНИ ====================
         async function loadNews() {
             try {
+                console.log('Завантаження новин...');
                 const res = await fetch('/api/news');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                document.getElementById('newsTableBody').innerHTML = data.map(n => `
-                    <tr><td>${n.id}</td><td>${n.date}</td><td>${escapeHtml(n.title)}</td><td>${n.important ? 'Так' : 'Ні'}</td><td>${n.media?.length || 0}</td>
-                    <td><button class="btn btn-sm btn-primary" onclick="editNews(${n.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteNews(${n.id})"><i class="fas fa-trash"></i> Дел</button></td></tr>
-                `).join('');
-            } catch (error) { showToast('Помилка', 'error'); }
+                console.log(`Отримано ${data.length} новин`);
+                
+                const tableBody = document.getElementById('newsTableBody');
+                if (!tableBody) {
+                    console.error('Елемент newsTableBody не знайдено!');
+                    return;
+                }
+                
+                if (data.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Немає новин</td></tr>';
+                } else {
+                    tableBody.innerHTML = data.map(news => `
+                        <tr>
+                            <td>${news.id}</td>
+                            <td>${news.date}</td>
+                            <td>${escapeHtml(news.title)}</td>
+                            <td>${news.important ? 'Так' : 'Ні'}</td>
+                            <td>${news.media?.length || 0}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="editNews(${news.id})"><i class="fas fa-edit"></i> Ред</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})"><i class="fas fa-trash"></i> Дел</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+                
+                // Оновлюємо мобільні картки
+                const mobileCards = document.getElementById('newsMobileCards');
+                if (mobileCards) {
+                    if (data.length === 0) {
+                        mobileCards.innerHTML = '<div class="empty-message">Немає новин</div>';
+                    } else {
+                        mobileCards.innerHTML = data.map(news => `
+                            <div class="mobile-card">
+                                <div class="mobile-card-row"><span class="mobile-card-label">Дата:</span><span class="mobile-card-value">${news.date}</span></div>
+                                <div class="mobile-card-row"><span class="mobile-card-label">Заголовок:</span><span class="mobile-card-value">${escapeHtml(news.title)}</span></div>
+                                <div class="mobile-card-row"><span class="mobile-card-label">Важливо:</span><span class="mobile-card-value">${news.important ? 'Так' : 'Ні'}</span></div>
+                                <div class="mobile-card-row"><span class="mobile-card-label">Медіа:</span><span class="mobile-card-value">${news.media?.length || 0}</span></div>
+                                <div class="mobile-card-actions">
+                                    <button class="btn btn-sm btn-primary" onclick="editNews(${news.id})"><i class="fas fa-edit"></i> Ред</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteNews(${news.id})"><i class="fas fa-trash"></i> Дел</button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (error) {
+                console.error('Помилка завантаження новин:', error);
+                const tableBody = document.getElementById('newsTableBody');
+                if (tableBody) {
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Помилка завантаження новин</td></tr>';
+                }
+                showToast('Помилка завантаження новин: ' + error.message, 'error');
+            }
         }
 
+        // Функція відкриття модального вікна для новини
         function openNewsModal(id = null) {
             currentEditId = id;
-            const modal = createModal('news', id ? 'Редагувати новину' : 'Додати новину');
+            const modal = createNewsModal(id ? 'Редагувати новину' : 'Додати новину');
             document.body.appendChild(modal);
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            
             if (id) loadNewsData(id);
         }
 
         async function loadNewsData(id) {
-            const res = await fetch('/api/news/' + id);
-            const data = await res.json();
-            document.getElementById('modalTitle').value = data.title;
-            document.getElementById('modalContent').value = data.content;
-            document.getElementById('modalDate').value = data.date || new Date().toISOString().split('T')[0];
-            document.getElementById('modalImportant').checked = data.important;
+            try {
+                const res = await fetch('/api/news/' + id);
+                const news = await res.json();
+                document.getElementById('modalTitle').value = news.title;
+                document.getElementById('modalContent').value = news.content;
+                document.getElementById('modalDate').value = news.date;
+                document.getElementById('modalImportant').checked = news.important;
+            } catch (error) {
+                showToast('Помилка завантаження даних новини', 'error');
+            }
         }
 
         async function saveNews() {
@@ -1477,18 +1546,58 @@
                 const url = id ? `/api/news/${id}` : '/api/news';
                 const method = id ? 'PUT' : 'POST';
                 const res = await fetch(url, { method, body: formData });
-                if (res.ok) { showToast(id ? 'Оновлено' : 'Додано', 'success'); closeModal(); loadNews(); loadDashboard(); }
-                else showToast('Помилка', 'error');
-            } catch (error) { showToast('Помилка', 'error'); }
+                if (res.ok) {
+                    showToast(id ? 'Новину оновлено' : 'Новину додано', 'success');
+                    closeModal();
+                    loadNews();          // оновлюємо список
+                    loadDashboard();     // оновлюємо статистику
+                } else {
+                    const error = await res.json();
+                    showToast(error.error || 'Помилка збереження', 'error');
+                }
+            } catch (error) {
+                showToast('Помилка сервера', 'error');
+            }
         }
 
         async function deleteNews(id) {
             if (confirm('Видалити новину?')) {
-                await fetch('/api/news/' + id, { method: 'DELETE' });
-                showToast('Видалено', 'success');
-                loadNews();
-                loadDashboard();
+                try {
+                    const res = await fetch('/api/news/' + id, { method: 'DELETE' });
+                    if (res.ok) {
+                        showToast('Новину видалено', 'success');
+                        loadNews();
+                        loadDashboard();
+                    } else {
+                        showToast('Помилка видалення', 'error');
+                    }
+                } catch (error) {
+                    showToast('Помилка сервера', 'error');
+                }
             }
+        }
+
+        // Функція створення модального вікна для новини
+        function createNewsModal(title) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                    <h2>${title}</h2>
+                    <div class="form-group"><label>Дата</label><input type="date" id="modalDate" value="${new Date().toISOString().split('T')[0]}"></div>
+                    <div class="form-group"><label>Заголовок</label><input type="text" id="modalTitle" placeholder="Заголовок"></div>
+                    <div class="form-group"><label>Текст</label><textarea id="modalContent" rows="5" placeholder="Текст новини"></textarea></div>
+                    <div class="form-group"><label class="checkbox-label"><input type="checkbox" id="modalImportant"> Важлива новина</label></div>
+                    <div class="form-group"><label>Медіа (фото/відео)</label><input type="file" id="modalMedia" accept="image/*,video/*" multiple></div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" onclick="saveNews()">Зберегти</button>
+                        <button class="btn btn-danger" onclick="closeModal()">Скасувати</button>
+                    </div>
+                </div>
+            `;
+            return modal;
         }
 
         // ==================== ЗБОРИ ====================
@@ -1497,16 +1606,18 @@
                 const res = await fetch('/api/collections');
                 const data = await res.json();
                 document.getElementById('collectionsTableBody').innerHTML = data.map(c => `
-                    <tr><td>${c.id}</td><td>${escapeHtml(c.name)}</td><td>${c.target.toLocaleString()}</td><td>${c.current.toLocaleString()}</td>
-                    <td>${((c.current/c.target)*100).toFixed(1)}%</td><td>${escapeHtml(c.requisites)}</td><td>${c.media?.length || 0}</td>
-                    <td><button class="btn btn-sm btn-primary" onclick="editCollection(${c.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteCollection(${c.id})"><i class="fas fa-trash"></i> Дел</button></td></tr>
+                    <tr>
+                        <td>${c.id}</td><td>${escapeHtml(c.name)}</td><td>${c.target.toLocaleString()}</td><td>${c.current.toLocaleString()}</td>
+                        <td>${((c.current/c.target)*100).toFixed(1)}%</td><td>${escapeHtml(c.requisites)}</td><td>${c.media?.length || 0}</td>
+                        <td><button class="btn btn-sm btn-primary" onclick="editCollection(${c.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteCollection(${c.id})"><i class="fas fa-trash"></i> Дел</button></td>
+                    </tr>
                 `).join('');
-            } catch (error) { showToast('Помилка', 'error'); }
+            } catch (error) { showToast('Помилка завантаження зборів', 'error'); }
         }
 
         function openCollectionModal(id = null) {
             currentEditId = id;
-            const modal = createModal('collection', id ? 'Редагувати збір' : 'Додати збір');
+            const modal = createCollectionModal(id ? 'Редагувати збір' : 'Додати збір');
             document.body.appendChild(modal);
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1564,15 +1675,36 @@
             }
         }
 
+        function createCollectionModal(title) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                    <h2>${title}</h2>
+                    <div class="form-group"><label>Назва</label><input type="text" id="modalName" placeholder="Назва збору"></div>
+                    <div class="form-group"><label>Опис</label><textarea id="modalDesc" rows="3" placeholder="Опис"></textarea></div>
+                    <div class="form-group"><label>Цільова сума</label><input type="number" id="modalTarget" placeholder="0"></div>
+                    <div class="form-group"><label>Реквізити</label><input type="text" id="modalRequisites" placeholder="Номер картки"></div>
+                    <div class="form-group"><label>Фото</label><input type="file" id="modalPhotos" accept="image/*" multiple></div>
+                    <div class="modal-actions"><button class="btn btn-primary" onclick="saveCollection()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
+                </div>
+            `;
+            return modal;
+        }
+
         // ==================== ДОНАТИ ====================
         async function loadDonations() {
             try {
                 const res = await fetch('/api/donations');
                 const data = await res.json();
                 document.getElementById('donationsTableBody').innerHTML = data.map(d => `
-                    <tr><td>${d.id}</td><td>${escapeHtml(d.name)}</td><td>${d.collectionName || 'Н/Д'}</td><td>${d.amount.toLocaleString()} грн</td>
-                    <td>${new Date(d.createdAt).toLocaleDateString()}</td><td><span class="status-badge status-${d.status}">${d.status === 'pending' ? 'Очікує' : 'Підтверджено'}</span></td>
-                    <td>${d.status === 'pending' ? `<button class="btn btn-sm btn-success" onclick="confirmDonation(${d.id})"><i class="fas fa-check"></i> Підтв</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteDonation(${d.id})"><i class="fas fa-trash"></i> Дел</button></td></tr>
+                    <tr>
+                        <td>${d.id}</td><td>${escapeHtml(d.name)}</td><td>${d.collectionName || 'Н/Д'}</td><td>${d.amount.toLocaleString()} грн</td>
+                        <td>${new Date(d.createdAt).toLocaleDateString()}</td><td><span class="status-badge status-${d.status}">${d.status === 'pending' ? 'Очікує' : 'Підтверджено'}</span></td>
+                        <td>${d.status === 'pending' ? `<button class="btn btn-sm btn-success" onclick="confirmDonation(${d.id})"><i class="fas fa-check"></i> Підтв</button>` : ''}<button class="btn btn-sm btn-danger" onclick="deleteDonation(${d.id})"><i class="fas fa-trash"></i> Дел</button></td>
+                    </tr>
                 `).join('');
             } catch (error) { showToast('Помилка', 'error'); }
         }
@@ -1599,15 +1731,17 @@
                 const res = await fetch('/api/reports');
                 const data = await res.json();
                 document.getElementById('reportsTableBody').innerHTML = data.map(r => `
-                    <tr><td>${r.id}</td><td>${escapeHtml(r.title)}</td><td>${r.amount.toLocaleString()} грн</td><td>${r.date}</td><td>${r.media?.length || 0}</td>
-                    <td><button class="btn btn-sm btn-primary" onclick="editReport(${r.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteReport(${r.id})"><i class="fas fa-trash"></i> Дел</button></td></tr>
+                    <tr>
+                        <td>${r.id}</td><td>${escapeHtml(r.title)}</td><td>${r.amount.toLocaleString()} грн</td><td>${r.date}</td><td>${r.media?.length || 0}</td>
+                        <td><button class="btn btn-sm btn-primary" onclick="editReport(${r.id})"><i class="fas fa-edit"></i> Ред</button> <button class="btn btn-sm btn-danger" onclick="deleteReport(${r.id})"><i class="fas fa-trash"></i> Дел</button></td>
+                    </tr>
                 `).join('');
             } catch (error) { showToast('Помилка', 'error'); }
         }
 
         function openReportModal(id = null) {
             currentEditId = id;
-            const modal = createModal('report', id ? 'Редагувати звіт' : 'Додати звіт');
+            const modal = createReportModal(id ? 'Редагувати звіт' : 'Додати звіт');
             document.body.appendChild(modal);
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1665,6 +1799,25 @@
             }
         }
 
+        function createReportModal(title) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                    <h2>${title}</h2>
+                    <div class="form-group"><label>Дата</label><input type="date" id="modalDate" value="${new Date().toISOString().split('T')[0]}"></div>
+                    <div class="form-group"><label>Назва</label><input type="text" id="modalTitle" placeholder="Назва звіту"></div>
+                    <div class="form-group"><label>Опис</label><textarea id="modalContent" rows="3" placeholder="Опис"></textarea></div>
+                    <div class="form-group"><label>Сума</label><input type="number" id="modalAmount" placeholder="0"></div>
+                    <div class="form-group"><label>Медіа</label><input type="file" id="modalMedia" accept="image/*,video/*" multiple></div>
+                    <div class="modal-actions"><button class="btn btn-primary" onclick="saveReport()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
+                </div>
+            `;
+            return modal;
+        }
+
         // ==================== ВОЛОНТЕРИ ====================
         async function loadVolunteers() {
             try {
@@ -1696,7 +1849,7 @@
 
         function openVolunteerModal(id = null) {
             currentVolunteerId = id;
-            const modal = createModal('volunteer', id ? 'Редагувати волонтера' : 'Додати волонтера');
+            const modal = createVolunteerModal(id ? 'Редагувати волонтера' : 'Додати волонтера');
             document.body.appendChild(modal);
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1751,6 +1904,24 @@
                 loadVolunteers();
                 loadDashboard();
             }
+        }
+
+        function createVolunteerModal(title) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                    <h2>${title}</h2>
+                    <div class="form-group"><label>Ім'я</label><input type="text" id="modalName" placeholder="ПІБ волонтера"></div>
+                    <div class="form-group"><label>Роль</label><input type="text" id="modalRole" placeholder="Роль (наприклад: Координатор, Волонтер)"></div>
+                    <div class="form-group"><label>Опис</label><textarea id="modalDesc" rows="3" placeholder="Опис діяльності"></textarea></div>
+                    <div class="form-group"><label>Фото</label><input type="file" id="modalPhoto" accept="image/*"></div>
+                    <div class="modal-actions"><button class="btn btn-primary" onclick="saveVolunteer()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
+                </div>
+            `;
+            return modal;
         }
 
         // ==================== ПРО НАС ====================
@@ -1821,7 +1992,7 @@
         function openSocialModal() {
             selectedPlatform = null;
             selectedIcon = null;
-            const modal = createModal('social', 'Додати соціальну мережу');
+            const modal = createSocialModal();
             document.body.appendChild(modal);
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1864,6 +2035,28 @@
             }
         }
 
+        function createSocialModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                    <h2>Додати соціальну мережу</h2>
+                    <div class="form-group"><label>Платформа</label><div class="platform-select" id="platformSelect">
+                        <div class="platform-option" onclick="selectPlatform('facebook', 'facebook')"><i class="fab fa-facebook"></i><span>Facebook</span></div>
+                        <div class="platform-option" onclick="selectPlatform('instagram', 'instagram')"><i class="fab fa-instagram"></i><span>Instagram</span></div>
+                        <div class="platform-option" onclick="selectPlatform('telegram', 'telegram')"><i class="fab fa-telegram"></i><span>Telegram</span></div>
+                        <div class="platform-option" onclick="selectPlatform('youtube', 'youtube')"><i class="fab fa-youtube"></i><span>YouTube</span></div>
+                        <div class="platform-option" onclick="selectPlatform('tiktok', 'tiktok')"><i class="fab fa-tiktok"></i><span>TikTok</span></div>
+                    </div></div>
+                    <div class="form-group"><label>Посилання</label><input type="url" id="modalUrl" placeholder="https://..."></div>
+                    <div class="modal-actions"><button class="btn btn-primary" onclick="saveSocial()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
+                </div>
+            `;
+            return modal;
+        }
+
         // ==================== НАЛАШТУВАННЯ ====================
         async function loadSettings() {
             try {
@@ -1901,85 +2094,6 @@
         }
 
         // ==================== ДОПОМІЖНІ ФУНКЦІЇ ====================
-        function createModal(type, title) {
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.onclick = (e) => { if (e.target === modal) closeModal(); };
-            
-            let content = '';
-            if (type === 'news') {
-                content = `
-                    <div class="modal-content">
-                        <button class="modal-close" onclick="closeModal()">&times;</button>
-                        <h2>${title}</h2>
-                        <div class="form-group"><label>Дата</label><input type="date" id="modalDate" value="${new Date().toISOString().split('T')[0]}"></div>
-                        <div class="form-group"><label>Заголовок</label><input type="text" id="modalTitle" placeholder="Заголовок"></div>
-                        <div class="form-group"><label>Текст</label><textarea id="modalContent" rows="5" placeholder="Текст новини"></textarea></div>
-                        <div class="form-group"><label class="checkbox-label"><input type="checkbox" id="modalImportant"> Важлива новина</label></div>
-                        <div class="form-group"><label>Медіа</label><input type="file" id="modalMedia" accept="image/*,video/*" multiple></div>
-                        <div class="modal-actions"><button class="btn btn-primary" onclick="saveNews()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                    </div>
-                `;
-            } else if (type === 'collection') {
-                content = `
-                    <div class="modal-content">
-                        <button class="modal-close" onclick="closeModal()">&times;</button>
-                        <h2>${title}</h2>
-                        <div class="form-group"><label>Назва</label><input type="text" id="modalName" placeholder="Назва збору"></div>
-                        <div class="form-group"><label>Опис</label><textarea id="modalDesc" rows="3" placeholder="Опис"></textarea></div>
-                        <div class="form-group"><label>Цільова сума</label><input type="number" id="modalTarget" placeholder="0"></div>
-                        <div class="form-group"><label>Реквізити</label><input type="text" id="modalRequisites" placeholder="Номер картки"></div>
-                        <div class="form-group"><label>Фото</label><input type="file" id="modalPhotos" accept="image/*" multiple></div>
-                        <div class="modal-actions"><button class="btn btn-primary" onclick="saveCollection()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                    </div>
-                `;
-            } else if (type === 'report') {
-                content = `
-                    <div class="modal-content">
-                        <button class="modal-close" onclick="closeModal()">&times;</button>
-                        <h2>${title}</h2>
-                        <div class="form-group"><label>Дата</label><input type="date" id="modalDate" value="${new Date().toISOString().split('T')[0]}"></div>
-                        <div class="form-group"><label>Назва</label><input type="text" id="modalTitle" placeholder="Назва звіту"></div>
-                        <div class="form-group"><label>Опис</label><textarea id="modalContent" rows="3" placeholder="Опис"></textarea></div>
-                        <div class="form-group"><label>Сума</label><input type="number" id="modalAmount" placeholder="0"></div>
-                        <div class="form-group"><label>Медіа</label><input type="file" id="modalMedia" accept="image/*,video/*" multiple></div>
-                        <div class="modal-actions"><button class="btn btn-primary" onclick="saveReport()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                    </div>
-                `;
-            } else if (type === 'volunteer') {
-                content = `
-                    <div class="modal-content">
-                        <button class="modal-close" onclick="closeModal()">&times;</button>
-                        <h2>${title}</h2>
-                        <div class="form-group"><label>Ім'я</label><input type="text" id="modalName" placeholder="ПІБ волонтера"></div>
-                        <div class="form-group"><label>Роль</label><input type="text" id="modalRole" placeholder="Роль (наприклад: Координатор, Волонтер)"></div>
-                        <div class="form-group"><label>Опис</label><textarea id="modalDesc" rows="3" placeholder="Опис діяльності"></textarea></div>
-                        <div class="form-group"><label>Фото</label><input type="file" id="modalPhoto" accept="image/*"></div>
-                        <div class="modal-actions"><button class="btn btn-primary" onclick="saveVolunteer()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                    </div>
-                `;
-            } else if (type === 'social') {
-                content = `
-                    <div class="modal-content">
-                        <button class="modal-close" onclick="closeModal()">&times;</button>
-                        <h2>${title}</h2>
-                        <div class="form-group"><label>Платформа</label><div class="platform-select" id="platformSelect">
-                            <div class="platform-option" onclick="selectPlatform('facebook', 'facebook')"><i class="fab fa-facebook"></i><span>Facebook</span></div>
-                            <div class="platform-option" onclick="selectPlatform('instagram', 'instagram')"><i class="fab fa-instagram"></i><span>Instagram</span></div>
-                            <div class="platform-option" onclick="selectPlatform('telegram', 'telegram')"><i class="fab fa-telegram"></i><span>Telegram</span></div>
-                            <div class="platform-option" onclick="selectPlatform('youtube', 'youtube')"><i class="fab fa-youtube"></i><span>YouTube</span></div>
-                            <div class="platform-option" onclick="selectPlatform('tiktok', 'tiktok')"><i class="fab fa-tiktok"></i><span>TikTok</span></div>
-                        </div></div>
-                        <div class="form-group"><label>Посилання</label><input type="url" id="modalUrl" placeholder="https://..."></div>
-                        <div class="modal-actions"><button class="btn btn-primary" onclick="saveSocial()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                    </div>
-                `;
-            }
-            
-            modal.innerHTML = content;
-            return modal;
-        }
-
         function closeModal() {
             const modal = document.querySelector('.modal.active');
             if (modal) modal.remove();
@@ -2000,7 +2114,10 @@
             toast.className = `toast ${type}`;
             toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i><span>${escapeHtml(message)}</span>`;
             document.getElementById('toastContainer').appendChild(toast);
-            setTimeout(() => { toast.style.animation = 'slideIn 0.3s reverse'; setTimeout(() => toast.remove(), 300); }, 3000);
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
         // Ініціалізація
@@ -2009,4 +2126,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
