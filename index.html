@@ -6,7 +6,6 @@
     <title>Волонтерський штаб 4.5.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* ВСІ ОРИГІНАЛЬНІ СТИЛІ ЗАЛИШАЮТЬСЯ */
         * {
             margin: 0;
             padding: 0;
@@ -430,6 +429,7 @@
             padding: 0 10px;
         }
 
+        /* Новини */
         .news-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -557,8 +557,413 @@
             opacity: 1;
         }
 
-        /* Модальне вікно новини */
-        .news-modal {
+        /* Збори */
+        .collections-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 640px) {
+            .collections-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .collection-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+            border: 1px solid var(--gray-light);
+        }
+
+        .collection-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .collection-description {
+            color: var(--gray);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .collection-progress {
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.5s ease;
+        }
+
+        .collection-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .collection-current {
+            color: var(--primary);
+        }
+
+        .collection-target {
+            color: var(--gray);
+        }
+
+        .collection-percent {
+            color: var(--success);
+        }
+
+        .collection-requisites {
+            background: var(--accent);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.95rem;
+            text-align: center;
+            border: 1px dashed var(--primary);
+            color: var(--primary);
+            word-break: break-all;
+        }
+
+        .donate-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .donate-btn:active {
+            background: var(--primary-dark);
+            transform: scale(0.98);
+        }
+
+        /* Звіти */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 768px) {
+            .reports-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+            border: 1px solid var(--gray-light);
+        }
+
+        .report-header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .report-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .report-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .report-date {
+            background: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            align-self: flex-start;
+        }
+
+        .report-content {
+            color: var(--gray);
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .report-amount {
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+
+        /* Партнери */
+        .partners-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 640px) {
+            .partners-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .partners-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .partner-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+            transition: transform 0.3s;
+            border: 1px solid var(--gray-light);
+        }
+
+        .partner-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .partner-logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--light);
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .partner-logo img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        .partner-name {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .partner-description {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .partner-website {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-bottom: 1px dashed var(--primary);
+        }
+
+        /* Сторінка допомоги */
+        .help-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 768px) {
+            .help-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .help-text {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+        }
+
+        .help-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .help-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--dark);
+            white-space: pre-line;
+        }
+
+        .help-image {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,102,204,0.2);
+            border: 2px solid var(--primary);
+        }
+
+        .help-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .instructions-section {
+            margin-top: 40px;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+        }
+
+        .instructions-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .instructions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .instruction-item {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            background: var(--accent);
+            border-radius: 12px;
+        }
+
+        .instruction-number {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .instruction-text {
+            flex: 1;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+
+        .help-contacts {
+            margin-top: 30px;
+            background: var(--accent);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .help-contacts h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .help-contacts p {
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        .help-contacts i {
+            color: var(--primary);
+            width: 30px;
+        }
+
+        /* Про нас */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+        }
+
+        .about-text {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+        }
+
+        .about-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--dark);
+            white-space: pre-line;
+        }
+
+        .about-image {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,102,204,0.2);
+            border: 2px solid var(--primary);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Модальні вікна */
+        .modal {
             display: none;
             position: fixed;
             top: 0;
@@ -570,29 +975,25 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            overflow-y: auto;
         }
 
-        .news-modal.active {
+        .modal.active {
             display: flex;
         }
 
-        .news-modal-content {
+        .modal-content {
             background: white;
             border-radius: 20px;
-            max-width: 800px;
-            width: 100%;
+            max-width: 90%;
             max-height: 90vh;
-            overflow-y: auto;
+            overflow: auto;
             position: relative;
-            animation: fadeInUp 0.3s;
         }
 
-        .news-modal-close {
-            position: sticky;
+        .modal-close {
+            position: absolute;
             top: 10px;
             right: 10px;
-            float: right;
             background: var(--danger);
             color: white;
             border: none;
@@ -604,12 +1005,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 10px;
             z-index: 10;
-        }
-
-        .news-modal-close:active {
-            transform: scale(0.95);
         }
 
         .news-modal-header {
@@ -631,7 +1027,6 @@
             font-size: 1.8rem;
             color: var(--primary);
             margin-bottom: 20px;
-            line-height: 1.3;
         }
 
         .news-modal-content-text {
@@ -645,12 +1040,6 @@
             padding: 25px;
         }
 
-        .news-modal-media h4 {
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
         .news-modal-media-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -658,7 +1047,6 @@
         }
 
         .news-modal-media-item {
-            position: relative;
             aspect-ratio: 1;
             border-radius: 12px;
             overflow: hidden;
@@ -673,10 +1061,137 @@
             object-fit: cover;
         }
 
-        /* Інші стилі (збори, звіти, футер) залишаються без змін */
-        .collections-grid, .reports-grid, .footer, .scroll-top, .toast {
-            /* Зберігаємо оригінальні стилі */
+        /* Футер */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 15px 20px;
+            margin-top: 40px;
         }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 640px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .footer-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: white;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 8px;
+        }
+
+        .footer-section p {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            word-break: break-word;
+        }
+
+        .footer-section i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.3rem;
+            transition: color 0.2s;
+            padding: 5px;
+        }
+
+        .social-links a:active {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 999;
+        }
+
+        .scroll-top.show {
+            display: flex;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 4000;
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.3s;
+            max-width: 400px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        .toast.success { border-left-color: var(--success); background: var(--success-light); color: var(--success); }
+        .toast.error { border-left-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); background: var(--warning-light); color: #856404; }
 
         .loading-spinner {
             text-align: center;
@@ -700,51 +1215,6 @@
             color: var(--gray);
             background: white;
             border-radius: 12px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 4000;
-            border-left: 4px solid var(--primary);
-            animation: slideIn 0.3s;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .toast.success { border-left-color: var(--success); background: var(--success-light); color: var(--success); }
-        .toast.error { border-left-color: var(--danger); background: var(--danger-light); color: var(--danger); }
-        .toast.warning { border-left-color: var(--warning); background: var(--warning-light); color: #856404; }
-
-        .scroll-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 45px;
-            height: 45px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            z-index: 999;
-        }
-
-        .scroll-top.show {
-            display: flex;
         }
     </style>
 </head>
@@ -771,6 +1241,8 @@
                     <li><a class="nav-link active" onclick="showPage('news'); closeMobileMenu()">Новини штабу</a></li>
                     <li><a class="nav-link" onclick="showPage('collections'); closeMobileMenu()">Збори</a></li>
                     <li><a class="nav-link" onclick="showPage('reports'); closeMobileMenu()">Звіти</a></li>
+                    <li><a class="nav-link" onclick="showPage('partners'); closeMobileMenu()">Партнери</a></li>
+                    <li><a class="nav-link" onclick="showPage('help'); closeMobileMenu()">Як отримати допомогу</a></li>
                     <li><a class="nav-link" onclick="showPage('about'); closeMobileMenu()">Про нас</a></li>
                 </ul>
             </nav>
@@ -807,10 +1279,7 @@
                     <p class="section-subtitle">Останні події та оголошення</p>
                 </div>
                 <div class="news-grid" id="newsList">
-                    <div class="loading-spinner">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Завантаження новин...</p>
-                    </div>
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження новин...</p></div>
                 </div>
             </div>
         </section>
@@ -823,10 +1292,7 @@
                     <p class="section-subtitle">Разом ми сила! Кожна гривня наближає перемогу</p>
                 </div>
                 <div class="collections-grid" id="collectionsList">
-                    <div class="loading-spinner">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Завантаження зборів...</p>
-                    </div>
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження зборів...</p></div>
                 </div>
             </div>
         </section>
@@ -839,10 +1305,45 @@
                     <p class="section-subtitle">Прозорість та відповідальність</p>
                 </div>
                 <div class="reports-grid" id="reportsList">
-                    <div class="loading-spinner">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Завантаження звітів...</p>
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження звітів...</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Партнери -->
+        <section id="partners" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h1 class="section-title">Наші партнери</h1>
+                    <p class="section-subtitle">Разом ми робимо більше</p>
+                </div>
+                <div class="partners-grid" id="partnersList">
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження партнерів...</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Як отримати допомогу -->
+        <section id="help" class="section">
+            <div class="container">
+                <div class="help-content" id="helpContent">
+                    <div class="help-text">
+                        <div id="helpTitle" class="help-title">Як отримати допомогу</div>
+                        <div id="helpDescription" class="help-description"></div>
                     </div>
+                    <div class="help-image" id="helpImageContainer">
+                        <img src="" alt="Допомога" id="helpImage">
+                    </div>
+                </div>
+                <div class="instructions-section" id="instructionsSection">
+                    <h2 class="instructions-title">Покрокова інструкція</h2>
+                    <div class="instructions-list" id="instructionsList"></div>
+                </div>
+                <div class="help-contacts" id="helpContacts">
+                    <h3><i class="fas fa-headset"></i> Контакти для звернень</h3>
+                    <p><i class="fas fa-phone"></i> <span id="helpPhone"></span></p>
+                    <p><i class="fas fa-envelope"></i> <span id="helpEmail"></span></p>
+                    <p><i class="fab fa-telegram"></i> <span id="helpTelegram"></span></p>
                 </div>
             </div>
         </section>
@@ -850,38 +1351,38 @@
         <!-- Про нас -->
         <section id="about" class="section">
             <div class="container">
-                <div class="about-content" style="display: grid; grid-template-columns: 1fr; gap: 30px;">
-                    <div class="about-text" style="background: white; padding: 25px; border-radius: 12px;">
+                <div class="about-content">
+                    <div class="about-text">
                         <h1 class="section-title">Про нас</h1>
-                        <div id="aboutContent" class="about-description" style="font-size: 1rem; line-height: 1.8;"></div>
+                        <div id="aboutContent" class="about-description"></div>
                     </div>
-                    <div class="about-image" style="border-radius: 12px; overflow: hidden;">
-                        <img src="https://images.unsplash.com/photo-1593113598332-cd59a0c3a9a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Волонтери" style="width: 100%; height: auto;">
+                    <div class="about-image">
+                        <img src="https://images.unsplash.com/photo-1593113598332-cd59a0c3a9a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Волонтери" loading="lazy">
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Модальне вікно для повного перегляду новини -->
-    <div class="news-modal" id="newsModal" onclick="if(event.target===this) closeNewsModal()">
-        <div class="news-modal-content">
-            <button class="news-modal-close" onclick="closeNewsModal()">&times;</button>
+    <!-- Модальне вікно для перегляду новини -->
+    <div class="modal" id="newsModal" onclick="if(event.target===this) closeNewsModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeNewsModal()">&times;</button>
             <div id="newsModalContent"></div>
         </div>
     </div>
 
     <!-- Модальне вікно для перегляду медіа -->
-    <div class="modal" id="mediaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:5000; justify-content:center; align-items:center;" onclick="if(event.target===this) closeMediaModal()">
-        <div style="max-width:90%; max-height:90%;">
-            <button style="position:absolute; top:20px; right:20px; background:var(--danger); color:white; border:none; width:40px; height:40px; border-radius:50%; font-size:1.5rem; cursor:pointer;" onclick="closeMediaModal()">&times;</button>
+    <div class="modal" id="mediaModal" onclick="if(event.target===this) closeMediaModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeMediaModal()">&times;</button>
             <div id="mediaModalContent"></div>
         </div>
     </div>
 
-    <footer class="footer" style="background: var(--dark); color: white; padding: 40px 15px 20px; margin-top: 40px;">
+    <footer class="footer">
         <div class="container">
-            <div class="footer-content" style="display: grid; grid-template-columns: 1fr; gap: 30px; max-width: 1200px; margin: 0 auto;">
+            <div class="footer-content">
                 <div class="footer-section">
                     <h3 id="footerSiteName">Волонтерський штаб 4.5.0</h3>
                     <p>Допомагаємо військовим з 2022 року. Разом до перемоги!</p>
@@ -889,20 +1390,20 @@
                 
                 <div class="footer-section">
                     <h3>Контакти</h3>
-                    <ul id="contactsList" style="list-style: none;">
-                        <li style="margin-bottom: 10px;"><i class="fas fa-phone"></i> <span id="contactPhone">+380 (99) 123-45-67</span></li>
-                        <li style="margin-bottom: 10px;"><i class="fas fa-envelope"></i> <span id="contactEmail">info@volunteer450.org</span></li>
-                        <li style="margin-bottom: 10px;"><i class="fas fa-map-marker-alt"></i> <span id="contactAddress">м. Київ, Україна</span></li>
+                    <ul id="contactsList">
+                        <li><i class="fas fa-phone"></i> <span id="contactPhone">+380 (99) 123-45-67</span></li>
+                        <li><i class="fas fa-envelope"></i> <span id="contactEmail">info@volunteer450.org</span></li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span id="contactAddress">м. Київ, Україна</span></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
                     <h3>Ми в соцмережах</h3>
-                    <div class="social-links" id="socialLinks" style="display: flex; gap: 15px;"></div>
+                    <div class="social-links" id="socialLinks"></div>
                 </div>
             </div>
             
-            <div class="footer-bottom" style="text-align: center; padding-top: 30px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div class="footer-bottom">
                 <p>&copy; <span id="currentYear"></span> Волонтерський штаб 4.5.0. Всі права захищені</p>
             </div>
         </div>
@@ -938,7 +1439,6 @@
             setTimeout(() => {
                 document.getElementById('loader').classList.add('fade-out');
             }, 800);
-            
             checkSession();
             loadAllData();
             setupScroll();
@@ -950,19 +1450,14 @@
             try {
                 const res = await fetch('/api/session');
                 const data = await res.json();
-                
                 if (data.authenticated) {
                     isAdmin = data.user.role === 'superadmin';
                     showUserInfo(data.user.username);
-                    
-                    if (isAdmin) {
-                        document.getElementById('adminBtn').classList.add('visible');
-                    }
+                    if (isAdmin) document.getElementById('adminBtn').classList.add('visible');
                 } else {
                     showLoginForm();
                 }
             } catch (error) {
-                console.error('Помилка перевірки сесії:', error);
                 showLoginForm();
             }
         }
@@ -983,29 +1478,18 @@
         async function login() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            
-            if (!username || !password) {
-                showToast('Введіть логін та пароль', 'warning');
-                return;
-            }
-            
+            if (!username || !password) { showToast('Введіть логін та пароль', 'warning'); return; }
             try {
                 const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
-                
                 const data = await res.json();
-                
                 if (res.ok) {
                     isAdmin = data.user.role === 'superadmin';
                     showUserInfo(data.user.username);
-                    
-                    if (isAdmin) {
-                        document.getElementById('adminBtn').classList.add('visible');
-                    }
-                    
+                    if (isAdmin) document.getElementById('adminBtn').classList.add('visible');
                     showToast('Вхід виконано успішно', 'success');
                     document.getElementById('loginUsername').value = '';
                     document.getElementById('loginPassword').value = '';
@@ -1019,131 +1503,101 @@
 
         // ==================== Вихід ====================
         async function logout() {
-            try {
-                await fetch('/api/logout', { method: 'POST' });
-                isAdmin = false;
-                showLoginForm();
-                showToast('Ви вийшли з системи', 'info');
-            } catch (error) {
-                showToast('Помилка', 'error');
-            }
+            await fetch('/api/logout', { method: 'POST' });
+            isAdmin = false;
+            showLoginForm();
+            showToast('Ви вийшли з системи', 'info');
         }
 
         // ==================== Завантаження всіх даних ====================
         async function loadAllData() {
-            try {
-                await Promise.all([
-                    loadSettings(),
-                    loadNews(),
-                    loadCollections(),
-                    loadReports(),
-                    loadAbout()
-                ]);
-            } catch (error) {
-                showToast('Помилка завантаження даних', 'error');
-            }
+            await Promise.all([
+                loadSettings(),
+                loadNews(),
+                loadCollections(),
+                loadReports(),
+                loadPartners(),
+                loadHelpPage(),
+                loadAbout()
+            ]);
         }
 
-        // ==================== Завантаження налаштувань ====================
+        // ==================== Налаштування ====================
         async function loadSettings() {
             try {
                 const res = await fetch('/api/settings');
                 const data = await res.json();
-                
                 document.getElementById('siteName').textContent = data.siteName;
                 document.getElementById('footerSiteName').textContent = data.siteName;
                 document.getElementById('contactPhone').textContent = data.contacts.phone;
                 document.getElementById('contactEmail').textContent = data.contacts.email;
                 document.getElementById('contactAddress').textContent = data.contacts.address;
-                
                 const socialLinks = document.getElementById('socialLinks');
-                if (data.social && data.social.length > 0) {
+                if (data.social?.length) {
                     const activeSocial = data.social.filter(s => s.active);
-                    socialLinks.innerHTML = activeSocial.map(s => `<a href="${s.url}" target="_blank" rel="noopener noreferrer"><i class="fab fa-${s.icon}"></i></a>`).join('');
+                    socialLinks.innerHTML = activeSocial.map(s => `<a href="${s.url}" target="_blank"><i class="fab fa-${s.icon}"></i></a>`).join('');
                 }
-            } catch (error) {
-                console.error('Помилка завантаження налаштувань:', error);
-            }
+            } catch (error) { console.error(error); }
         }
 
-        // ==================== Завантаження новин ====================
+        // ==================== Новини ====================
         async function loadNews() {
             try {
                 const res = await fetch('/api/news');
                 allNews = await res.json();
-                
                 const container = document.getElementById('newsList');
-                
-                if (allNews.length === 0) {
-                    container.innerHTML = '<div class="empty-message">Немає новин</div>';
-                    return;
-                }
-                
+                if (!allNews.length) { container.innerHTML = '<div class="empty-message">Немає новин</div>'; return; }
                 container.innerHTML = allNews.map(news => {
-                    const previewMedia = news.media && news.media.length > 0 ? `
+                    const previewMedia = news.media?.length ? `
                         <div class="news-media">
                             <div class="media-grid">
                                 ${news.media.slice(0, 3).map(m => `
                                     <div class="media-item" onclick="event.stopPropagation(); openMedia('${m.url}', '${m.type}')">
-                                        ${m.type === 'photo' ? `<img src="${m.url}" alt="Фото" loading="lazy">` : `<video src="${m.url}" preload="metadata"></video>`}
+                                        ${m.type === 'photo' ? `<img src="${m.url}" loading="lazy">` : `<video src="${m.url}" preload="metadata"></video>`}
                                         <div class="media-overlay"><i class="fas fa-${m.type === 'photo' ? 'camera' : 'video'}"></i></div>
                                     </div>
                                 `).join('')}
-                                ${news.media.length > 3 ? `<div class="media-item" onclick="event.stopPropagation(); openNewsModal(${news.id})"><div class="media-more" style="background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; height:100%; font-weight:600;">+${news.media.length - 3}</div></div>` : ''}
+                                ${news.media.length > 3 ? `<div class="media-item" onclick="event.stopPropagation(); openNewsModal(${news.id})"><div style="background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; height:100%; font-weight:600;">+${news.media.length - 3}</div></div>` : ''}
                             </div>
                         </div>
                     ` : '';
-                    
                     return `
                         <div class="news-card ${news.important ? 'important' : ''}" onclick="openNewsModal(${news.id})">
-                            <div class="news-header">
-                                <span class="news-date">${news.date}</span>
-                                ${news.important ? '<span class="news-badge">Важливо</span>' : ''}
-                            </div>
+                            <div class="news-header"><span class="news-date">${news.date}</span>${news.important ? '<span class="news-badge">Важливо</span>' : ''}</div>
                             <h3 class="news-title">${escapeHtml(news.title)}</h3>
                             <p class="news-content">${escapeHtml(news.content.substring(0, 150))}${news.content.length > 150 ? '...' : ''}</p>
                             ${previewMedia}
                         </div>
                     `;
                 }).join('');
-            } catch (error) {
-                console.error('Помилка завантаження новин:', error);
-                document.getElementById('newsList').innerHTML = '<div class="empty-message">Помилка завантаження новин</div>';
-            }
+            } catch (error) { console.error(error); }
         }
 
-        // ==================== Відкриття модального вікна з повною новиною ====================
         function openNewsModal(newsId) {
             const news = allNews.find(n => n.id === newsId);
             if (!news) return;
-            
             const modalContent = document.getElementById('newsModalContent');
-            
-            const mediaHtml = news.media && news.media.length > 0 ? `
+            const mediaHtml = news.media?.length ? `
                 <div class="news-modal-media">
                     <h4><i class="fas fa-images"></i> Медіа (${news.media.length})</h4>
                     <div class="news-modal-media-grid">
                         ${news.media.map(m => `
                             <div class="news-modal-media-item" onclick="openMedia('${m.url}', '${m.type}')">
-                                ${m.type === 'photo' ? `<img src="${m.url}" alt="Фото">` : `<video src="${m.url}" preload="metadata"></video>`}
+                                ${m.type === 'photo' ? `<img src="${m.url}">` : `<video src="${m.url}" preload="metadata"></video>`}
                             </div>
                         `).join('')}
                     </div>
                 </div>
             ` : '';
-            
             modalContent.innerHTML = `
                 <div class="news-modal-header">
                     <span class="news-modal-date">${news.date}</span>
                     ${news.important ? '<span class="news-badge" style="margin-left:10px;">Важливо</span>' : ''}
                     <h2 class="news-modal-title">${escapeHtml(news.title)}</h2>
                 </div>
-                <div class="news-modal-content-text">
-                    ${escapeHtml(news.content).replace(/\n/g, '<br>')}
-                </div>
+                <div class="news-modal-content-text">${escapeHtml(news.content).replace(/\n/g, '<br>')}</div>
                 ${mediaHtml}
             `;
-            
             document.getElementById('newsModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -1153,96 +1607,124 @@
             document.body.style.overflow = '';
         }
 
-        // ==================== Відкриття медіа ====================
+        // ==================== Медіа ====================
         function openMedia(url, type) {
             const modal = document.getElementById('mediaModal');
             const content = document.getElementById('mediaModalContent');
-            
             if (type === 'photo') {
                 content.innerHTML = `<img src="${url}" style="max-width:100%; max-height:90vh; border-radius:10px;">`;
             } else {
                 content.innerHTML = `<video src="${url}" controls autoplay style="max-width:100%; max-height:90vh; border-radius:10px;"></video>`;
             }
-            
-            modal.style.display = 'flex';
+            modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeMediaModal() {
-            document.getElementById('mediaModal').style.display = 'none';
+            document.getElementById('mediaModal').classList.remove('active');
             document.getElementById('mediaModalContent').innerHTML = '';
             document.body.style.overflow = '';
         }
 
-        // ==================== Завантаження зборів ====================
+        // ==================== Збори ====================
         async function loadCollections() {
             try {
                 const res = await fetch('/api/collections');
                 const data = await res.json();
                 const container = document.getElementById('collectionsList');
-                
-                if (data.length === 0) {
-                    container.innerHTML = '<div class="empty-message">Немає активних зборів</div>';
-                    return;
-                }
-                
+                if (!data.length) { container.innerHTML = '<div class="empty-message">Немає активних зборів</div>'; return; }
                 container.innerHTML = data.map(c => {
                     const percent = ((c.current / c.target) * 100).toFixed(1);
                     return `
-                        <div class="collection-card" style="background:white; border-radius:12px; padding:20px; box-shadow:0 5px 15px rgba(0,102,204,0.1);">
-                            <h3 style="font-size:1.3rem; margin-bottom:10px; color:var(--primary);">${escapeHtml(c.name)}</h3>
-                            <p style="color:var(--gray); margin-bottom:15px;">${escapeHtml(c.description)}</p>
-                            <div style="margin:15px 0;">
-                                <div style="width:100%; height:8px; background:var(--gray-light); border-radius:4px; overflow:hidden;"><div style="width:${percent}%; height:100%; background:var(--primary);"></div></div>
-                                <div style="display:flex; justify-content:space-between; margin:8px 0;"><span style="color:var(--primary);">${c.current.toLocaleString()} грн</span><span style="color:var(--success);">${percent}%</span></div>
-                                <div style="color:var(--gray);">Ціль: ${c.target.toLocaleString()} грн</div>
+                        <div class="collection-card">
+                            <h3 class="collection-title">${escapeHtml(c.name)}</h3>
+                            <p class="collection-description">${escapeHtml(c.description)}</p>
+                            <div class="collection-progress">
+                                <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
+                                <div class="collection-stats"><span class="collection-current">${c.current.toLocaleString()} грн</span><span class="collection-percent">${percent}%</span></div>
+                                <div class="collection-target">Ціль: ${c.target.toLocaleString()} грн</div>
                             </div>
-                            <div style="background:var(--accent); padding:12px; border-radius:8px; margin:15px 0; text-align:center; font-family:monospace; border:1px dashed var(--primary);"><i class="fas fa-credit-card"></i> ${escapeHtml(c.requisites)}</div>
-                            <button class="donate-btn" onclick="openDonateModal(${c.id}, '${escapeHtml(c.name)}', '${escapeHtml(c.requisites)}')" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer;"><i class="fas fa-heart"></i> Задонатити</button>
+                            <div class="collection-requisites"><i class="fas fa-credit-card"></i> ${escapeHtml(c.requisites)}</div>
+                            <button class="donate-btn" onclick="openDonateModal(${c.id}, '${escapeHtml(c.name)}', '${escapeHtml(c.requisites)}')"><i class="fas fa-heart"></i> Задонатити</button>
                         </div>
                     `;
                 }).join('');
-            } catch (error) {
-                console.error('Помилка завантаження зборів:', error);
-            }
+            } catch (error) { console.error(error); }
         }
 
-        // ==================== Завантаження звітів ====================
+        // ==================== Звіти ====================
         async function loadReports() {
             try {
                 const res = await fetch('/api/reports');
                 const data = await res.json();
                 const container = document.getElementById('reportsList');
-                
-                if (data.length === 0) {
-                    container.innerHTML = '<div class="empty-message">Ще немає звітів</div>';
-                    return;
-                }
-                
+                if (!data.length) { container.innerHTML = '<div class="empty-message">Ще немає звітів</div>'; return; }
                 container.innerHTML = data.sort((a,b) => new Date(b.date) - new Date(a.date)).map(r => `
-                    <div class="report-card" style="background:white; border-radius:12px; padding:20px; box-shadow:0 5px 15px rgba(0,102,204,0.1);">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap;">
-                            <h3 style="color:var(--primary);">${escapeHtml(r.title)}</h3>
-                            <span style="background:var(--accent); padding:4px 12px; border-radius:20px; color:var(--primary); font-size:0.8rem;">${r.date}</span>
-                        </div>
-                        <p style="color:var(--gray); margin-bottom:10px;">${escapeHtml(r.content)}</p>
-                        ${r.amount ? `<p style="font-weight:600; color:var(--success); margin-bottom:15px;">Сума: ${r.amount.toLocaleString()} грн</p>` : ''}
+                    <div class="report-card">
+                        <div class="report-header"><h3 class="report-title">${escapeHtml(r.title)}</h3><span class="report-date">${r.date}</span></div>
+                        <p class="report-content">${escapeHtml(r.content)}</p>
+                        ${r.amount ? `<p class="report-amount">Сума: ${r.amount.toLocaleString()} грн</p>` : ''}
                     </div>
                 `).join('');
-            } catch (error) {
-                console.error('Помилка завантаження звітів:', error);
-            }
+            } catch (error) { console.error(error); }
         }
 
-        // ==================== Завантаження "Про нас" ====================
+        // ==================== Партнери ====================
+        async function loadPartners() {
+            try {
+                const res = await fetch('/api/partners');
+                const data = await res.json();
+                const container = document.getElementById('partnersList');
+                if (!data.length) { container.innerHTML = '<div class="empty-message">Партнерів поки немає</div>'; return; }
+                container.innerHTML = data.map(p => `
+                    <div class="partner-card">
+                        <div class="partner-logo">${p.logo ? `<img src="${p.logo}" alt="${escapeHtml(p.name)}">` : '<i class="fas fa-building fa-3x" style="color:var(--gray);"></i>'}</div>
+                        <h3 class="partner-name">${escapeHtml(p.name)}</h3>
+                        <p class="partner-description">${escapeHtml(p.description)}</p>
+                        ${p.website ? `<a href="${p.website}" target="_blank" class="partner-website">${p.website}</a>` : ''}
+                    </div>
+                `).join('');
+            } catch (error) { console.error(error); }
+        }
+
+        // ==================== Сторінка допомоги ====================
+        async function loadHelpPage() {
+            try {
+                const res = await fetch('/api/help-page');
+                const data = await res.json();
+                document.getElementById('helpTitle').textContent = data.title || 'Як отримати допомогу';
+                document.getElementById('helpDescription').innerHTML = escapeHtml(data.content || '').replace(/\n/g, '<br>');
+                if (data.image) {
+                    document.getElementById('helpImage').src = data.image;
+                    document.getElementById('helpImageContainer').style.display = 'block';
+                } else {
+                    document.getElementById('helpImageContainer').style.display = 'none';
+                }
+                const instructions = data.instructions || [];
+                const instContainer = document.getElementById('instructionsList');
+                if (instructions.length) {
+                    instContainer.innerHTML = instructions.map((inst, idx) => `
+                        <div class="instruction-item">
+                            <div class="instruction-number">${idx + 1}</div>
+                            <div class="instruction-text">${escapeHtml(inst)}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    instContainer.innerHTML = '<div class="empty-message">Інструкції відсутні</div>';
+                }
+                document.getElementById('helpPhone').textContent = data.contacts?.phone || '';
+                document.getElementById('helpEmail').textContent = data.contacts?.email || '';
+                document.getElementById('helpTelegram').textContent = data.contacts?.telegram || '';
+            } catch (error) { console.error(error); }
+        }
+
+        // ==================== Про нас ====================
         async function loadAbout() {
             try {
                 const res = await fetch('/api/about');
                 const data = await res.json();
                 document.getElementById('aboutContent').innerHTML = escapeHtml(data.content).replace(/\n/g, '<br>');
-            } catch (error) {
-                console.error('Помилка завантаження:', error);
-            }
+            } catch (error) { console.error(error); }
         }
 
         // ==================== Донати ====================
@@ -1252,7 +1734,6 @@
             currentCollectionId = id;
             const modal = document.createElement('div');
             modal.className = 'modal';
-            modal.id = 'donateModal';
             modal.style.display = 'flex';
             modal.style.position = 'fixed';
             modal.style.top = '0';
@@ -1282,19 +1763,13 @@
             const modal = btn.closest('.modal');
             const name = modal.querySelector('#donorName').value.trim();
             const amount = parseFloat(modal.querySelector('#donorAmount').value);
-            
-            if (!name || !amount || amount <= 0) {
-                showToast('Введіть коректні дані', 'warning');
-                return;
-            }
-            
+            if (!name || !amount || amount <= 0) { showToast('Введіть коректні дані', 'warning'); return; }
             try {
                 const res = await fetch('/api/donations', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ collectionId: currentCollectionId, name, amount })
                 });
-                
                 if (res.ok) {
                     showToast('Донат прийнято! Очікуйте підтвердження', 'success');
                     modal.remove();
@@ -1311,11 +1786,8 @@
         function showPage(page) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(page).classList.add('active');
-            
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
+            if (event?.target) event.target.classList.add('active');
             closeMobileMenu();
         }
 
