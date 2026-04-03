@@ -16,13 +16,15 @@ const photosDir = path.join(uploadsDir, 'photos');
 const videosDir = path.join(uploadsDir, 'videos');
 const newsDir = path.join(uploadsDir, 'news');
 const volunteersDir = path.join(uploadsDir, 'volunteers');
+const partnersDir = path.join(uploadsDir, 'partners');
 
 fs.ensureDirSync(photosDir);
 fs.ensureDirSync(videosDir);
 fs.ensureDirSync(newsDir);
 fs.ensureDirSync(volunteersDir);
+fs.ensureDirSync(partnersDir);
 
-// Налаштування multer для фото (до 50 файлів)
+// Налаштування multer
 const photoStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, photosDir);
@@ -34,19 +36,6 @@ const photoStorage = multer.diskStorage({
     }
 });
 
-// Налаштування multer для відео
-const videoStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, videosDir);
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const ext = path.extname(file.originalname);
-        cb(null, 'video-' + uniqueSuffix + ext);
-    }
-});
-
-// Налаштування multer для новин
 const newsStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, newsDir);
@@ -58,7 +47,6 @@ const newsStorage = multer.diskStorage({
     }
 });
 
-// Налаштування multer для фото волонтерів
 const volunteerStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, volunteersDir);
@@ -70,6 +58,17 @@ const volunteerStorage = multer.diskStorage({
     }
 });
 
+const partnerStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, partnersDir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, 'partner-' + uniqueSuffix + ext);
+    }
+});
+
 const uploadPhoto = multer({ 
     storage: photoStorage,
     limits: { fileSize: 10 * 1024 * 1024, files: 50 },
@@ -78,18 +77,6 @@ const uploadPhoto = multer({
             cb(null, true);
         } else {
             cb(new Error('Тільки зображення дозволені'));
-        }
-    }
-});
-
-const uploadVideo = multer({ 
-    storage: videoStorage,
-    limits: { fileSize: 100 * 1024 * 1024, files: 10 },
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith('video/')) {
-            cb(null, true);
-        } else {
-            cb(new Error('Тільки відео дозволені'));
         }
     }
 });
@@ -118,11 +105,23 @@ const uploadVolunteer = multer({
     }
 });
 
+const uploadPartner = multer({ 
+    storage: partnerStorage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Тільки зображення дозволені'));
+        }
+    }
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'http://localhost:' + PORT,
+    origin: ['http://localhost:' + PORT, 'http://localhost:3000'],
     credentials: true
 }));
 
@@ -142,7 +141,6 @@ app.use(session({
 // ==================== База даних ====================
 const DB_PATH = path.join(__dirname, 'database.json');
 
-// Ініціалізація БД
 async function initDB() {
     if (!await fs.pathExists(DB_PATH)) {
         const salt = bcrypt.genSaltSync(10);
@@ -186,27 +184,49 @@ async function initDB() {
                     id: 1,
                     name: 'Олена Петренко',
                     role: 'Координатор штабу',
-                    description: 'Координатор волонтерського штабу, відповідає за логістику та розподіл допомоги. Має 5 років досвіду в благодійній діяльності.',
-                    photo: null,
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 2,
-                    name: 'Іван Коваленко',
-                    role: 'Водій-волонтер',
-                    description: 'Доставляє допомогу військовим на передову. За плечима понад 50 виїздів у зону бойових дій.',
-                    photo: null,
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 3,
-                    name: 'Марія Шевченко',
-                    role: 'PR-менеджер',
-                    description: 'Відповідає за комунікацію з донорами та ведення соціальних мереж. Допомагає розповідати про нашу роботу.',
+                    description: 'Координатор волонтерського штабу, відповідає за логістику та розподіл допомоги.',
                     photo: null,
                     createdAt: new Date().toISOString()
                 }
             ],
+            partners: [
+                {
+                    id: 1,
+                    name: 'Благодійний фонд "Разом"',
+                    logo: null,
+                    website: 'https://example.com',
+                    description: 'Надійний партнер, який допомагає з логістикою',
+                    order: 1,
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    name: 'Медичний центр "Здоров\'я"',
+                    logo: null,
+                    website: 'https://example.com',
+                    description: 'Забезпечує медикаментами та аптечками',
+                    order: 2,
+                    isActive: true,
+                    createdAt: new Date().toISOString()
+                }
+            ],
+            helpPage: {
+                title: 'Як отримати допомогу',
+                content: 'Якщо ви військовослужбовець або волонтер, який потребує допомоги, звертайтеся до нас за наступними контактами:\n\n📞 Телефон: +380 (99) 123-45-67\n📧 Email: help@volunteer450.org\n\nПроцедура отримання допомоги:\n1. Заповніть заявку через форму на сайті\n2. Очікуйте дзвінка від нашого координатора\n3. Отримайте допомогу (спорядження, медикаменти, транспорт)',
+                image: null,
+                instructions: [
+                    'Заповніть онлайн-форму заявки',
+                    'Наш координатор зв\'яжеться з вами протягом 24 годин',
+                    'Підтвердьте потребу та узгодьте деталі',
+                    'Отримайте допомогу особисто або через представника'
+                ],
+                contacts: {
+                    phone: '+380 (99) 123-45-67',
+                    email: 'help@volunteer450.org',
+                    telegram: '@volunteer450_help'
+                }
+            },
             about: {
                 content: 'Ми - волонтерський штаб 4.5.0, який допомагає військовим з 2022 року. Наша мета - забезпечити наших захисників усім необхідним для виконання бойових завдань.\n\nКожна гривня, яку ви жертвуєте, йде на потреби військових. Ми публікуємо детальні звіти про всі витрати. Ми працюємо цілодобово, щоб наблизити перемогу. Долучайтеся до нашої команди!'
             },
@@ -220,7 +240,6 @@ async function initDB() {
 
 initDB();
 
-// Допоміжні функції для роботи з БД
 async function readDB() {
     return await fs.readJson(DB_PATH);
 }
@@ -229,7 +248,6 @@ async function writeDB(data) {
     await fs.writeJson(DB_PATH, data, { spaces: 2 });
 }
 
-// Middleware для перевірки авторизації
 function requireAuth(req, res, next) {
     if (req.session.userId) {
         next();
@@ -293,7 +311,6 @@ app.post('/api/logout', async (req, res) => {
         });
         await writeDB(db);
     }
-    
     req.session.destroy();
     res.json({ success: true });
 });
@@ -403,7 +420,6 @@ app.delete('/api/collections/:id', requireAuth, requireAdmin, async (req, res) =
     res.json({ success: true });
 });
 
-// Медіа для зборів
 app.post('/api/collections/:id/photos', requireAuth, requireAdmin, uploadPhoto.array('photos', 50), async (req, res) => {
     const db = await readDB();
     const collectionIndex = db.collections.findIndex(c => c.id === parseInt(req.params.id));
@@ -418,31 +434,6 @@ app.post('/api/collections/:id/photos', requireAuth, requireAdmin, uploadPhoto.a
         db.collections[collectionIndex].media = [...(db.collections[collectionIndex].media || []), ...files];
         await writeDB(db);
         res.json({ success: true, files });
-    } else {
-        res.status(404).json({ error: 'Збір не знайдено' });
-    }
-});
-
-app.delete('/api/collections/:id/media/:mediaIndex', requireAuth, requireAdmin, async (req, res) => {
-    const db = await readDB();
-    const collectionIndex = db.collections.findIndex(c => c.id === parseInt(req.params.id));
-    
-    if (collectionIndex !== -1) {
-        const mediaIndex = parseInt(req.params.mediaIndex);
-        if (mediaIndex >= 0 && mediaIndex < db.collections[collectionIndex].media.length) {
-            const media = db.collections[collectionIndex].media[mediaIndex];
-            
-            const filePath = path.join(__dirname, media.url);
-            if (await fs.pathExists(filePath)) {
-                await fs.remove(filePath);
-            }
-            
-            db.collections[collectionIndex].media.splice(mediaIndex, 1);
-            await writeDB(db);
-            res.json({ success: true });
-        } else {
-            res.status(404).json({ error: 'Медіа не знайдено' });
-        }
     } else {
         res.status(404).json({ error: 'Збір не знайдено' });
     }
@@ -587,45 +578,20 @@ app.put('/api/reports/:id', requireAuth, requireAdmin, async (req, res) => {
     }
 });
 
-app.post('/api/reports/:id/photos', requireAuth, requireAdmin, uploadPhoto.array('photos', 50), async (req, res) => {
+app.post('/api/reports/:id/media', requireAuth, requireAdmin, uploadNews.array('media', 50), async (req, res) => {
     const db = await readDB();
     const reportIndex = db.reports.findIndex(r => r.id === parseInt(req.params.id));
     
     if (reportIndex !== -1) {
         const files = req.files.map(file => ({
-            type: 'photo',
-            url: '/uploads/photos/' + file.filename,
-            caption: req.body.caption || ''
+            type: file.mimetype.startsWith('image/') ? 'photo' : 'video',
+            url: '/uploads/news/' + file.filename,
+            caption: ''
         }));
         
         db.reports[reportIndex].media = [...(db.reports[reportIndex].media || []), ...files];
         await writeDB(db);
         res.json({ success: true, files });
-    } else {
-        res.status(404).json({ error: 'Звіт не знайдено' });
-    }
-});
-
-app.delete('/api/reports/:id/media/:mediaIndex', requireAuth, requireAdmin, async (req, res) => {
-    const db = await readDB();
-    const reportIndex = db.reports.findIndex(r => r.id === parseInt(req.params.id));
-    
-    if (reportIndex !== -1) {
-        const mediaIndex = parseInt(req.params.mediaIndex);
-        if (mediaIndex >= 0 && mediaIndex < db.reports[reportIndex].media.length) {
-            const media = db.reports[reportIndex].media[mediaIndex];
-            
-            const filePath = path.join(__dirname, media.url);
-            if (await fs.pathExists(filePath)) {
-                await fs.remove(filePath);
-            }
-            
-            db.reports[reportIndex].media.splice(mediaIndex, 1);
-            await writeDB(db);
-            res.json({ success: true });
-        } else {
-            res.status(404).json({ error: 'Медіа не знайдено' });
-        }
     } else {
         res.status(404).json({ error: 'Звіт не знайдено' });
     }
@@ -742,31 +708,6 @@ app.post('/api/news/:id/media', requireAuth, requireAdmin, uploadNews.array('med
         db.news[newsIndex].media = [...(db.news[newsIndex].media || []), ...files];
         await writeDB(db);
         res.json({ success: true, files });
-    } else {
-        res.status(404).json({ error: 'Новину не знайдено' });
-    }
-});
-
-app.delete('/api/news/:id/media/:mediaIndex', requireAuth, requireAdmin, async (req, res) => {
-    const db = await readDB();
-    const newsIndex = db.news.findIndex(n => n.id === parseInt(req.params.id));
-    
-    if (newsIndex !== -1) {
-        const mediaIndex = parseInt(req.params.mediaIndex);
-        if (mediaIndex >= 0 && mediaIndex < db.news[newsIndex].media.length) {
-            const media = db.news[newsIndex].media[mediaIndex];
-            
-            const filePath = path.join(__dirname, media.url);
-            if (await fs.pathExists(filePath)) {
-                await fs.remove(filePath);
-            }
-            
-            db.news[newsIndex].media.splice(mediaIndex, 1);
-            await writeDB(db);
-            res.json({ success: true });
-        } else {
-            res.status(404).json({ error: 'Медіа не знайдено' });
-        }
     } else {
         res.status(404).json({ error: 'Новину не знайдено' });
     }
@@ -890,14 +831,6 @@ app.post('/api/volunteers/:id/photo', requireAuth, requireAdmin, uploadVolunteer
         const photoPath = '/uploads/volunteers/' + req.file.filename;
         db.volunteers[index].photo = photoPath;
         
-        db.activity.push({
-            id: Date.now(),
-            type: 'volunteer_photo_updated',
-            user: req.session.username,
-            timestamp: new Date().toISOString(),
-            details: `Оновлено фото волонтера: ${db.volunteers[index].name}`
-        });
-        
         await writeDB(db);
         res.json({ success: true, photo: photoPath });
     } else {
@@ -928,6 +861,204 @@ app.delete('/api/volunteers/:id', requireAuth, requireAdmin, async (req, res) =>
     
     await writeDB(db);
     res.json({ success: true });
+});
+
+// ==================== Партнери ====================
+app.get('/api/partners', async (req, res) => {
+    const db = await readDB();
+    if (!db.partners) {
+        db.partners = [];
+        await writeDB(db);
+    }
+    // Сортуємо за order
+    const sorted = [...db.partners].sort((a, b) => (a.order || 999) - (b.order || 999));
+    res.json(sorted.filter(p => p.isActive !== false));
+});
+
+app.get('/api/partners/all', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    if (!db.partners) {
+        db.partners = [];
+        await writeDB(db);
+    }
+    res.json(db.partners);
+});
+
+app.get('/api/partners/:id', async (req, res) => {
+    const db = await readDB();
+    const partner = db.partners?.find(p => p.id === parseInt(req.params.id));
+    if (partner) {
+        res.json(partner);
+    } else {
+        res.status(404).json({ error: 'Партнера не знайдено' });
+    }
+});
+
+app.post('/api/partners', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    
+    if (!db.partners) {
+        db.partners = [];
+    }
+    
+    const newPartner = {
+        id: Date.now(),
+        name: req.body.name,
+        description: req.body.description || '',
+        website: req.body.website || '',
+        logo: null,
+        isActive: req.body.isActive !== false,
+        order: db.partners.length + 1,
+        createdAt: new Date().toISOString()
+    };
+    
+    db.partners.push(newPartner);
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'partner_added',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Додано партнера: ${newPartner.name}`
+    });
+    
+    await writeDB(db);
+    res.json(newPartner);
+});
+
+app.put('/api/partners/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    const index = db.partners?.findIndex(p => p.id === parseInt(req.params.id));
+    
+    if (index !== -1 && index !== undefined) {
+        db.partners[index] = { 
+            ...db.partners[index], 
+            ...req.body,
+            updatedAt: new Date().toISOString()
+        };
+        
+        db.activity.push({
+            id: Date.now(),
+            type: 'partner_updated',
+            user: req.session.username,
+            timestamp: new Date().toISOString(),
+            details: `Оновлено партнера: ${db.partners[index].name}`
+        });
+        
+        await writeDB(db);
+        res.json(db.partners[index]);
+    } else {
+        res.status(404).json({ error: 'Партнера не знайдено' });
+    }
+});
+
+app.post('/api/partners/:id/logo', requireAuth, requireAdmin, uploadPartner.single('logo'), async (req, res) => {
+    const db = await readDB();
+    const index = db.partners?.findIndex(p => p.id === parseInt(req.params.id));
+    
+    if (index !== -1 && index !== undefined && req.file) {
+        if (db.partners[index].logo) {
+            const oldLogoPath = path.join(__dirname, db.partners[index].logo);
+            if (await fs.pathExists(oldLogoPath)) {
+                await fs.remove(oldLogoPath);
+            }
+        }
+        
+        const logoPath = '/uploads/partners/' + req.file.filename;
+        db.partners[index].logo = logoPath;
+        
+        await writeDB(db);
+        res.json({ success: true, logo: logoPath });
+    } else {
+        res.status(404).json({ error: 'Партнера не знайдено або лого не завантажено' });
+    }
+});
+
+app.delete('/api/partners/:id', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    const partner = db.partners?.find(p => p.id === parseInt(req.params.id));
+    
+    if (partner && partner.logo) {
+        const logoPath = path.join(__dirname, partner.logo);
+        if (await fs.pathExists(logoPath)) {
+            await fs.remove(logoPath);
+        }
+    }
+    
+    db.partners = db.partners?.filter(p => p.id !== parseInt(req.params.id)) || [];
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'partner_deleted',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: `Видалено партнера: ${partner ? partner.name : 'невідомий'}`
+    });
+    
+    await writeDB(db);
+    res.json({ success: true });
+});
+
+// ==================== Сторінка "Як отримати допомогу" ====================
+app.get('/api/help-page', async (req, res) => {
+    const db = await readDB();
+    if (!db.helpPage) {
+        db.helpPage = {
+            title: 'Як отримати допомогу',
+            content: 'Якщо ви військовослужбовець або волонтер, який потребує допомоги, звертайтеся до нас.',
+            image: null,
+            instructions: [
+                'Заповніть онлайн-форму заявки',
+                'Наш координатор зв\'яжеться з вами',
+                'Підтвердьте потребу',
+                'Отримайте допомогу'
+            ],
+            contacts: {
+                phone: '+380 (99) 123-45-67',
+                email: 'help@volunteer450.org',
+                telegram: '@volunteer450_help'
+            }
+        };
+        await writeDB(db);
+    }
+    res.json(db.helpPage);
+});
+
+app.put('/api/help-page', requireAuth, requireAdmin, async (req, res) => {
+    const db = await readDB();
+    db.helpPage = { ...db.helpPage, ...req.body };
+    
+    db.activity.push({
+        id: Date.now(),
+        type: 'help_page_updated',
+        user: req.session.username,
+        timestamp: new Date().toISOString(),
+        details: 'Оновлено сторінку "Як отримати допомогу"'
+    });
+    
+    await writeDB(db);
+    res.json(db.helpPage);
+});
+
+app.post('/api/help-page/image', requireAuth, requireAdmin, uploadPhoto.single('image'), async (req, res) => {
+    const db = await readDB();
+    
+    if (req.file) {
+        if (db.helpPage.image) {
+            const oldImagePath = path.join(__dirname, db.helpPage.image);
+            if (await fs.pathExists(oldImagePath)) {
+                await fs.remove(oldImagePath);
+            }
+        }
+        
+        const imagePath = '/uploads/photos/' + req.file.filename;
+        db.helpPage.image = imagePath;
+        
+        await writeDB(db);
+        res.json({ success: true, image: imagePath });
+    } else {
+        res.status(400).json({ error: 'Файл не завантажено' });
+    }
 });
 
 // ==================== Про нас ====================
@@ -1063,28 +1194,6 @@ app.post('/api/social', requireAuth, requireAdmin, async (req, res) => {
     res.json(newSocial);
 });
 
-app.put('/api/social/:id', requireAuth, requireAdmin, async (req, res) => {
-    const db = await readDB();
-    const index = db.settings.social.findIndex(s => s.id === parseInt(req.params.id));
-    
-    if (index !== -1) {
-        db.settings.social[index] = { ...db.settings.social[index], ...req.body };
-        
-        db.activity.push({
-            id: Date.now(),
-            type: 'social_updated',
-            user: req.session.username,
-            timestamp: new Date().toISOString(),
-            details: `Оновлено соціальну мережу: ${db.settings.social[index].platform}`
-        });
-        
-        await writeDB(db);
-        res.json(db.settings.social[index]);
-    } else {
-        res.status(404).json({ error: 'Соціальну мережу не знайдено' });
-    }
-});
-
 app.delete('/api/social/:id', requireAuth, requireAdmin, async (req, res) => {
     const db = await readDB();
     const social = db.settings.social.find(s => s.id === parseInt(req.params.id));
@@ -1113,6 +1222,7 @@ app.get('/api/stats', requireAuth, requireAdmin, async (req, res) => {
         totalReports: db.reports.length,
         totalNews: db.news.length,
         totalVolunteers: db.volunteers?.length || 0,
+        totalPartners: db.partners?.filter(p => p.isActive !== false).length || 0,
         totalDonors: [...new Set(db.donations.map(d => d.name))].length,
         totalSocial: db.settings.social.filter(s => s.active).length,
         totalMedia: db.collections.reduce((sum, c) => sum + (c.media?.length || 0), 0) +
