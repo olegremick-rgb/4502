@@ -728,6 +728,75 @@
             margin-bottom: 15px;
         }
 
+        /* Волонтери */
+        .volunteers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 640px) {
+            .volunteers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .volunteers-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .volunteer-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+            transition: transform 0.3s;
+            border: 1px solid var(--gray-light);
+        }
+
+        .volunteer-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .volunteer-photo {
+            width: 100%;
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: var(--accent);
+        }
+
+        .volunteer-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .volunteer-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .volunteer-name {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .volunteer-role {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .volunteer-description {
+            color: var(--dark);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
         /* Партнери */
         .partners-grid {
             display: grid;
@@ -1241,6 +1310,7 @@
                     <li><a class="nav-link active" onclick="showPage('news'); closeMobileMenu()">Новини штабу</a></li>
                     <li><a class="nav-link" onclick="showPage('collections'); closeMobileMenu()">Збори</a></li>
                     <li><a class="nav-link" onclick="showPage('reports'); closeMobileMenu()">Звіти</a></li>
+                    <li><a class="nav-link" onclick="showPage('volunteers'); closeMobileMenu()">Волонтери</a></li>
                     <li><a class="nav-link" onclick="showPage('partners'); closeMobileMenu()">Партнери</a></li>
                     <li><a class="nav-link" onclick="showPage('help'); closeMobileMenu()">Як отримати допомогу</a></li>
                     <li><a class="nav-link" onclick="showPage('about'); closeMobileMenu()">Про нас</a></li>
@@ -1306,6 +1376,19 @@
                 </div>
                 <div class="reports-grid" id="reportsList">
                     <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження звітів...</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Волонтери -->
+        <section id="volunteers" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h1 class="section-title">Наша команда</h1>
+                    <p class="section-subtitle">Люди, які роблять цей світ кращим</p>
+                </div>
+                <div class="volunteers-grid" id="volunteersList">
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження волонтерів...</p></div>
                 </div>
             </div>
         </section>
@@ -1516,6 +1599,7 @@
                 loadNews(),
                 loadCollections(),
                 loadReports(),
+                loadVolunteers(),
                 loadPartners(),
                 loadHelpPage(),
                 loadAbout()
@@ -1664,6 +1748,28 @@
                         <div class="report-header"><h3 class="report-title">${escapeHtml(r.title)}</h3><span class="report-date">${r.date}</span></div>
                         <p class="report-content">${escapeHtml(r.content)}</p>
                         ${r.amount ? `<p class="report-amount">Сума: ${r.amount.toLocaleString()} грн</p>` : ''}
+                    </div>
+                `).join('');
+            } catch (error) { console.error(error); }
+        }
+
+        // ==================== Волонтери ====================
+        async function loadVolunteers() {
+            try {
+                const res = await fetch('/api/volunteers');
+                const data = await res.json();
+                const container = document.getElementById('volunteersList');
+                if (!data.length) { container.innerHTML = '<div class="empty-message">Інформація про волонтерів незабаром з\'явиться</div>'; return; }
+                container.innerHTML = data.map(v => `
+                    <div class="volunteer-card">
+                        <div class="volunteer-photo">
+                            ${v.photo ? `<img src="${v.photo}" alt="${escapeHtml(v.name)}" loading="lazy">` : '<div style="display:flex; align-items:center; justify-content:center; height:100%; background:var(--accent);"><i class="fas fa-user fa-4x" style="color:var(--primary);"></i></div>'}
+                        </div>
+                        <div class="volunteer-info">
+                            <h3 class="volunteer-name">${escapeHtml(v.name)}</h3>
+                            <p class="volunteer-role">${escapeHtml(v.role || 'Волонтер')}</p>
+                            <p class="volunteer-description">${escapeHtml(v.description || '').replace(/\n/g, '<br>')}</p>
+                        </div>
                     </div>
                 `).join('');
             } catch (error) { console.error(error); }
@@ -1826,7 +1932,7 @@
             if (e.key === 'Escape') {
                 closeNewsModal();
                 closeMediaModal();
-                const donateModal = document.querySelector('#donateModal');
+                const donateModal = document.querySelector('.modal[style*="display: flex"]');
                 if (donateModal) donateModal.remove();
                 document.body.style.overflow = '';
             }
