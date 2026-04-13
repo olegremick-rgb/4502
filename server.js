@@ -10,41 +10,34 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ==================== НАЛАШТУВАННЯ ШЛЯХІВ ====================
+// Визначаємо директорії для зберігання даних
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 
-// Створення папок
-const photosDir = path.join(UPLOADS_DIR, 'photos');
-const newsDir = path.join(UPLOADS_DIR, 'news');
-const volunteersDir = path.join(UPLOADS_DIR, 'volunteers');
-const partnersDir = path.join(UPLOADS_DIR, 'partners');
-
-try {
-    fs.ensureDirSync(DATA_DIR);
-    fs.ensureDirSync(UPLOADS_DIR);
-    fs.ensureDirSync(photosDir);
-    fs.ensureDirSync(newsDir);
-    fs.ensureDirSync(volunteersDir);
-    fs.ensureDirSync(partnersDir);
-    console.log('✅ Папки створено успішно');
-} catch (err) {
-    console.error('❌ Помилка створення папок:', err);
+// Функція для безпечного створення директорій
+async function ensureDirectories() {
+    await fs.ensureDir(DATA_DIR);
+    await fs.ensureDir(UPLOADS_DIR);
+    await fs.ensureDir(path.join(UPLOADS_DIR, 'photos'));
+    await fs.ensureDir(path.join(UPLOADS_DIR, 'news'));
+    await fs.ensureDir(path.join(UPLOADS_DIR, 'volunteers'));
+    await fs.ensureDir(path.join(UPLOADS_DIR, 'partners'));
+    console.log(`Директорії готові: DATA_DIR=${DATA_DIR}, UPLOADS_DIR=${UPLOADS_DIR}`);
 }
 
-// ==================== НАЛАШТУВАННЯ MULTER ====================
+// Налаштування multer для різних типів файлів
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        let dest = photosDir;
-        if (file.fieldname === 'media') dest = newsDir;
-        else if (file.fieldname === 'photo') dest = volunteersDir;
-        else if (file.fieldname === 'logo') dest = partnersDir;
+        let dest = path.join(UPLOADS_DIR, 'photos');
+        if (file.fieldname === 'media') dest = path.join(UPLOADS_DIR, 'news');
+        else if (file.fieldname === 'photo') dest = path.join(UPLOADS_DIR, 'volunteers');
+        else if (file.fieldname === 'logo') dest = path.join(UPLOADS_DIR, 'partners');
         cb(null, dest);
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const ext = path.extname(file.originalname);
-        cb(null, uniqueSuffix + ext);
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
     }
 });
 
@@ -53,14 +46,14 @@ const upload = multer({
     limits: { fileSize: 50 * 1024 * 1024, files: 50 }
 });
 
-// ==================== MIDDLEWARE ====================
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use('/uploads', express.static(UPLOADS_DIR));
 app.use(express.static(__dirname));
 
-// ==================== СЕСІЇ ====================
+// Сесії
 app.use(session({
     secret: process.env.SESSION_SECRET || 'volunteer-secret-key',
     resave: false,
@@ -71,12 +64,52 @@ app.use(session({
 // ==================== БАЗА ДАНИХ ====================
 const DB_PATH = path.join(DATA_DIR, 'database.json');
 
-// Функція для читання БД з обробкою помилок
+async function initDB() {
+    if (!await fs.pathExists(DB_PATH)) {
+        const salt = bcrypt.genSaltSync(10);
+        const defaultDB = {
+            users: [
+                { id: 1, username: 'admin', password: bcrypt.hashSync('admin', salt), role: 'superadmin', createdAt: new Date().toISOString() }
+            ],
+            settings: {
+                siteName: 'Волонтерський штаб 4.5.0',
+                logo: null,
+                contacts: { phone: '+380 (99) 123-45-67', email: 'info@volunteer450.org', address: 'м. Київ, Україна' },
+                social: []
+            },
+            collections: [],
+            donations: [],
+            reports: [],
+            news: [
+                {
+                    id: 1,
+                    title: 'Ласкаво просимо!',
+                    content: 'Вітаємо на сайті Волонтерського штабу 4.5.0',
+                    important: true,
+                    media: [],
+                    date: new Date().toISOString().split('T')[0]
+                }
+            ],
+            volunteers: [],
+            partners: [],
+            helpPage: {
+                title: 'Як отримати допомогу',
+                content: 'Зв\'яжіться з нами за телефонами нижче',
+                instructions: ['Зателефонуйте нам', 'Опишіть вашу ситуацію', 'Отримайте допомогу'],
+                contacts: { phone: '+380 (99) 123-45-67', email: 'help@volunteer450.org', telegram: '@volunteer450' }
+            },
+            about: { content: 'Ми - волонтерський штаб, що допомагає з 2022 року.' },
+            activity: []
+        };
+        await fs.writeJson(DB_PATH, defaultDB, { spaces: 2 });
+        console.log('✅ Базу даних створено');
+    } else {
+        console.log('✅ База даних вже існує');
+    }
+}
+
 async function readDB() {
     try {
-        if (!await fs.pathExists(DB_PATH)) {
-            await initDB();
-        }
         return await fs.readJson(DB_PATH);
     } catch (err) {
         console.error('Помилка читання БД:', err);
@@ -92,46 +125,7 @@ async function writeDB(data) {
     }
 }
 
-// Ініціалізація БД
-async function initDB() {
-    const salt = bcrypt.genSaltSync(10);
-    const defaultDB = {
-        users: [{ id: 1, username: 'admin', password: bcrypt.hashSync('admin', salt), role: 'superadmin', createdAt: new Date().toISOString() }],
-        settings: {
-            siteName: 'Волонтерський штаб 4.5.0',
-            logo: null,
-            contacts: { phone: '+380 (99) 123-45-67', email: 'info@volunteer450.org', address: 'м. Київ, Україна' },
-            social: []
-        },
-        collections: [],
-        donations: [],
-        reports: [],
-        news: [
-            {
-                id: 1,
-                title: 'Ласкаво просимо!',
-                content: 'Вітаємо на сайті Волонтерського штабу 4.5.0',
-                important: true,
-                media: [],
-                date: new Date().toISOString().split('T')[0]
-            }
-        ],
-        volunteers: [],
-        partners: [],
-        helpPage: {
-            title: 'Як отримати допомогу',
-            content: 'Зв\'яжіться з нами за телефонами нижче',
-            instructions: ['Зателефонуйте нам', 'Опишіть вашу ситуацію', 'Отримайте допомогу'],
-            contacts: { phone: '+380 (99) 123-45-67', email: 'help@volunteer450.org', telegram: '@volunteer450' }
-        },
-        about: { content: 'Ми - волонтерський штаб, що допомагає з 2022 року.' },
-        activity: []
-    };
-    await fs.writeJson(DB_PATH, defaultDB, { spaces: 2 });
-    console.log('✅ Базу даних створено');
-}
-
-// Middleware для перевірки авторизації
+// Middleware для авторизації
 function requireAuth(req, res, next) {
     if (req.session.userId) return next();
     res.status(401).json({ error: 'Необхідна авторизація' });
@@ -142,9 +136,7 @@ function requireAdmin(req, res, next) {
     res.status(403).json({ error: 'Доступ заборонено' });
 }
 
-// ==================== API МАРШРУТИ ====================
-
-// Аутентифікація
+// ==================== АУТЕНТИФІКАЦІЯ ====================
 app.post('/api/login', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -159,8 +151,8 @@ app.post('/api/login', async (req, res) => {
             res.status(401).json({ error: 'Невірний логін або пароль' });
         }
     } catch (err) {
-        console.error('Помилка логіну:', err);
-        res.status(500).json({ error: 'Внутрішня помилка сервера' });
+        console.error(err);
+        res.status(500).json({ error: 'Внутрішня помилка' });
     }
 });
 
@@ -185,7 +177,7 @@ app.get('/api/news', async (req, res) => {
         res.json(news.sort((a, b) => new Date(b.date) - new Date(a.date)));
     } catch (err) {
         console.error('Помилка отримання новин:', err);
-        res.status(500).json({ error: 'Помилка сервера', details: err.message });
+        res.status(500).json({ error: 'Помилка сервера' });
     }
 });
 
@@ -203,7 +195,7 @@ app.get('/api/news/:id', async (req, res) => {
 app.post('/api/news', requireAuth, requireAdmin, upload.array('media', 50), async (req, res) => {
     try {
         const db = await readDB();
-        const files = req.files ? req.files.map(f => ({ type: f.mimetype.startsWith('image/') ? 'photo' : 'video', url: '/uploads/' + f.filename })) : [];
+        const files = req.files ? req.files.map(f => ({ type: f.mimetype.startsWith('image/') ? 'photo' : 'video', url: '/uploads/' + path.basename(f.path) })) : [];
         const newNews = {
             id: Date.now(),
             title: req.body.title,
@@ -216,6 +208,7 @@ app.post('/api/news', requireAuth, requireAdmin, upload.array('media', 50), asyn
         await writeDB(db);
         res.json(newNews);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: 'Помилка сервера' });
     }
 });
@@ -296,6 +289,23 @@ app.delete('/api/collections/:id', requireAuth, requireAdmin, async (req, res) =
     }
 });
 
+app.post('/api/collections/:id/photos', requireAuth, requireAdmin, upload.array('photos', 50), async (req, res) => {
+    try {
+        const db = await readDB();
+        const index = db.collections.findIndex(c => c.id === parseInt(req.params.id));
+        if (index !== -1 && req.files) {
+            const files = req.files.map(f => ({ type: 'photo', url: '/uploads/' + path.basename(f.path) }));
+            db.collections[index].media = [...(db.collections[index].media || []), ...files];
+            await writeDB(db);
+            res.json({ success: true, files });
+        } else {
+            res.status(404).json({ error: 'Не знайдено' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
 // ==================== ДОНАТИ ====================
 app.get('/api/donations', async (req, res) => {
     try {
@@ -324,11 +334,28 @@ app.put('/api/donations/:id/confirm', requireAuth, requireAdmin, async (req, res
         const index = (db.donations || []).findIndex(d => d.id === parseInt(req.params.id));
         if (index !== -1) {
             db.donations[index].status = 'confirmed';
+            // Оновлюємо суму збору
+            const donation = db.donations[index];
+            const collectionIndex = (db.collections || []).findIndex(c => c.id === donation.collectionId);
+            if (collectionIndex !== -1) {
+                db.collections[collectionIndex].current = (db.collections[collectionIndex].current || 0) + donation.amount;
+            }
             await writeDB(db);
             res.json(db.donations[index]);
         } else {
             res.status(404).json({ error: 'Не знайдено' });
         }
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.delete('/api/donations/:id', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const db = await readDB();
+        db.donations = (db.donations || []).filter(d => d.id !== parseInt(req.params.id));
+        await writeDB(db);
+        res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: 'Помилка сервера' });
     }
@@ -351,6 +378,22 @@ app.post('/api/reports', requireAuth, requireAdmin, async (req, res) => {
         db.reports.push(newReport);
         await writeDB(db);
         res.json(newReport);
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.put('/api/reports/:id', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const db = await readDB();
+        const index = (db.reports || []).findIndex(r => r.id === parseInt(req.params.id));
+        if (index !== -1) {
+            db.reports[index] = { ...db.reports[index], ...req.body };
+            await writeDB(db);
+            res.json(db.reports[index]);
+        } else {
+            res.status(404).json({ error: 'Не знайдено' });
+        }
     } catch (err) {
         res.status(500).json({ error: 'Помилка сервера' });
     }
@@ -384,6 +427,38 @@ app.post('/api/volunteers', requireAuth, requireAdmin, async (req, res) => {
         db.volunteers.push(newVolunteer);
         await writeDB(db);
         res.json(newVolunteer);
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.put('/api/volunteers/:id', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const db = await readDB();
+        const index = (db.volunteers || []).findIndex(v => v.id === parseInt(req.params.id));
+        if (index !== -1) {
+            db.volunteers[index] = { ...db.volunteers[index], ...req.body };
+            await writeDB(db);
+            res.json(db.volunteers[index]);
+        } else {
+            res.status(404).json({ error: 'Не знайдено' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.post('/api/volunteers/:id/photo', requireAuth, requireAdmin, upload.single('photo'), async (req, res) => {
+    try {
+        const db = await readDB();
+        const index = (db.volunteers || []).findIndex(v => v.id === parseInt(req.params.id));
+        if (index !== -1 && req.file) {
+            db.volunteers[index].photo = '/uploads/volunteers/' + req.file.filename;
+            await writeDB(db);
+            res.json({ success: true, photo: db.volunteers[index].photo });
+        } else {
+            res.status(404).json({ error: 'Не знайдено' });
+        }
     } catch (err) {
         res.status(500).json({ error: 'Помилка сервера' });
     }
@@ -431,6 +506,38 @@ app.post('/api/partners', requireAuth, requireAdmin, async (req, res) => {
     }
 });
 
+app.put('/api/partners/:id', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const db = await readDB();
+        const index = (db.partners || []).findIndex(p => p.id === parseInt(req.params.id));
+        if (index !== -1) {
+            db.partners[index] = { ...db.partners[index], ...req.body };
+            await writeDB(db);
+            res.json(db.partners[index]);
+        } else {
+            res.status(404).json({ error: 'Не знайдено' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.post('/api/partners/:id/logo', requireAuth, requireAdmin, upload.single('logo'), async (req, res) => {
+    try {
+        const db = await readDB();
+        const index = (db.partners || []).findIndex(p => p.id === parseInt(req.params.id));
+        if (index !== -1 && req.file) {
+            db.partners[index].logo = '/uploads/partners/' + req.file.filename;
+            await writeDB(db);
+            res.json({ success: true, logo: db.partners[index].logo });
+        } else {
+            res.status(404).json({ error: 'Не знайдено' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
 app.delete('/api/partners/:id', requireAuth, requireAdmin, async (req, res) => {
     try {
         const db = await readDB();
@@ -442,11 +549,37 @@ app.delete('/api/partners/:id', requireAuth, requireAdmin, async (req, res) => {
     }
 });
 
-// ==================== ІНШІ МАРШРУТИ ====================
+// ==================== ІНШІ API ====================
 app.get('/api/help-page', async (req, res) => {
     try {
         const db = await readDB();
         res.json(db.helpPage || {});
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.put('/api/help-page', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const db = await readDB();
+        db.helpPage = { ...db.helpPage, ...req.body };
+        await writeDB(db);
+        res.json(db.helpPage);
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.post('/api/help-page/image', requireAuth, requireAdmin, upload.single('image'), async (req, res) => {
+    try {
+        const db = await readDB();
+        if (req.file) {
+            db.helpPage.image = '/uploads/photos/' + req.file.filename;
+            await writeDB(db);
+            res.json({ success: true, image: db.helpPage.image });
+        } else {
+            res.status(400).json({ error: 'Файл не завантажено' });
+        }
     } catch (err) {
         res.status(500).json({ error: 'Помилка сервера' });
     }
@@ -461,10 +594,119 @@ app.get('/api/about', async (req, res) => {
     }
 });
 
+app.put('/api/about', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const db = await readDB();
+        db.about = { ...db.about, ...req.body };
+        await writeDB(db);
+        res.json(db.about);
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
 app.get('/api/settings', async (req, res) => {
     try {
         const db = await readDB();
         res.json(db.settings || {});
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.put('/api/settings', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const db = await readDB();
+        db.settings = { ...db.settings, ...req.body };
+        await writeDB(db);
+        res.json(db.settings);
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.post('/api/settings/logo', requireAuth, requireAdmin, upload.single('logo'), async (req, res) => {
+    try {
+        const db = await readDB();
+        if (req.file) {
+            const logoPath = '/uploads/photos/' + req.file.filename;
+            db.settings.logo = logoPath;
+            await writeDB(db);
+            res.json({ success: true, logo: logoPath });
+        } else {
+            res.status(400).json({ error: 'Файл не завантажено' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.post('/api/settings/credentials', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const db = await readDB();
+        const userIndex = db.users.findIndex(u => u.id === req.session.userId);
+        if (userIndex !== -1) {
+            if (username) db.users[userIndex].username = username;
+            if (password) db.users[userIndex].password = bcrypt.hashSync(password, 10);
+            await writeDB(db);
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ error: 'Користувача не знайдено' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.get('/api/logo', async (req, res) => {
+    try {
+        const db = await readDB();
+        if (db.settings && db.settings.logo) {
+            const filename = path.basename(db.settings.logo);
+            const logoPath = path.join(UPLOADS_DIR, 'photos', filename);
+            if (await fs.pathExists(logoPath)) {
+                return res.sendFile(logoPath);
+            }
+        }
+    } catch (err) {}
+    // Дефолтний SVG логотип
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.send(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" fill="#0066cc"/>
+        <text x="50" y="70" font-size="40" text-anchor="middle" fill="white" font-family="Arial">4.5.0</text>
+    </svg>`);
+});
+
+app.get('/api/social', async (req, res) => {
+    try {
+        const db = await readDB();
+        res.json((db.settings?.social || []).filter(s => s.active));
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.post('/api/social', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const db = await readDB();
+        const newSocial = { id: Date.now(), ...req.body, active: true };
+        if (!db.settings.social) db.settings.social = [];
+        db.settings.social.push(newSocial);
+        await writeDB(db);
+        res.json(newSocial);
+    } catch (err) {
+        res.status(500).json({ error: 'Помилка сервера' });
+    }
+});
+
+app.delete('/api/social/:id', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const db = await readDB();
+        db.settings.social = (db.settings.social || []).filter(s => s.id !== parseInt(req.params.id));
+        await writeDB(db);
+        res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: 'Помилка сервера' });
     }
@@ -496,25 +738,6 @@ app.get('/api/activity', requireAuth, requireAdmin, async (req, res) => {
     }
 });
 
-app.get('/api/logo', async (req, res) => {
-    try {
-        const db = await readDB();
-        if (db.settings && db.settings.logo) {
-            const logoPath = path.join(UPLOADS_DIR, 'photos', path.basename(db.settings.logo));
-            if (await fs.pathExists(logoPath)) {
-                res.sendFile(logoPath);
-                return;
-            }
-        }
-    } catch (err) {}
-    
-    res.setHeader('Content-Type', 'image/svg+xml');
-    res.send(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="45" fill="#0066cc"/>
-        <text x="50" y="70" font-size="40" text-anchor="middle" fill="white" font-family="Arial">4.5.0</text>
-    </svg>`);
-});
-
 // ==================== СТОРІНКИ ====================
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -533,8 +756,18 @@ app.get('/admin', (req, res) => {
 });
 
 // ==================== ЗАПУСК ====================
-app.listen(PORT, () => {
-    console.log(`✅ Сервер запущено на порту ${PORT}`);
-    console.log(`📁 DATA_DIR: ${DATA_DIR}`);
-    console.log(`📁 UPLOADS_DIR: ${UPLOADS_DIR}`);
+async function startServer() {
+    await ensureDirectories();
+    await initDB();
+    app.listen(PORT, () => {
+        console.log(`✅ Сервер запущено на порту ${PORT}`);
+        console.log(`📁 DATA_DIR: ${DATA_DIR}`);
+        console.log(`📁 UPLOADS_DIR: ${UPLOADS_DIR}`);
+        console.log(`🌐 Головна сторінка: http://localhost:${PORT}`);
+    });
+}
+
+startServer().catch(err => {
+    console.error('Помилка запуску сервера:', err);
+    process.exit(1);
 });
