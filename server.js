@@ -10,11 +10,17 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Визначаємо директорії для зберігання даних
+// ==================== НАЛАШТУВАННЯ ШЛЯХІВ ====================
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 
-// Функція для безпечного створення директорій
+// Функція для створення відносного URL з абсолютного шляху
+function getRelativeUrl(filePath) {
+    const relative = path.relative(UPLOADS_DIR, filePath).replace(/\\/g, '/');
+    return '/uploads/' + relative;
+}
+
+// Створення папок
 async function ensureDirectories() {
     await fs.ensureDir(DATA_DIR);
     await fs.ensureDir(UPLOADS_DIR);
@@ -22,10 +28,10 @@ async function ensureDirectories() {
     await fs.ensureDir(path.join(UPLOADS_DIR, 'news'));
     await fs.ensureDir(path.join(UPLOADS_DIR, 'volunteers'));
     await fs.ensureDir(path.join(UPLOADS_DIR, 'partners'));
-    console.log(`Директорії готові: DATA_DIR=${DATA_DIR}, UPLOADS_DIR=${UPLOADS_DIR}`);
+    console.log(`📁 Папки готові: DATA_DIR=${DATA_DIR}, UPLOADS_DIR=${UPLOADS_DIR}`);
 }
 
-// Налаштування multer
+// ==================== НАЛАШТУВАННЯ MULTER ====================
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let dest = path.join(UPLOADS_DIR, 'photos');
@@ -46,7 +52,7 @@ const upload = multer({
     limits: { fileSize: 50 * 1024 * 1024, files: 50 }
 });
 
-// Middleware
+// ==================== MIDDLEWARE ====================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -80,16 +86,7 @@ async function initDB() {
             collections: [],
             donations: [],
             reports: [],
-            news: [
-                {
-                    id: 1,
-                    title: 'Ласкаво просимо!',
-                    content: 'Вітаємо на сайті Волонтерського штабу 4.5.0',
-                    important: true,
-                    media: [],
-                    date: new Date().toISOString().split('T')[0]
-                }
-            ],
+            news: [],
             volunteers: [],
             partners: [],
             helpPage: {
@@ -103,8 +100,6 @@ async function initDB() {
         };
         await fs.writeJson(DB_PATH, defaultDB, { spaces: 2 });
         console.log('✅ Базу даних створено');
-    } else {
-        console.log('✅ База даних вже існує');
     }
 }
 
@@ -125,7 +120,6 @@ async function writeDB(data) {
     }
 }
 
-// Middleware для авторизації
 function requireAuth(req, res, next) {
     if (req.session.userId) return next();
     res.status(401).json({ error: 'Необхідна авторизація' });
@@ -151,7 +145,6 @@ app.post('/api/login', async (req, res) => {
             res.status(401).json({ error: 'Невірний логін або пароль' });
         }
     } catch (err) {
-        console.error(err);
         res.status(500).json({ error: 'Внутрішня помилка' });
     }
 });
@@ -176,7 +169,6 @@ app.get('/api/news', async (req, res) => {
         const news = db.news || [];
         res.json(news.sort((a, b) => new Date(b.date) - new Date(a.date)));
     } catch (err) {
-        console.error('Помилка отримання новин:', err);
         res.status(500).json({ error: 'Помилка сервера' });
     }
 });
@@ -195,7 +187,10 @@ app.get('/api/news/:id', async (req, res) => {
 app.post('/api/news', requireAuth, requireAdmin, upload.array('media', 50), async (req, res) => {
     try {
         const db = await readDB();
-        const files = req.files ? req.files.map(f => ({ type: f.mimetype.startsWith('image/') ? 'photo' : 'video', url: '/uploads/' + path.basename(f.path) })) : [];
+        const files = req.files ? req.files.map(f => ({
+            type: f.mimetype.startsWith('image/') ? 'photo' : 'video',
+            url: getRelativeUrl(f.path)  // ВИПРАВЛЕНО: правильний шлях
+        })) : [];
         const newNews = {
             id: Date.now(),
             title: req.body.title,
@@ -294,7 +289,10 @@ app.post('/api/collections/:id/photos', requireAuth, requireAdmin, upload.array(
         const db = await readDB();
         const index = db.collections.findIndex(c => c.id === parseInt(req.params.id));
         if (index !== -1 && req.files) {
-            const files = req.files.map(f => ({ type: 'photo', url: '/uploads/' + path.basename(f.path) }));
+            const files = req.files.map(f => ({
+                type: 'photo',
+                url: getRelativeUrl(f.path)
+            }));
             db.collections[index].media = [...(db.collections[index].media || []), ...files];
             await writeDB(db);
             res.json({ success: true, files });
@@ -452,7 +450,7 @@ app.post('/api/volunteers/:id/photo', requireAuth, requireAdmin, upload.single('
         const db = await readDB();
         const index = (db.volunteers || []).findIndex(v => v.id === parseInt(req.params.id));
         if (index !== -1 && req.file) {
-            db.volunteers[index].photo = '/uploads/volunteers/' + req.file.filename;
+            db.volunteers[index].photo = getRelativeUrl(req.file.path);
             await writeDB(db);
             res.json({ success: true, photo: db.volunteers[index].photo });
         } else {
@@ -526,7 +524,7 @@ app.post('/api/partners/:id/logo', requireAuth, requireAdmin, upload.single('log
         const db = await readDB();
         const index = (db.partners || []).findIndex(p => p.id === parseInt(req.params.id));
         if (index !== -1 && req.file) {
-            db.partners[index].logo = '/uploads/partners/' + req.file.filename;
+            db.partners[index].logo = getRelativeUrl(req.file.path);
             await writeDB(db);
             res.json({ success: true, logo: db.partners[index].logo });
         } else {
@@ -573,7 +571,7 @@ app.post('/api/help-page/image', requireAuth, requireAdmin, upload.single('image
     try {
         const db = await readDB();
         if (req.file) {
-            db.helpPage.image = '/uploads/photos/' + req.file.filename;
+            db.helpPage.image = getRelativeUrl(req.file.path);
             await writeDB(db);
             res.json({ success: true, image: db.helpPage.image });
         } else {
@@ -628,7 +626,7 @@ app.post('/api/settings/logo', requireAuth, requireAdmin, upload.single('logo'),
     try {
         const db = await readDB();
         if (req.file) {
-            const logoPath = '/uploads/photos/' + req.file.filename;
+            const logoPath = getRelativeUrl(req.file.path);
             db.settings.logo = logoPath;
             await writeDB(db);
             res.json({ success: true, logo: logoPath });
@@ -636,7 +634,6 @@ app.post('/api/settings/logo', requireAuth, requireAdmin, upload.single('logo'),
             res.status(400).json({ error: 'Файл не завантажено' });
         }
     } catch (err) {
-        console.error(err);
         res.status(500).json({ error: 'Помилка сервера' });
     }
 });
@@ -663,8 +660,7 @@ app.get('/api/logo', async (req, res) => {
     try {
         const db = await readDB();
         if (db.settings && db.settings.logo) {
-            const filename = path.basename(db.settings.logo);
-            const logoPath = path.join(UPLOADS_DIR, 'photos', filename);
+            const logoPath = path.join(UPLOADS_DIR, db.settings.logo.replace('/uploads/', ''));
             if (await fs.pathExists(logoPath)) {
                 return res.sendFile(logoPath);
             }
