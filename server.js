@@ -25,7 +25,7 @@ async function ensureDirectories() {
     console.log(`Директорії готові: DATA_DIR=${DATA_DIR}, UPLOADS_DIR=${UPLOADS_DIR}`);
 }
 
-// Налаштування multer для різних типів файлів
+// Налаштування multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let dest = path.join(UPLOADS_DIR, 'photos');
@@ -334,7 +334,6 @@ app.put('/api/donations/:id/confirm', requireAuth, requireAdmin, async (req, res
         const index = (db.donations || []).findIndex(d => d.id === parseInt(req.params.id));
         if (index !== -1) {
             db.donations[index].status = 'confirmed';
-            // Оновлюємо суму збору
             const donation = db.donations[index];
             const collectionIndex = (db.collections || []).findIndex(c => c.id === donation.collectionId);
             if (collectionIndex !== -1) {
