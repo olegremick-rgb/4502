@@ -51,29 +51,29 @@
         .header-container {
             max-width: 1300px;
             margin: 0 auto;
-            padding: 10px 20px;
+            padding: 8px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: nowrap;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             text-decoration: none;
             flex-shrink: 0;
         }
 
         .logo-img {
-            max-height: 40px;
+            max-height: 36px;
             width: auto;
         }
 
         .logo-text {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 800;
             color: var(--primary);
             white-space: nowrap;
@@ -87,16 +87,16 @@
 
         .nav-menu {
             display: flex;
-            gap: 20px;
+            gap: 12px;
             list-style: none;
         }
 
         .nav-link {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 6px 12px;
             font-weight: 700;
             border-radius: 30px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             white-space: nowrap;
             cursor: pointer;
             color: var(--dark);
@@ -120,26 +120,29 @@
 
         .login-form {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             flex-wrap: nowrap;
         }
 
         .login-input {
-            padding: 8px 12px;
+            padding: 6px 10px;
             border: 2px solid var(--gray-light);
             border-radius: 30px;
-            width: 110px;
+            width: 100px;
+            font-size: 0.85rem;
             font-weight: 500;
         }
 
         .btn {
-            padding: 8px 18px;
+            padding: 6px 14px;
             border: none;
             border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
+            font-size: 0.85rem;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -158,15 +161,16 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-weight: 700;
+            font-size: 0.9rem;
         }
 
         .logout-btn {
             background: none;
             border: none;
             color: var(--danger);
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
         }
 
@@ -174,7 +178,7 @@
             display: none;
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: var(--primary);
             cursor: pointer;
         }
@@ -201,6 +205,7 @@
             }
             .nav-link {
                 white-space: normal;
+                display: block;
             }
             .menu-toggle {
                 display: block;
@@ -227,27 +232,27 @@
                 justify-content: flex-end;
             }
             .login-input {
-                width: 100px;
-                font-size: 0.8rem;
-            }
-            .btn {
-                padding: 6px 12px;
-                font-size: 0.8rem;
+                width: 90px;
             }
         }
 
         @media (max-width: 768px) {
-            .login-input {
-                width: 90px;
-            }
             .logo-text {
-                font-size: 1rem;
+                font-size: 0.9rem;
+            }
+            .login-input {
+                width: 80px;
+                font-size: 0.75rem;
+            }
+            .btn {
+                padding: 5px 10px;
+                font-size: 0.75rem;
             }
         }
 
-        /* Основний контент */
+        /* Решта стилів (секції, картки) – залишаються без змін */
         main {
-            margin-top: 80px;
+            margin-top: 70px;
             padding: 0 15px;
         }
 
@@ -329,7 +334,6 @@
             }
         }
 
-        /* Картки */
         .news-card,
         .collection-card,
         .report-card,
@@ -822,7 +826,6 @@
     </header>
 
     <main>
-        <!-- Секції (повністю аналогічні попередній версії) -->
         <section id="news" class="section active">
             <div class="container">
                 <div class="section-header">
@@ -1351,4 +1354,4 @@
         });
     </script>
 </body>
-</html>іі
+</html>
