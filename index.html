@@ -6,107 +6,22 @@
     <title>Волонтерський штаб 4.5.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         :root {
-            --primary: #0066cc;
-            --primary-dark: #004999;
-            --primary-light: #4da3ff;
-            --secondary: #ffffff;
-            --accent: #e6f0ff;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --dark: #003366;
-            --light: #f8f9fa;
-            --gray: #4a5568;
-            --gray-light: #e2e8f0;
+            --primary: #0066cc; --primary-dark: #004999; --primary-light: #4da3ff;
+            --success: #28a745; --warning: #ffc107; --danger: #dc3545;
+            --dark: #003366; --light: #f8f9fa; --gray: #4a5568; --gray-light: #e2e8f0;
+            --accent: #e6f0ff; --shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
-        html {
-            -webkit-text-size-adjust: 100%;
-            -webkit-font-smoothing: antialiased;
-        }
-
         body {
-            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #ffffff 0%, #e6f0ff 100%);
-            min-height: 100vh;
             color: var(--dark);
-            line-height: 1.5;
-            overflow-x: hidden;
             font-weight: 500;
         }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: rotate(45deg) scale(1); }
-            50% { transform: rotate(45deg) scale(1.1); }
-        }
-
-        .loader-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--dark));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.3s;
-        }
-
-        .loader-wrapper.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loader {
-            width: 60px;
-            height: 60px;
-            position: relative;
-        }
-
-        .heart {
-            width: 60px;
-            height: 60px;
-            background: white;
-            position: relative;
-            transform: rotate(45deg);
-            animation: pulse 1.2s ease-in-out infinite;
-        }
-
-        .heart:before,
-        .heart:after {
-            content: '';
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-        }
-
-        .heart:before { left: -30px; }
-        .heart:after { top: -30px; }
-
+        /* ========== ХЕДЕР В ОДИН РЯДОК ========== */
         .header {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255,255,255,0.98);
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 15px rgba(0,102,204,0.15);
             position: fixed;
@@ -115,1575 +30,245 @@
             z-index: 1000;
             border-bottom: 3px solid var(--primary);
         }
-
         .header-container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 12px 20px;
+            padding: 10px 20px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            flex-shrink: 0;
-        }
-
-        .logo-img {
-            max-height: 40px;
-            width: auto;
-            border-radius: 8px;
-        }
-
-        .logo-text {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -0.5px;
-        }
-
-        @media (min-width: 768px) {
-            .logo-text {
-                font-size: 1.3rem;
-            }
-        }
-
-        .nav {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-        .nav-menu {
-            list-style: none;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        @media (min-width: 768px) {
-            .nav-menu {
-                gap: 20px;
-            }
-        }
-
-        .nav-link {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 700;
-            border-radius: 30px;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        @media (min-width: 768px) {
-            .nav-link {
-                font-size: 1rem;
-                padding: 10px 20px;
-            }
-        }
-
-        .nav-link:active {
-            background: var(--accent);
-            color: var(--primary);
-        }
-
-        .nav-link.active {
-            color: var(--primary);
-            background: var(--accent);
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-            .nav {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 80%;
-                max-width: 280px;
-                height: calc(100vh - 70px);
-                background: white;
-                box-shadow: 2px 0 20px rgba(0,0,0,0.1);
-                transition: left 0.3s ease;
-                z-index: 999;
-                overflow-y: auto;
-                justify-content: flex-start;
-            }
-            .nav.active {
-                left: 0;
-            }
-            .nav-menu {
-                flex-direction: column;
-                padding: 20px;
-                gap: 5px;
-            }
-            .nav-link {
-                display: block;
-                padding: 12px 15px;
-                white-space: normal;
-            }
-        }
-
-        .nav-overlay {
-            display: none;
-            position: fixed;
-            top: 70px;
-            left: 0;
-            width: 100%;
-            height: calc(100vh - 70px);
-            background: rgba(0,0,0,0.5);
-            z-index: 998;
-        }
-
-        .nav-overlay.active {
-            display: block;
-        }
-
-        .auth-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-        .login-form {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .login-input {
-            padding: 8px 12px;
-            border: 2px solid var(--gray-light);
-            border-radius: 30px;
-            font-size: 0.85rem;
-            width: 110px;
-            font-weight: 500;
-        }
-
-        .login-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .btn {
-            padding: 8px 18px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            white-space: nowrap;
-        }
-
-        .btn:active {
-            transform: scale(0.97);
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:active {
-            background: var(--primary-dark);
-        }
-
-        .admin-btn {
-            display: none !important;
-        }
-
-        .admin-btn.visible {
-            display: inline-flex !important;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .logout-btn {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 5px;
-        }
-
-        main {
-            margin-top: 80px;
-            min-height: calc(100vh - 80px);
-            padding: 0 15px;
-        }
-
-        .section {
-            display: none;
-            padding: 40px 0;
-            animation: fadeInUp 0.4s ease-out;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            color: var(--primary);
-            position: relative;
-            display: inline-block;
-        }
-
-        @media (min-width: 768px) {
-            .section-title {
-                font-size: 2.5rem;
-            }
-        }
-
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 2px;
-        }
-
-        .section-subtitle {
-            font-size: 1rem;
-            color: var(--gray);
-            font-weight: 500;
-        }
-
-        .news-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-
-        @media (min-width: 640px) {
-            .news-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .news-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .news-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0,102,204,0.1);
-            border: 1px solid var(--gray-light);
-            transition: transform 0.2s;
-            cursor: pointer;
-        }
-
-        .news-card:active {
-            transform: scale(0.98);
-        }
-
-        .news-card.important {
-            border-left: 5px solid var(--primary);
-            background: linear-gradient(to right, var(--accent), white);
-        }
-
-        .news-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .news-date {
-            background: var(--accent);
-            padding: 5px 14px;
-            border-radius: 30px;
-            color: var(--primary);
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .news-badge {
-            background: var(--primary);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .news-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-            color: var(--dark);
-        }
-
-        .news-content {
-            margin-bottom: 15px;
-            color: var(--gray);
-            line-height: 1.6;
-            font-weight: 500;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .collections-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-
-        @media (min-width: 640px) {
-            .collections-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .collection-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0,102,204,0.1);
-            border: 1px solid var(--gray-light);
-        }
-
-        .collection-title {
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-
-        .collection-description {
-            color: var(--gray);
-            margin-bottom: 15px;
-            line-height: 1.6;
-            font-weight: 500;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: var(--gray-light);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary);
-            transition: width 0.5s ease;
-        }
-
-        .collection-stats {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            font-weight: 700;
-            font-size: 1rem;
-        }
-
-        .collection-current {
-            color: var(--primary);
-        }
-
-        .collection-target {
-            color: var(--gray);
-        }
-
-        .collection-percent {
-            color: var(--success);
-        }
-
-        .collection-requisites {
-            background: var(--accent);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            font-family: monospace;
-            font-size: 1rem;
-            text-align: center;
-            border: 1px dashed var(--primary);
-            color: var(--primary);
-            word-break: break-all;
-            font-weight: 700;
-        }
-
-        .donate-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .donate-btn:active {
-            background: var(--primary-dark);
-            transform: scale(0.98);
-        }
-
-        .reports-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-
-        @media (min-width: 768px) {
-            .reports-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .report-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0,102,204,0.1);
-            border: 1px solid var(--gray-light);
-        }
-
-        .report-header {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-
-        @media (min-width: 480px) {
-            .report-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
-
-        .report-title {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .report-date {
-            background: var(--accent);
-            padding: 5px 14px;
-            border-radius: 30px;
-            color: var(--primary);
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .report-content {
-            color: var(--gray);
-            margin-bottom: 10px;
-            line-height: 1.6;
-            font-weight: 500;
-        }
-
-        .report-amount {
-            font-weight: 800;
-            color: var(--success);
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        .volunteers-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-
-        @media (min-width: 640px) {
-            .volunteers-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .volunteers-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .volunteer-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,102,204,0.1);
-            transition: transform 0.3s;
-            border: 1px solid var(--gray-light);
-        }
-
-        .volunteer-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .volunteer-photo {
-            width: 100%;
-            aspect-ratio: 1;
-            overflow: hidden;
-            background: var(--accent);
-        }
-
-        .volunteer-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .volunteer-info {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .volunteer-name {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .volunteer-role {
-            color: var(--gray);
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .partners-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-
-        @media (min-width: 640px) {
-            .partners-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .partners-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .partner-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,102,204,0.1);
-            transition: transform 0.3s;
-            border: 1px solid var(--gray-light);
-        }
-
-        .partner-logo {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--light);
-            border-radius: 50%;
-            overflow: hidden;
-        }
-
-        .partner-logo img {
-            max-width: 80%;
-            max-height: 80%;
-            object-fit: contain;
-        }
-
-        .partner-name {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .partner-description {
-            color: var(--gray);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
-
-        .help-content {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
-        }
-
-        @media (min-width: 768px) {
-            .help-content {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .help-text {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,102,204,0.1);
-        }
-
-        .help-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .help-description {
-            font-size: 1rem;
-            line-height: 1.8;
-            color: var(--dark);
-            font-weight: 500;
-            white-space: pre-line;
-        }
-
-        .help-image {
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,102,204,0.2);
-            border: 2px solid var(--primary);
-        }
-
-        .help-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .instructions-section {
-            margin-top: 40px;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,102,204,0.1);
-        }
-
-        .instructions-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .instructions-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .instruction-item {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            padding: 15px;
-            background: var(--accent);
-            border-radius: 12px;
-        }
-
-        .instruction-number {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.2rem;
-        }
-
-        .instruction-text {
-            flex: 1;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .help-contacts {
-            margin-top: 30px;
-            background: var(--accent);
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .help-contacts h3 {
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-weight: 800;
-        }
-
-        .help-contacts p {
-            margin: 10px 0;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
-        }
-
-        @media (min-width: 768px) {
-            .about-content {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .about-text {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 5px 20px rgba(0,102,204,0.1);
-        }
-
-        .about-description {
-            font-size: 1rem;
-            line-height: 1.8;
-            color: var(--dark);
-            font-weight: 500;
-            white-space: pre-line;
-        }
-
-        .about-image {
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,102,204,0.2);
-            border: 2px solid var(--primary);
-        }
-
-        .about-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .footer {
-            background: var(--dark);
-            color: white;
-            padding: 40px 20px 25px;
-            margin-top: 50px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        @media (min-width: 640px) {
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .footer-content {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .footer-section h3 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-            color: white;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 8px;
-        }
-
-        .footer-section p {
-            color: rgba(255,255,255,0.85);
-            line-height: 1.6;
-            font-weight: 500;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section li {
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: rgba(255,255,255,0.85);
-            word-break: break-word;
-        }
-
-        .footer-section i {
-            color: var(--primary);
-            width: 22px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .social-links a {
-            color: white;
-            font-size: 1.4rem;
-            transition: color 0.2s;
-            padding: 5px;
-        }
-
-        .social-links a:active {
-            color: var(--primary);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 30px;
-            margin-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .scroll-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 48px;
-            height: 48px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            z-index: 999;
-            box-shadow: 0 3px 10px rgba(0,102,204,0.3);
-        }
-
-        .scroll-top.show {
-            display: flex;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: white;
-            padding: 15px 20px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 4000;
-            border-left: 4px solid var(--primary);
-            animation: slideIn 0.3s;
-            max-width: 400px;
-            margin: 0 auto;
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
-        .toast.success { border-left-color: var(--success); background: var(--success-light); color: var(--success); }
-        .toast.error { border-left-color: var(--danger); background: var(--danger-light); color: var(--danger); }
-        .toast.warning { border-left-color: var(--warning); background: var(--warning-light); color: #856404; }
-
-        .loading-spinner {
-            text-align: center;
-            padding: 50px;
-            color: var(--primary);
-        }
-
-        .loading-spinner i {
-            font-size: 3rem;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 50px;
-            color: var(--gray);
-            background: white;
-            border-radius: 16px;
-            font-weight: 600;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            max-width: 90%;
-            max-height: 90vh;
-            overflow: auto;
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--danger);
-            color: white;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .news-modal-header {
-            padding: 25px 25px 0 25px;
-        }
-
-        .news-modal-date {
-            background: var(--accent);
-            padding: 5px 12px;
-            border-radius: 20px;
-            color: var(--primary);
-            font-size: 0.85rem;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
-        .news-modal-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .news-modal-content-text {
-            padding: 0 25px;
-            color: var(--dark);
-            line-height: 1.8;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .news-modal-media {
-            padding: 25px;
-        }
-
-        .news-modal-media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-        }
-
-        .news-modal-media-item {
-            aspect-ratio: 1;
-            border-radius: 12px;
-            overflow: hidden;
-            cursor: pointer;
-            border: 2px solid var(--gray-light);
-        }
-
-        .news-modal-media-item img,
-        .news-modal-media-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .media-item {
-            position: relative;
-            aspect-ratio: 1;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            border: 1px solid var(--gray-light);
-        }
-
-        .media-item img,
-        .media-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+            gap: 20px;
+            flex-wrap: nowrap;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+        .logo-img { max-height: 40px; width: auto; }
+        .logo-text { font-size: 1.2rem; font-weight: 800; color: var(--primary); white-space: nowrap; }
+        .nav { flex: 1; display: flex; justify-content: center; }
+        .nav-menu { display: flex; gap: 20px; list-style: none; }
+        .nav-link { display: inline-block; padding: 8px 16px; font-weight: 700; border-radius: 30px; font-size: 0.95rem; white-space: nowrap; cursor: pointer; color: var(--dark); text-decoration: none; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { background: var(--accent); color: var(--primary); }
+        .auth-section { flex-shrink: 0; display: flex; gap: 10px; align-items: center; }
+        .login-form { display: flex; gap: 8px; align-items: center; }
+        .login-input { padding: 8px 12px; border: 2px solid var(--gray-light); border-radius: 30px; width: 110px; font-weight: 500; }
+        .btn { padding: 8px 18px; border: none; border-radius: 30px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .admin-btn { display: none !important; }
+        .admin-btn.visible { display: inline-flex !important; }
+        .user-info { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+        .logout-btn { background: none; border: none; color: var(--danger); font-size: 1.1rem; cursor: pointer; }
+        .menu-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--primary); cursor: pointer; }
+        @media (max-width: 1024px) {
+            .header-container { flex-wrap: wrap; }
+            .nav { order: 3; width: 100%; justify-content: flex-start; display: none; }
+            .nav.active { display: block; }
+            .nav-menu { flex-direction: column; gap: 5px; margin-top: 10px; }
+            .nav-link { white-space: normal; }
+            .menu-toggle { display: block; }
+            .nav-overlay { display: none; position: fixed; top: 70px; left: 0; width: 100%; height: calc(100vh - 70px); background: rgba(0,0,0,0.5); z-index: 998; }
+            .nav-overlay.active { display: block; }
+        }
+        /* ========== ІНШІ СТИЛІ ========== */
+        main { margin-top: 80px; padding: 0 15px; }
+        .section { display: none; padding: 40px 0; animation: fadeInUp 0.4s; }
+        .section.active { display: block; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 40px; }
+        .section-title { font-size: 2rem; font-weight: 800; color: var(--primary); position: relative; display: inline-block; }
+        .section-title:after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 4px; background: var(--primary); border-radius: 2px; }
+        .section-subtitle { font-size: 1rem; color: var(--gray); }
+        .news-grid, .collections-grid, .reports-grid, .volunteers-grid, .partners-grid {
+            display: grid; gap: 25px;
+        }
+        @media (min-width: 640px) { .news-grid, .collections-grid, .volunteers-grid, .partners-grid { grid-template-columns: repeat(2,1fr); } }
+        @media (min-width: 1024px) { .news-grid, .volunteers-grid, .partners-grid { grid-template-columns: repeat(3,1fr); } }
+        @media (min-width: 768px) { .reports-grid { grid-template-columns: repeat(2,1fr); } }
+        .news-card, .collection-card, .report-card, .volunteer-card, .partner-card {
+            background: white; border-radius: 16px; padding: 25px; box-shadow: 0 5px 20px rgba(0,102,204,0.1); border: 1px solid var(--gray-light); transition: 0.2s;
+        }
+        .news-card.important { border-left: 5px solid var(--primary); background: linear-gradient(to right, var(--accent), white); }
+        .news-title, .collection-title, .report-title, .volunteer-name, .partner-name { font-weight: 800; color: var(--primary); margin-bottom: 10px; }
+        .collection-requisites { background: var(--accent); padding: 15px; border-radius: 12px; text-align: center; font-family: monospace; border: 1px dashed var(--primary); font-weight: 700; margin: 15px 0; }
+        .donate-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .progress-bar { width: 100%; height: 10px; background: var(--gray-light); border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s; }
+        .collection-stats { display: flex; justify-content: space-between; margin: 10px 0; font-weight: 700; }
+        .footer { background: var(--dark); color: white; padding: 40px 20px 25px; margin-top: 50px; }
+        .footer-content { display: grid; gap: 30px; max-width: 1200px; margin: 0 auto; }
+        @media (min-width: 640px) { .footer-content { grid-template-columns: repeat(2,1fr); } }
+        @media (min-width: 1024px) { .footer-content { grid-template-columns: repeat(3,1fr); } }
+        .footer-section h3 { font-weight: 800; border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-bottom: 15px; }
+        .footer-section ul { list-style: none; }
+        .footer-section li { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 500; }
+        .social-links { display: flex; gap: 15px; }
+        .social-links a { color: white; font-size: 1.4rem; }
+        .scroll-top { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 999; }
+        .scroll-top.show { display: flex; }
+        .toast { position: fixed; bottom: 20px; left: 20px; right: 20px; background: white; padding: 15px 20px; border-radius: 12px; border-left: 4px solid var(--primary); max-width: 400px; margin: 0 auto; z-index: 4000; font-weight: 600; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: 20px; max-width: 90%; max-height: 90vh; overflow: auto; position: relative; padding: 20px; }
+        .modal-close { position: absolute; top: 10px; right: 10px; background: var(--danger); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; }
+        .loading-spinner { text-align: center; padding: 50px; color: var(--primary); }
+        .empty-message { text-align: center; padding: 50px; background: white; border-radius: 16px; color: var(--gray); }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="loader-wrapper" id="loader">
-        <div class="loader"><div class="heart"></div></div>
+    <div class="loader-wrapper" id="loader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg,var(--primary),var(--dark)); display:flex; justify-content:center; align-items:center; z-index:9999; transition:0.3s;">
+        <div class="loader"><div class="heart" style="width:60px;height:60px;background:white;position:relative;transform:rotate(45deg);animation:pulse 1.2s infinite;"></div></div>
     </div>
+    <style>@keyframes pulse { 0%,100%{transform:rotate(45deg) scale(1);} 50%{transform:rotate(45deg) scale(1.1);} } .heart:before,.heart:after{content:'';width:60px;height:60px;background:white;border-radius:50%;position:absolute;} .heart:before{left:-30px;} .heart:after{top:-30px;}</style>
 
     <header class="header">
         <div class="header-container">
             <button class="menu-toggle" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-
-            <a href="/" class="logo">
-                <img src="/api/logo" alt="Логотип" id="logoImg" class="logo-img">
-                <span class="logo-text" id="siteName">Волонтерський штаб 4.5.0</span>
-            </a>
-
+            <a href="/" class="logo"><img src="/api/logo" id="logoImg" class="logo-img"><span class="logo-text" id="siteName">Волонтерський штаб 4.5.0</span></a>
             <nav class="nav" id="mobileNav">
                 <ul class="nav-menu">
-                    <li><a class="nav-link active" onclick="showPage('news'); closeMobileMenu()">Новини</a></li>
-                    <li><a class="nav-link" onclick="showPage('collections'); closeMobileMenu()">Збори</a></li>
-                    <li><a class="nav-link" onclick="showPage('reports'); closeMobileMenu()">Звіти</a></li>
-                    <li><a class="nav-link" onclick="showPage('volunteers'); closeMobileMenu()">Волонтери</a></li>
-                    <li><a class="nav-link" onclick="showPage('partners'); closeMobileMenu()">Партнери</a></li>
-                    <li><a class="nav-link" onclick="showPage('help'); closeMobileMenu()">Допомога</a></li>
-                    <li><a class="nav-link" onclick="showPage('about'); closeMobileMenu()">Про нас</a></li>
+                    <li><a class="nav-link active" onclick="showPage('news');closeMobileMenu()">Новини</a></li>
+                    <li><a class="nav-link" onclick="showPage('collections');closeMobileMenu()">Збори</a></li>
+                    <li><a class="nav-link" onclick="showPage('reports');closeMobileMenu()">Звіти</a></li>
+                    <li><a class="nav-link" onclick="showPage('volunteers');closeMobileMenu()">Волонтери</a></li>
+                    <li><a class="nav-link" onclick="showPage('partners');closeMobileMenu()">Партнери</a></li>
+                    <li><a class="nav-link" onclick="showPage('help');closeMobileMenu()">Допомога</a></li>
+                    <li><a class="nav-link" onclick="showPage('about');closeMobileMenu()">Про нас</a></li>
                 </ul>
             </nav>
-
             <div class="nav-overlay" id="navOverlay" onclick="closeMobileMenu()"></div>
-
             <div class="auth-section">
                 <div id="loginForm" class="login-form">
-                    <input type="text" id="loginUsername" class="login-input" placeholder="Логін" autocomplete="off">
-                    <input type="password" id="loginPassword" class="login-input" placeholder="Пароль" autocomplete="off">
+                    <input type="text" id="loginUsername" class="login-input" placeholder="Логін">
+                    <input type="password" id="loginPassword" class="login-input" placeholder="Пароль">
                     <button class="btn btn-primary" onclick="login()">Увійти</button>
                 </div>
-                <div id="userInfo" class="user-info" style="display: none;">
-                    <span id="currentUser"></span>
-                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
+                <div id="userInfo" class="user-info" style="display:none;"><span id="currentUser"></span><button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button></div>
                 <a href="/admin" id="adminBtn" class="btn btn-primary admin-btn"><i class="fas fa-lock"></i> Адмін</a>
             </div>
         </div>
     </header>
 
     <main>
-        <section id="news" class="section active">
-            <div class="container">
-                <div class="section-header">
-                    <h1 class="section-title">Новини штабу</h1>
-                    <p class="section-subtitle">Останні події та оголошення</p>
-                </div>
-                <div class="news-grid" id="newsList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження...</p></div></div>
-            </div>
-        </section>
-
-        <section id="collections" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h1 class="section-title">Актуальні збори</h1>
-                    <p class="section-subtitle">Разом ми сила! Кожна гривня наближає перемогу</p>
-                </div>
-                <div class="collections-grid" id="collectionsList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження...</p></div></div>
-            </div>
-        </section>
-
-        <section id="reports" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h1 class="section-title">Звіти</h1>
-                    <p class="section-subtitle">Прозорість та відповідальність</p>
-                </div>
-                <div class="reports-grid" id="reportsList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження...</p></div></div>
-            </div>
-        </section>
-
-        <section id="volunteers" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h1 class="section-title">Наша команда</h1>
-                    <p class="section-subtitle">Люди, які роблять цей світ кращим</p>
-                </div>
-                <div class="volunteers-grid" id="volunteersList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження...</p></div></div>
-            </div>
-        </section>
-
-        <section id="partners" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h1 class="section-title">Наші партнери</h1>
-                    <p class="section-subtitle">Разом ми робимо більше</p>
-                </div>
-                <div class="partners-grid" id="partnersList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Завантаження...</p></div></div>
-            </div>
-        </section>
-
-        <section id="help" class="section">
-            <div class="container">
-                <div class="help-content" id="helpContent">
-                    <div class="help-text">
-                        <div id="helpTitle" class="help-title">Як отримати допомогу</div>
-                        <div id="helpDescription" class="help-description"></div>
-                    </div>
-                    <div class="help-image" id="helpImageContainer"><img src="" alt="Допомога" id="helpImage"></div>
-                </div>
-                <div class="instructions-section" id="instructionsSection">
-                    <h2 class="instructions-title">Покрокова інструкція</h2>
-                    <div class="instructions-list" id="instructionsList"></div>
-                </div>
-                <div class="help-contacts" id="helpContacts">
-                    <h3><i class="fas fa-headset"></i> Контакти для звернень</h3>
-                    <p><i class="fas fa-phone"></i> <span id="helpPhone"></span></p>
-                    <p><i class="fas fa-envelope"></i> <span id="helpEmail"></span></p>
-                    <p><i class="fab fa-telegram"></i> <span id="helpTelegram"></span></p>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="section">
-            <div class="container">
-                <div class="about-content">
-                    <div class="about-text">
-                        <h1 class="section-title">Про нас</h1>
-                        <div id="aboutContent" class="about-description"></div>
-                    </div>
-                    <div class="about-image">
-                        <img src="https://images.unsplash.com/photo-1593113598332-cd59a0c3a9a1?w=800" alt="Волонтери" loading="lazy">
-                    </div>
-                </div>
-            </div>
-        </section>
+        <section id="news" class="section active"><div class="container"><div class="section-header"><h1 class="section-title">Новини штабу</h1><p class="section-subtitle">Останні події</p></div><div class="news-grid" id="newsList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Завантаження...</div></div></div></section>
+        <section id="collections" class="section"><div class="container"><div class="section-header"><h1 class="section-title">Актуальні збори</h1><p class="section-subtitle">Разом ми сила!</p></div><div class="collections-grid" id="collectionsList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Завантаження...</div></div></div></section>
+        <section id="reports" class="section"><div class="container"><div class="section-header"><h1 class="section-title">Звіти</h1><p class="section-subtitle">Прозорість та відповідальність</p></div><div class="reports-grid" id="reportsList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Завантаження...</div></div></div></section>
+        <section id="volunteers" class="section"><div class="container"><div class="section-header"><h1 class="section-title">Наша команда</h1><p class="section-subtitle">Люди, які роблять світ кращим</p></div><div class="volunteers-grid" id="volunteersList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Завантаження...</div></div></div></section>
+        <section id="partners" class="section"><div class="container"><div class="section-header"><h1 class="section-title">Наші партнери</h1><p class="section-subtitle">Разом ми робимо більше</p></div><div class="partners-grid" id="partnersList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Завантаження...</div></div></div></section>
+        <section id="help" class="section"><div class="container"><div class="help-content" style="display:grid; gap:40px;"><div class="help-text"><div id="helpTitle" class="help-title">Як отримати допомогу</div><div id="helpDescription" class="help-description"></div></div><div class="help-image" id="helpImageContainer"><img src="" id="helpImage"></div></div><div class="instructions-section"><h2 class="instructions-title">Покрокова інструкція</h2><div id="instructionsList" class="instructions-list"></div></div><div class="help-contacts"><h3><i class="fas fa-headset"></i> Контакти</h3><p><i class="fas fa-phone"></i> <span id="helpPhone"></span></p><p><i class="fas fa-envelope"></i> <span id="helpEmail"></span></p><p><i class="fab fa-telegram"></i> <span id="helpTelegram"></span></p></div></div></section>
+        <section id="about" class="section"><div class="container"><div class="about-content" style="display:grid; gap:40px;"><div class="about-text"><h1 class="section-title">Про нас</h1><div id="aboutContent" class="about-description"></div></div><div class="about-image"><img src="https://images.unsplash.com/photo-1593113598332-cd59a0c3a9a1?w=800" alt="Волонтери"></div></div></div></section>
     </main>
 
-    <div class="modal" id="newsModal" onclick="if(event.target===this) closeNewsModal()">
-        <div class="modal-content"><button class="modal-close" onclick="closeNewsModal()">&times;</button><div id="newsModalContent"></div></div>
-    </div>
-
-    <div class="modal" id="mediaModal" onclick="if(event.target===this) closeMediaModal()">
-        <div class="modal-content"><button class="modal-close" onclick="closeMediaModal()">&times;</button><div id="mediaModalContent"></div></div>
-    </div>
+    <div class="modal" id="newsModal" onclick="if(event.target===this) closeNewsModal()"><div class="modal-content"><button class="modal-close" onclick="closeNewsModal()">&times;</button><div id="newsModalContent"></div></div></div>
+    <div class="modal" id="mediaModal" onclick="if(event.target===this) closeMediaModal()"><div class="modal-content"><button class="modal-close" onclick="closeMediaModal()">&times;</button><div id="mediaModalContent"></div></div></div>
 
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Контакти</h3>
-                    <ul id="contactsList">
-                        <li><i class="fas fa-phone"></i> <span id="contactPhone">+380 (99) 299-17-08</span></li>
-                        <li><i class="fas fa-envelope"></i> <span id="contactEmail">shtabvolonteriv450@gmail.com</span></li>
-                        <li><i class="fas fa-map-marker-alt"></i> <span id="contactAddress">м. Надвірна та м. Івано-Франківськ</span></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Реквізити</h3>
-                    <ul id="requisitesList">
-                        <li><i class="fas fa-credit-card"></i> <span id="requisitesCard"></span></li>
-                        <li><i class="fas fa-university"></i> <span id="requisitesBank"></span></li>
-                        <li><i class="fas fa-user"></i> <span id="requisitesName"></span></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Ми в соцмережах</h3>
-                    <div class="social-links" id="socialLinks"></div>
-                </div>
+                <div class="footer-section"><h3>Контакти</h3><ul id="contactsList"><li><i class="fas fa-phone"></i> <span id="contactPhone">+380 (99) 299-17-08</span></li><li><i class="fas fa-envelope"></i> <span id="contactEmail">shtabvolonteriv450@gmail.com</span></li><li><i class="fas fa-map-marker-alt"></i> <span id="contactAddress">м. Надвірна та м. Івано-Франківськ</span></li></ul></div>
+                <div class="footer-section"><h3>Реквізити</h3><ul id="requisitesList"><li><i class="fas fa-credit-card"></i> <span id="requisitesCard"></span></li><li><i class="fas fa-university"></i> <span id="requisitesBank"></span></li><li><i class="fas fa-user"></i> <span id="requisitesName"></span></li></ul></div>
+                <div class="footer-section"><h3>Ми в соцмережах</h3><div class="social-links" id="socialLinks"></div></div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; <span id="currentYear"></span> Волонтерський штаб 4.5.0. Всі права захищені</p>
-            </div>
+            <div class="footer-bottom"><p>&copy; <span id="currentYear"></span> Волонтерський штаб 4.5.0. Всі права захищені</p></div>
         </div>
     </footer>
-
     <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
     <div id="toastContainer"></div>
 
     <script>
-        let isAdmin = false;
-        let allNews = [];
-
-        function toggleMobileMenu() {
-            document.getElementById('mobileNav').classList.toggle('active');
-            document.getElementById('navOverlay').classList.toggle('active');
-            document.body.style.overflow = document.getElementById('mobileNav').classList.contains('active') ? 'hidden' : '';
-        }
-        function closeMobileMenu() {
-            document.getElementById('mobileNav').classList.remove('active');
-            document.getElementById('navOverlay').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => document.getElementById('loader').classList.add('fade-out'), 800);
-            checkSession();
-            loadAllData();
-            setupScroll();
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-        });
-
-        async function checkSession() {
-            try {
-                const res = await fetch('/api/session');
-                const data = await res.json();
-                if (data.authenticated) {
-                    isAdmin = data.user.role === 'superadmin';
-                    document.getElementById('loginForm').style.display = 'none';
-                    document.getElementById('userInfo').style.display = 'flex';
-                    document.getElementById('currentUser').textContent = data.user.username;
-                    if (isAdmin) document.getElementById('adminBtn').classList.add('visible');
-                }
-            } catch(e) {}
-        }
-
-        async function login() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-            if (!username || !password) { showToast('Введіть логін та пароль', 'warning'); return; }
-            try {
-                const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
-                const data = await res.json();
-                if (res.ok) {
-                    isAdmin = data.user.role === 'superadmin';
-                    document.getElementById('loginForm').style.display = 'none';
-                    document.getElementById('userInfo').style.display = 'flex';
-                    document.getElementById('currentUser').textContent = data.user.username;
-                    if (isAdmin) document.getElementById('adminBtn').classList.add('visible');
-                    showToast('Вхід виконано', 'success');
-                    document.getElementById('loginUsername').value = '';
-                    document.getElementById('loginPassword').value = '';
-                } else showToast(data.error || 'Помилка', 'error');
-            } catch(e) { showToast('Помилка', 'error'); }
-        }
-
-        async function logout() {
-            await fetch('/api/logout', { method: 'POST' });
-            isAdmin = false;
-            document.getElementById('loginForm').style.display = 'flex';
-            document.getElementById('userInfo').style.display = 'none';
-            document.getElementById('adminBtn').classList.remove('visible');
-            showToast('Ви вийшли', 'info');
-        }
-
-        async function loadAllData() {
-            await Promise.all([loadSettings(), loadNews(), loadCollections(), loadReports(), loadVolunteers(), loadPartners(), loadHelpPage(), loadAbout()]);
-        }
-
-        async function loadSettings() {
-            try {
-                const res = await fetch('/api/settings');
-                const data = await res.json();
-                document.getElementById('siteName').textContent = data.siteName;
-                document.getElementById('contactPhone').textContent = data.contacts?.phone || '+380 (99) 299-17-08';
-                document.getElementById('contactEmail').textContent = data.contacts?.email || 'shtabvolonteriv450@gmail.com';
-                document.getElementById('contactAddress').textContent = data.contacts?.address || 'м. Надвірна та м. Івано-Франківськ';
-                
-                // Реквізити
-                if (data.requisites) {
-                    document.getElementById('requisitesCard').textContent = data.requisites.card || '5168 7573 1234 5678';
-                    document.getElementById('requisitesBank').textContent = data.requisites.bank || 'Монобанк';
-                    document.getElementById('requisitesName').textContent = data.requisites.name || 'Волонтерський штаб 4.5.0';
-                }
-                
-                if (data.social?.length) {
-                    const activeSocial = data.social.filter(s => s.active);
-                    document.getElementById('socialLinks').innerHTML = activeSocial.map(s => `<a href="${s.url}" target="_blank"><i class="fab fa-${s.icon}"></i></a>`).join('');
-                }
-            } catch(e) {}
-        }
-
-        async function loadNews() {
-            try {
-                const res = await fetch('/api/news');
-                allNews = await res.json();
-                const container = document.getElementById('newsList');
-                if (!allNews.length) { container.innerHTML = '<div class="empty-message">Немає новин</div>'; return; }
-                container.innerHTML = allNews.map(news => `
-                    <div class="news-card ${news.important ? 'important' : ''}" onclick="openNewsModal(${news.id})">
-                        <div class="news-header"><span class="news-date">${news.date}</span>${news.important ? '<span class="news-badge">Важливо</span>' : ''}</div>
-                        <h3 class="news-title">${escapeHtml(news.title)}</h3>
-                        <p class="news-content">${escapeHtml(news.content.substring(0, 150))}${news.content.length > 150 ? '...' : ''}</p>
-                    </div>
-                `).join('');
-            } catch(e) {}
-        }
-
-        function openNewsModal(newsId) {
-            const news = allNews.find(n => n.id === newsId);
-            if (!news) return;
-            const mediaHtml = news.media?.length ? `
-                <div class="news-modal-media">
-                    <h4><i class="fas fa-images"></i> Медіа (${news.media.length})</h4>
-                    <div class="news-modal-media-grid">
-                        ${news.media.map(m => `<div class="news-modal-media-item" onclick="openMedia('${m.url}', '${m.type}')">${m.type === 'photo' ? `<img src="${m.url}">` : `<video src="${m.url}" preload="metadata"></video>`}</div>`).join('')}
-                    </div>
-                </div>
-            ` : '';
-            document.getElementById('newsModalContent').innerHTML = `
-                <div class="news-modal-header"><span class="news-modal-date">${news.date}</span>${news.important ? '<span class="news-badge" style="margin-left:10px;">Важливо</span>' : ''}<h2 class="news-modal-title">${escapeHtml(news.title)}</h2></div>
-                <div class="news-modal-content-text">${escapeHtml(news.content).replace(/\n/g, '<br>')}</div>${mediaHtml}
-            `;
-            document.getElementById('newsModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeNewsModal() { document.getElementById('newsModal').classList.remove('active'); document.body.style.overflow = ''; }
-
-        function openMedia(url, type) {
-            const modal = document.getElementById('mediaModal');
-            document.getElementById('mediaModalContent').innerHTML = type === 'photo' ? `<img src="${url}" style="max-width:100%; max-height:90vh; border-radius:10px;">` : `<video src="${url}" controls autoplay style="max-width:100%; max-height:90vh; border-radius:10px;"></video>`;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeMediaModal() { document.getElementById('mediaModal').classList.remove('active'); document.getElementById('mediaModalContent').innerHTML = ''; document.body.style.overflow = ''; }
-
-        async function loadCollections() {
-            try {
-                const res = await fetch('/api/collections');
-                const data = await res.json();
-                const container = document.getElementById('collectionsList');
-                if (!data.length) { container.innerHTML = '<div class="empty-message">Немає активних зборів</div>'; return; }
-                container.innerHTML = data.map(c => {
-                    const percent = ((c.current / c.target) * 100).toFixed(1);
-                    return `
-                        <div class="collection-card">
-                            <h3 class="collection-title">${escapeHtml(c.name)}</h3>
-                            <p class="collection-description">${escapeHtml(c.description)}</p>
-                            <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
-                            <div class="collection-stats"><span class="collection-current">${c.current.toLocaleString()} грн</span><span class="collection-percent">${percent}%</span></div>
-                            <div class="collection-target">Ціль: ${c.target.toLocaleString()} грн</div>
-                            <div class="collection-requisites"><i class="fas fa-credit-card"></i> ${escapeHtml(c.requisites)}</div>
-                            <button class="donate-btn" onclick="openDonateModal(${c.id}, '${escapeHtml(c.name)}', '${escapeHtml(c.requisites)}')"><i class="fas fa-heart"></i> Задонатити</button>
-                        </div>
-                    `;
-                }).join('');
-            } catch(e) {}
-        }
-
-        async function loadReports() {
-            try {
-                const res = await fetch('/api/reports');
-                const data = await res.json();
-                const container = document.getElementById('reportsList');
-                if (!data.length) { container.innerHTML = '<div class="empty-message">Ще немає звітів</div>'; return; }
-                container.innerHTML = data.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(r => `
-                    <div class="report-card"><div class="report-header"><h3 class="report-title">${escapeHtml(r.title)}</h3><span class="report-date">${r.date}</span></div>
-                    <p class="report-content">${escapeHtml(r.content)}</p>${r.amount ? `<p class="report-amount">Сума: ${r.amount.toLocaleString()} грн</p>` : ''}</div>
-                `).join('');
-            } catch(e) {}
-        }
-
-        async function loadVolunteers() {
-            try {
-                const res = await fetch('/api/volunteers');
-                const data = await res.json();
-                const container = document.getElementById('volunteersList');
-                if (!data.length) { container.innerHTML = '<div class="empty-message">Інформація про волонтерів незабаром з\'явиться</div>'; return; }
-                container.innerHTML = data.map(v => `
-                    <div class="volunteer-card">
-                        <div class="volunteer-photo">${v.photo ? `<img src="${v.photo}">` : '<div style="display:flex; align-items:center; justify-content:center; height:100%; background:var(--accent);"><i class="fas fa-user fa-4x" style="color:var(--primary);"></i></div>'}</div>
-                        <div class="volunteer-info"><h3 class="volunteer-name">${escapeHtml(v.name)}</h3><p class="volunteer-role">${escapeHtml(v.role || 'Волонтер')}</p><p>${escapeHtml(v.description || '')}</p></div>
-                    </div>
-                `).join('');
-            } catch(e) {}
-        }
-
-        async function loadPartners() {
-            try {
-                const res = await fetch('/api/partners');
-                const data = await res.json();
-                const container = document.getElementById('partnersList');
-                if (!data.length) { container.innerHTML = '<div class="empty-message">Партнерів поки немає</div>'; return; }
-                container.innerHTML = data.map(p => `
-                    <div class="partner-card"><div class="partner-logo">${p.logo ? `<img src="${p.logo}">` : '<i class="fas fa-building fa-3x" style="color:var(--gray);"></i>'}</div>
-                    <h3 class="partner-name">${escapeHtml(p.name)}</h3><p class="partner-description">${escapeHtml(p.description)}</p>${p.website ? `<a href="${p.website}" target="_blank" class="partner-website">${p.website}</a>` : ''}</div>
-                `).join('');
-            } catch(e) {}
-        }
-
-        async function loadHelpPage() {
-            try {
-                const res = await fetch('/api/help-page');
-                const data = await res.json();
-                document.getElementById('helpTitle').textContent = data.title || 'Як отримати допомогу';
-                document.getElementById('helpDescription').innerHTML = escapeHtml(data.content || '').replace(/\n/g, '<br>');
-                if (data.image) { document.getElementById('helpImage').src = data.image; document.getElementById('helpImageContainer').style.display = 'block'; }
-                else document.getElementById('helpImageContainer').style.display = 'none';
-                const instructions = data.instructions || [];
-                const instContainer = document.getElementById('instructionsList');
-                if (instructions.length) instContainer.innerHTML = instructions.map((inst, idx) => `<div class="instruction-item"><div class="instruction-number">${idx+1}</div><div class="instruction-text">${escapeHtml(inst)}</div></div>`).join('');
-                else instContainer.innerHTML = '<div class="empty-message">Інструкції відсутні</div>';
-                document.getElementById('helpPhone').textContent = data.contacts?.phone || '';
-                document.getElementById('helpEmail').textContent = data.contacts?.email || '';
-                document.getElementById('helpTelegram').textContent = data.contacts?.telegram || '';
-            } catch(e) {}
-        }
-
-        async function loadAbout() {
-            try {
-                const res = await fetch('/api/about');
-                const data = await res.json();
-                document.getElementById('aboutContent').innerHTML = escapeHtml(data.content).replace(/\n/g, '<br>');
-            } catch(e) {}
-        }
-
-        let currentCollectionId = null;
+        let isAdmin = false, allNews = [], currentCollectionId = null;
+        function toggleMobileMenu() { let n=document.getElementById('mobileNav'), o=document.getElementById('navOverlay'); n.classList.toggle('active'); o.classList.toggle('active'); document.body.style.overflow = n.classList.contains('active') ? 'hidden' : ''; }
+        function closeMobileMenu() { document.getElementById('mobileNav').classList.remove('active'); document.getElementById('navOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+        function showPage(page) { document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.getElementById(page).classList.add('active'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); if(event?.target) event.target.classList.add('active'); closeMobileMenu(); }
+        function escapeHtml(t){if(!t)return '';const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+        function showToast(msg,type='info'){const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i><span>${escapeHtml(msg)}</span>`;document.getElementById('toastContainer').appendChild(t);setTimeout(()=>t.remove(),3000);}
+        function setupScroll(){window.addEventListener('scroll',()=>{document.getElementById('scrollTop').classList.toggle('show',window.scrollY>300);});}
+        document.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>document.getElementById('loader').style.opacity='0',800);setTimeout(()=>document.getElementById('loader').style.display='none',1100);checkSession();loadAllData();setupScroll();document.getElementById('currentYear').textContent=new Date().getFullYear();});
+        async function checkSession(){try{const r=await fetch('/api/session');const d=await r.json();if(d.authenticated){isAdmin=d.user.role==='superadmin';document.getElementById('loginForm').style.display='none';document.getElementById('userInfo').style.display='flex';document.getElementById('currentUser').textContent=d.user.username;if(isAdmin)document.getElementById('adminBtn').classList.add('visible');}}catch(e){}}
+        async function login(){const u=document.getElementById('loginUsername').value.trim(),p=document.getElementById('loginPassword').value.trim();if(!u||!p){showToast('Введіть логін та пароль','warning');return;}try{const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const d=await r.json();if(r.ok){isAdmin=d.user.role==='superadmin';document.getElementById('loginForm').style.display='none';document.getElementById('userInfo').style.display='flex';document.getElementById('currentUser').textContent=d.user.username;if(isAdmin)document.getElementById('adminBtn').classList.add('visible');showToast('Вхід виконано','success');document.getElementById('loginUsername').value='';document.getElementById('loginPassword').value='';}else showToast(d.error||'Помилка','error');}catch(e){showToast('Помилка','error');}}
+        async function logout(){await fetch('/api/logout',{method:'POST'});isAdmin=false;document.getElementById('loginForm').style.display='flex';document.getElementById('userInfo').style.display='none';document.getElementById('adminBtn').classList.remove('visible');showToast('Ви вийшли','info');}
+        async function loadAllData(){await Promise.all([loadSettings(),loadNews(),loadCollections(),loadReports(),loadVolunteers(),loadPartners(),loadHelpPage(),loadAbout()]);}
+        async function loadSettings(){try{const r=await fetch('/api/settings');const d=await r.json();document.getElementById('siteName').textContent=d.siteName;document.getElementById('contactPhone').textContent=d.contacts?.phone||'+380 (99) 299-17-08';document.getElementById('contactEmail').textContent=d.contacts?.email||'shtabvolonteriv450@gmail.com';document.getElementById('contactAddress').textContent=d.contacts?.address||'м. Надвірна та м. Івано-Франківськ';if(d.requisites){document.getElementById('requisitesCard').textContent=d.requisites.card||'5168 7573 1234 5678';document.getElementById('requisitesBank').textContent=d.requisites.bank||'Монобанк';document.getElementById('requisitesName').textContent=d.requisites.name||'Волонтерський штаб 4.5.0';}if(d.social?.length){const active=d.social.filter(s=>s.active);document.getElementById('socialLinks').innerHTML=active.map(s=>`<a href="${s.url}" target="_blank"><i class="fab fa-${s.icon}"></i></a>`).join('');}}catch(e){}}
+        async function loadNews(){try{const r=await fetch('/api/news');allNews=await r.json();const c=document.getElementById('newsList');if(!allNews.length){c.innerHTML='<div class="empty-message">Немає новин</div>';return;}c.innerHTML=allNews.map(n=>`<div class="news-card ${n.important?'important':''}" onclick="openNewsModal(${n.id})"><div class="news-header"><span class="news-date">${n.date}</span>${n.important?'<span class="news-badge">Важливо</span>':''}</div><h3 class="news-title">${escapeHtml(n.title)}</h3><p class="news-content">${escapeHtml(n.content.substring(0,150))}${n.content.length>150?'...':''}</p></div>`).join('');}catch(e){}}
+        function openNewsModal(id){const n=allNews.find(x=>x.id===id);if(!n)return;const mediaHtml=n.media?.length?`<div class="news-modal-media"><h4><i class="fas fa-images"></i> Медіа (${n.media.length})</h4><div class="news-modal-media-grid">${n.media.map(m=>`<div class="news-modal-media-item" onclick="openMedia('${m.url}','${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<video src="${m.url}" preload="metadata"></video>`}</div>`).join('')}</div></div>`:'';document.getElementById('newsModalContent').innerHTML=`<div class="news-modal-header"><span class="news-modal-date">${n.date}</span>${n.important?'<span class="news-badge">Важливо</span>':''}<h2 class="news-modal-title">${escapeHtml(n.title)}</h2></div><div class="news-modal-content-text">${escapeHtml(n.content).replace(/\n/g,'<br>')}</div>${mediaHtml}`;document.getElementById('newsModal').classList.add('active');document.body.style.overflow='hidden';}
+        function closeNewsModal(){document.getElementById('newsModal').classList.remove('active');document.body.style.overflow='';}
+        function openMedia(url,type){const modal=document.getElementById('mediaModal');document.getElementById('mediaModalContent').innerHTML=type==='photo'?`<img src="${url}" style="max-width:100%;max-height:90vh;">`:`<video src="${url}" controls autoplay style="max-width:100%;max-height:90vh;"></video>`;modal.classList.add('active');document.body.style.overflow='hidden';}
+        function closeMediaModal(){document.getElementById('mediaModal').classList.remove('active');document.getElementById('mediaModalContent').innerHTML='';document.body.style.overflow='';}
+        async function loadCollections(){try{const r=await fetch('/api/collections');const data=await r.json();const c=document.getElementById('collectionsList');if(!data.length){c.innerHTML='<div class="empty-message">Немає активних зборів</div>';return;}c.innerHTML=data.map(coll=>{const percent=((coll.current/coll.target)*100).toFixed(1);return`<div class="collection-card"><h3 class="collection-title">${escapeHtml(coll.name)}</h3><p class="collection-description">${escapeHtml(coll.description)}</p><div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div><div class="collection-stats"><span class="collection-current">${coll.current.toLocaleString()} грн</span><span class="collection-percent">${percent}%</span></div><div class="collection-target">Ціль: ${coll.target.toLocaleString()} грн</div><div class="collection-requisites"><i class="fas fa-credit-card"></i> ${escapeHtml(coll.requisites)}</div><button class="donate-btn" onclick="openDonateModal(${coll.id}, '${escapeHtml(coll.name)}', '${escapeHtml(coll.requisites)}')"><i class="fas fa-heart"></i> Задонатити</button></div>`;}).join('');}catch(e){}}
+        async function loadReports(){try{const r=await fetch('/api/reports');const data=await r.json();const c=document.getElementById('reportsList');if(!data.length){c.innerHTML='<div class="empty-message">Ще немає звітів</div>';return;}c.innerHTML=data.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(r=>`<div class="report-card"><div class="report-header"><h3 class="report-title">${escapeHtml(r.title)}</h3><span class="report-date">${r.date}</span></div><p class="report-content">${escapeHtml(r.content)}</p>${r.amount?`<p class="report-amount">Сума: ${r.amount.toLocaleString()} грн</p>`:''}</div>`).join('');}catch(e){}}
+        async function loadVolunteers(){try{const r=await fetch('/api/volunteers');const data=await r.json();const c=document.getElementById('volunteersList');if(!data.length){c.innerHTML='<div class="empty-message">Інформація про волонтерів незабаром з\'явиться</div>';return;}c.innerHTML=data.map(v=>`<div class="volunteer-card"><div class="volunteer-photo">${v.photo?`<img src="${v.photo}">`:'<i class="fas fa-user fa-4x" style="color:var(--primary);"></i>'}</div><div class="volunteer-info"><h3 class="volunteer-name">${escapeHtml(v.name)}</h3><p class="volunteer-role">${escapeHtml(v.role||'Волонтер')}</p><p>${escapeHtml(v.description||'')}</p></div></div>`).join('');}catch(e){}}
+        async function loadPartners(){try{const r=await fetch('/api/partners');const data=await r.json();const c=document.getElementById('partnersList');if(!data.length){c.innerHTML='<div class="empty-message">Партнерів поки немає</div>';return;}c.innerHTML=data.map(p=>`<div class="partner-card"><div class="partner-logo">${p.logo?`<img src="${p.logo}">`:'<i class="fas fa-building fa-3x"></i>'}</div><h3 class="partner-name">${escapeHtml(p.name)}</h3><p class="partner-description">${escapeHtml(p.description)}</p>${p.website?`<a href="${p.website}" target="_blank">${p.website}</a>`:''}</div>`).join('');}catch(e){}}
+        async function loadHelpPage(){try{const r=await fetch('/api/help-page');const d=await r.json();document.getElementById('helpTitle').textContent=d.title||'Як отримати допомогу';document.getElementById('helpDescription').innerHTML=escapeHtml(d.content||'').replace(/\n/g,'<br>');if(d.image){document.getElementById('helpImage').src=d.image;document.getElementById('helpImageContainer').style.display='block';}else document.getElementById('helpImageContainer').style.display='none';const inst=d.instructions||[];const ic=document.getElementById('instructionsList');if(inst.length)ic.innerHTML=inst.map((t,i)=>`<div class="instruction-item"><div class="instruction-number">${i+1}</div><div class="instruction-text">${escapeHtml(t)}</div></div>`).join('');else ic.innerHTML='<div class="empty-message">Інструкції відсутні</div>';document.getElementById('helpPhone').textContent=d.contacts?.phone||'';document.getElementById('helpEmail').textContent=d.contacts?.email||'';document.getElementById('helpTelegram').textContent=d.contacts?.telegram||'';}catch(e){}}
+        async function loadAbout(){try{const r=await fetch('/api/about');const d=await r.json();document.getElementById('aboutContent').innerHTML=escapeHtml(d.content).replace(/\n/g,'<br>');}catch(e){}}
+        
+        // Функції для донатів (виправлені)
         function openDonateModal(id, name, requisites) {
             currentCollectionId = id;
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.style.display = 'flex';
-            modal.style.position = 'fixed';
-            modal.style.top = '0';
-            modal.style.left = '0';
-            modal.style.width = '100%';
-            modal.style.height = '100%';
-            modal.style.background = 'rgba(0,0,0,0.8)';
-            modal.style.zIndex = '5000';
-            modal.style.justifyContent = 'center';
-            modal.style.alignItems = 'center';
-            modal.innerHTML = `
-                <div style="background:white; border-radius:20px; max-width:500px; width:90%; padding:30px;">
-                    <button onclick="this.closest('.modal').remove()" style="float:right; background:none; border:none; font-size:1.8rem; cursor:pointer;">&times;</button>
+            // Видаляємо старе модальне вікно, якщо воно є
+            const existingModal = document.querySelector('.donate-modal');
+            if (existingModal) existingModal.remove();
+            
+            const modalDiv = document.createElement('div');
+            modalDiv.className = 'modal donate-modal';
+            modalDiv.style.display = 'flex';
+            modalDiv.style.position = 'fixed';
+            modalDiv.style.top = '0';
+            modalDiv.style.left = '0';
+            modalDiv.style.width = '100%';
+            modalDiv.style.height = '100%';
+            modalDiv.style.background = 'rgba(0,0,0,0.8)';
+            modalDiv.style.zIndex = '5000';
+            modalDiv.style.justifyContent = 'center';
+            modalDiv.style.alignItems = 'center';
+            modalDiv.innerHTML = `
+                <div style="background:white; border-radius:20px; max-width:500px; width:90%; padding:30px; position:relative;">
+                    <button onclick="this.closest('.modal').remove()" style="position:absolute; top:15px; right:15px; background:none; border:none; font-size:1.8rem; cursor:pointer;">&times;</button>
                     <h2 style="color:var(--primary); margin-bottom:20px; font-weight:800;">Зробити донат</h2>
                     <div style="background:var(--accent); padding:15px; border-radius:12px; margin-bottom:20px;"><h3 style="font-weight:800;">${escapeHtml(name)}</h3></div>
-                    <div class="form-group"><label style="font-weight:700;">Ваше ім'я</label><input type="text" id="donorName" placeholder="Як до вас звертатися?" style="width:100%; padding:12px; border:2px solid var(--gray-light); border-radius:10px; font-weight:500;"></div>
-                    <div class="form-group"><label style="font-weight:700;">Сума (грн)</label><input type="number" id="donorAmount" min="1" placeholder="Введіть суму" style="width:100%; padding:12px; border:2px solid var(--gray-light); border-radius:10px; font-weight:500;"></div>
-                    <div class="form-group"><label style="font-weight:700;">Реквізити</label><div style="background:var(--accent); padding:15px; border-radius:10px; font-family:monospace; text-align:center; font-weight:700;">${escapeHtml(requisites)}</div></div>
+                    <div class="form-group"><label style="font-weight:700;">Ваше ім'я</label><input type="text" id="donorName" placeholder="Як до вас звертатися?" style="width:100%; padding:12px; border:2px solid var(--gray-light); border-radius:10px; margin-top:5px;"></div>
+                    <div class="form-group"><label style="font-weight:700;">Сума (грн)</label><input type="number" id="donorAmount" min="1" placeholder="Введіть суму" style="width:100%; padding:12px; border:2px solid var(--gray-light); border-radius:10px; margin-top:5px;"></div>
+                    <div class="form-group"><label style="font-weight:700;">Реквізити</label><div style="background:var(--accent); padding:15px; border-radius:10px; font-family:monospace; text-align:center; font-weight:700; margin-top:5px;">${escapeHtml(requisites)}</div></div>
                     <button class="btn btn-primary" onclick="submitDonation(this)" style="width:100%; margin-top:20px; padding:14px; font-weight:800;"><i class="fas fa-heart"></i> Підтвердити донат</button>
                 </div>
             `;
-            document.body.appendChild(modal);
+            document.body.appendChild(modalDiv);
             document.body.style.overflow = 'hidden';
         }
-
+        
         async function submitDonation(btn) {
             const modal = btn.closest('.modal');
             const name = modal.querySelector('#donorName').value.trim();
             const amount = parseFloat(modal.querySelector('#donorAmount').value);
-            if (!name || !amount || amount <= 0) { showToast('Введіть коректні дані', 'warning'); return; }
+            if (!name || !amount || amount <= 0) {
+                showToast('Введіть коректні дані', 'warning');
+                return;
+            }
             try {
-                const res = await fetch('/api/donations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ collectionId: currentCollectionId, name, amount }) });
-                if (res.ok) { showToast('Донат прийнято! Очікуйте підтвердження', 'success'); modal.remove(); document.body.style.overflow = ''; }
-                else showToast('Помилка', 'error');
-            } catch(e) { showToast('Помилка сервера', 'error'); }
+                const res = await fetch('/api/donations', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ collectionId: currentCollectionId, name, amount })
+                });
+                if (res.ok) {
+                    showToast('Донат прийнято! Очікуйте підтвердження', 'success');
+                    modal.remove();
+                    document.body.style.overflow = '';
+                } else {
+                    const err = await res.json();
+                    showToast(err.error || 'Помилка', 'error');
+                }
+            } catch(e) {
+                showToast('Помилка сервера', 'error');
+            }
         }
-
-        function showPage(page) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(page).classList.add('active');
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            if (event?.target) event.target.classList.add('active');
-            closeMobileMenu();
-        }
-
-        function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
-        function setupScroll() { window.addEventListener('scroll', () => { document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300); }); }
-
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i><span>${escapeHtml(message)}</span>`;
-            document.getElementById('toastContainer').appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeNewsModal(); closeMediaModal(); const dm = document.querySelector('.modal[style*="display: flex"]'); if (dm) dm.remove(); document.body.style.overflow = ''; } });
+        
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeNewsModal();
+                closeMediaModal();
+                const dm = document.querySelector('.donate-modal');
+                if (dm) dm.remove();
+                document.body.style.overflow = '';
+            }
+        });
     </script>
 </body>
 </html>
