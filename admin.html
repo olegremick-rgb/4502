@@ -28,18 +28,19 @@
             --dark: #003366;
             --darker: #002244;
             --light: #f8f9fa;
-            --gray: #6c757d;
-            --gray-light: #e9ecef;
+            --gray: #4a5568;
+            --gray-light: #e2e8f0;
             --white: #ffffff;
             --shadow: 0 4px 6px rgba(0,0,0,0.1);
             --shadow-hover: 0 8px 15px rgba(0,102,204,0.2);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #e6f0ff 100%);
             min-height: 100vh;
             color: var(--dark);
+            font-weight: 500;
         }
 
         .admin-container {
@@ -78,14 +79,14 @@
         }
 
         .sidebar-header i {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: var(--primary-light);
             margin-bottom: 10px;
         }
 
         .sidebar-header h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
         }
 
         .sidebar-nav ul {
@@ -97,13 +98,14 @@
             display: flex;
             align-items: center;
             padding: 12px 20px;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.85);
             cursor: pointer;
             transition: all 0.3s;
             border: none;
             background: none;
             width: 100%;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
             text-align: left;
             border-left: 4px solid transparent;
         }
@@ -122,6 +124,7 @@
         .nav-item i {
             width: 24px;
             margin-right: 12px;
+            font-size: 1.1rem;
         }
 
         .badge {
@@ -130,6 +133,7 @@
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 0.7rem;
+            font-weight: 700;
             margin-left: 8px;
         }
 
@@ -161,7 +165,7 @@
 
         .admin-header {
             background: white;
-            padding: 15px 20px;
+            padding: 15px 25px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -197,6 +201,12 @@
             color: var(--primary);
         }
 
+        .header-title h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
         .user-info {
             display: flex;
             align-items: center;
@@ -212,6 +222,7 @@
             align-items: center;
             justify-content: center;
             color: white;
+            font-weight: 700;
         }
 
         .logout-btn {
@@ -223,7 +234,7 @@
         }
 
         .admin-content {
-            padding: 20px;
+            padding: 25px;
         }
 
         .admin-page {
@@ -236,6 +247,7 @@
 
         .page-title {
             font-size: 1.8rem;
+            font-weight: 800;
             margin-bottom: 25px;
             color: var(--primary);
             border-bottom: 3px solid var(--primary-light);
@@ -268,6 +280,11 @@
             align-items: center;
             gap: 15px;
             box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
         }
 
         .stat-icon {
@@ -284,13 +301,14 @@
 
         .stat-number {
             font-size: 1.8rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--primary);
         }
 
         .stat-label {
             font-size: 0.85rem;
             color: var(--gray);
+            font-weight: 600;
         }
 
         /* Таблиці */
@@ -316,20 +334,21 @@
         th {
             background: var(--light);
             color: var(--primary);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         /* Кнопки */
         .btn {
             padding: 10px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+            font-weight: 700;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.9rem;
         }
 
         .btn-primary {
@@ -351,102 +370,46 @@
             color: white;
         }
 
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
         .btn-sm {
-            padding: 5px 10px;
-            font-size: 0.85rem;
+            padding: 6px 12px;
+            font-size: 0.8rem;
         }
 
-        /* Соціальні мережі */
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
+        .btn-block {
+            width: 100%;
         }
 
-        .social-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s;
+        /* Форми */
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .social-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .social-icon-large {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: white;
-        }
-
-        .social-icon-large.facebook { background: #1877f2; }
-        .social-icon-large.instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf); }
-        .social-icon-large.telegram { background: #26a5e4; }
-        .social-icon-large.youtube { background: #ff0000; }
-        .social-icon-large.tiktok { background: #000000; }
-        .social-icon-large.twitter { background: #1da1f2; }
-        .social-icon-large.linkedin { background: #0077b5; }
-        .social-icon-large.github { background: #333; }
-        .social-icon-large.whatsapp { background: #25d366; }
-        .social-icon-large.viber { background: #7360f2; }
-        .social-icon-large.signal { background: #3a76f0; }
-        .social-icon-large.discord { background: #5865f2; }
-        .social-icon-large.reddit { background: #ff4500; }
-        .social-icon-large.pinterest { background: #bd081c; }
-        .social-icon-large.snapchat { background: #fffc00; color: #000; }
-        .social-icon-large.skype { background: #00aff0; }
-        .social-icon-large.vk { background: #4680c2; }
-
-        .social-info {
-            flex: 1;
-        }
-
-        .social-name {
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: 700;
-            font-size: 1.1rem;
             color: var(--primary);
-            margin-bottom: 5px;
         }
 
-        .social-url {
-            font-size: 0.85rem;
-            color: var(--gray);
-            word-break: break-all;
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
         }
 
-        .social-status {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        .social-status.active {
-            background: var(--success-light);
-            color: var(--success);
-        }
-
-        .social-status.inactive {
-            background: var(--danger-light);
-            color: var(--danger);
-        }
-
-        .social-actions {
-            display: flex;
-            gap: 8px;
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         /* Модальне вікно */
@@ -492,75 +455,7 @@
         .modal h2 {
             color: var(--primary);
             margin-bottom: 20px;
-            padding-right: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--gray-light);
-            border-radius: 10px;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .platform-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .platform-card {
-            background: var(--light);
-            border: 2px solid var(--gray-light);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .platform-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
-        }
-
-        .platform-card.selected {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: white;
-        }
-
-        .platform-card i {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .platform-card.selected i {
-            color: white;
-        }
-
-        .platform-card span {
-            font-size: 0.75rem;
+            font-weight: 800;
         }
 
         .modal-actions {
@@ -574,7 +469,69 @@
             justify-content: center;
         }
 
-        /* Інші стилі */
+        /* Картки для волонтерів, партнерів */
+        .volunteer-card, .partner-card, .social-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .volunteer-card:hover, .partner-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .volunteer-photo, .partner-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .volunteer-photo img, .partner-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .volunteer-info, .partner-info {
+            flex: 1;
+        }
+
+        .volunteer-name, .partner-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .social-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Сторінка налаштувань */
         .settings-card {
             background: white;
             border-radius: 16px;
@@ -586,6 +543,7 @@
         .settings-card h3 {
             color: var(--primary);
             margin-bottom: 20px;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -615,7 +573,6 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.2rem;
         }
 
         .contact-input {
@@ -623,50 +580,15 @@
             padding: 10px;
             border: 2px solid var(--gray-light);
             border-radius: 8px;
+            font-weight: 500;
         }
 
-        .volunteer-card, .partner-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            box-shadow: var(--shadow);
-        }
-
-        .volunteer-photo, .partner-logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 12px;
-            background: var(--light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .volunteer-photo img, .partner-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .volunteer-info, .partner-info {
-            flex: 1;
-        }
-
-        .volunteer-name, .partner-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
+        /* Інструкції */
         .instructions-list {
             background: var(--light);
             border-radius: 12px;
             padding: 15px;
+            margin-bottom: 15px;
         }
 
         .instruction-item {
@@ -686,13 +608,58 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
+            font-weight: 700;
+        }
+
+        /* Платформи для соцмереж */
+        .platform-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .platform-card {
+            background: var(--light);
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .platform-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .platform-card.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .platform-card i {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            display: block;
         }
 
         .loading-spinner {
             text-align: center;
-            padding: 40px;
+            padding: 50px;
             color: var(--primary);
+        }
+
+        .loading-spinner i {
+            font-size: 2.5rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .empty-message {
@@ -701,6 +668,7 @@
             color: var(--gray);
             background: white;
             border-radius: 16px;
+            font-weight: 600;
         }
 
         .toast {
@@ -719,30 +687,21 @@
             animation: slideIn 0.3s;
             max-width: 400px;
             margin: 0 auto;
+            font-weight: 600;
         }
 
-        .toast.success { border-left-color: var(--success); background: var(--success-light); }
-        .toast.error { border-left-color: var(--danger); background: var(--danger-light); }
-        .toast.warning { border-left-color: var(--warning); background: var(--warning-light); }
+        .toast.success { border-left-color: var(--success); background: var(--success-light); color: var(--success); }
+        .toast.error { border-left-color: var(--danger); background: var(--danger-light); color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); background: var(--warning-light); color: #856404; }
 
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .fa-spin {
-            animation: spin 1s linear infinite;
-        }
     </style>
 </head>
 <body>
     <div class="admin-container">
-        <!-- Сайдбар -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-hand-holding-heart"></i>
@@ -760,6 +719,7 @@
                     <li><button class="nav-item" onclick="showPage('help')"><i class="fas fa-question-circle"></i><span>Допомога</span></button></li>
                     <li><button class="nav-item" onclick="showPage('about')"><i class="fas fa-info-circle"></i><span>Про нас</span></button></li>
                     <li><button class="nav-item" onclick="showPage('contacts')"><i class="fas fa-address-book"></i><span>Контакти</span></button></li>
+                    <li><button class="nav-item" onclick="showPage('requisites')"><i class="fas fa-credit-card"></i><span>Реквізити</span></button></li>
                     <li><button class="nav-item" onclick="showPage('social')"><i class="fas fa-share-alt"></i><span>Соцмережі</span></button></li>
                     <li><button class="nav-item" onclick="showPage('settings')"><i class="fas fa-cog"></i><span>Налаштування</span></button></li>
                 </ul>
@@ -776,11 +736,7 @@
             <header class="admin-header">
                 <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
                 <div class="header-title"><i class="fas fa-hand-holding-heart"></i><h1>Адмін-панель</h1></div>
-                <div class="user-info">
-                    <span class="user-name" id="adminUsername">admin</span>
-                    <div class="user-avatar"><i class="fas fa-user-shield"></i></div>
-                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
+                <div class="user-info"><div class="user-avatar"><i class="fas fa-user-shield"></i></div><button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button></div>
             </header>
 
             <div class="admin-content">
@@ -788,158 +744,96 @@
                 <div id="dashboardPage" class="admin-page active">
                     <h2 class="page-title">Дашборд</h2>
                     <div class="stats-cards" id="statsCards"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Завантаження...</div></div>
-                    <h3 style="margin-top:30px;">Остання активність</h3>
+                    <h3 style="margin-top:30px; font-weight:700;">Остання активність</h3>
                     <div id="activityList" style="background:white; border-radius:16px; padding:20px; margin-top:15px;"></div>
                 </div>
 
                 <!-- Новини -->
                 <div id="newsPage" class="admin-page">
-                    <div class="page-header">
-                        <h2 class="page-title">Новини</h2>
-                        <button class="btn btn-primary" onclick="openNewsModal()"><i class="fas fa-plus"></i> Додати новину</button>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>ID</th><th>Дата</th><th>Заголовок</th><th>Важливо</th><th>Дії</th></tr></thead>
-                            <tbody id="newsTableBody"><tr><td colspan="5" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody>
-                        </table>
-                    </div>
+                    <div class="page-header"><h2 class="page-title">Новини</h2><button class="btn btn-primary" onclick="openNewsModal()"><i class="fas fa-plus"></i> Додати новину</button></div>
+                    <div class="table-container"><table><thead><tr><th>ID</th><th>Дата</th><th>Заголовок</th><th>Важливо</th><th>Дії</th></tr></thead><tbody id="newsTableBody"><tr><td colspan="5" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody></table></div>
                 </div>
 
                 <!-- Збори -->
                 <div id="collectionsPage" class="admin-page">
-                    <div class="page-header">
-                        <h2 class="page-title">Збори</h2>
-                        <button class="btn btn-primary" onclick="openCollectionModal()"><i class="fas fa-plus"></i> Додати збір</button>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>ID</th><th>Назва</th><th>Ціль</th><th>Зібрано</th><th>%</th><th>Дії</th></tr></thead>
-                            <tbody id="collectionsTableBody"><tr><td colspan="6" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody>
-                        </table>
-                    </div>
+                    <div class="page-header"><h2 class="page-title">Збори</h2><button class="btn btn-primary" onclick="openCollectionModal()"><i class="fas fa-plus"></i> Додати збір</button></div>
+                    <div class="table-container"><table><thead><tr><th>ID</th><th>Назва</th><th>Ціль</th><th>Зібрано</th><th>%</th><th>Дії</th></tr></thead><tbody id="collectionsTableBody"><tr><td colspan="6" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody></table></div>
                 </div>
 
                 <!-- Донати -->
                 <div id="donationsPage" class="admin-page">
                     <h2 class="page-title">Донати</h2>
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>ID</th><th>Ім'я</th><th>Збір</th><th>Сума</th><th>Статус</th><th>Дії</th></tr></thead>
-                            <tbody id="donationsTableBody"><tr><td colspan="6" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody>
-                        </table>
-                    </div>
+                    <div class="table-container"><table><thead><tr><th>ID</th><th>Ім'я</th><th>Збір</th><th>Сума</th><th>Статус</th><th>Дії</th></tr></thead><tbody id="donationsTableBody"><tr><td colspan="6" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody></table></div>
                 </div>
 
                 <!-- Звіти -->
                 <div id="reportsPage" class="admin-page">
-                    <div class="page-header">
-                        <h2 class="page-title">Звіти</h2>
-                        <button class="btn btn-primary" onclick="openReportModal()"><i class="fas fa-plus"></i> Додати звіт</button>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead><tr><th>ID</th><th>Назва</th><th>Сума</th><th>Дата</th><th>Дії</th></tr></thead>
-                            <tbody id="reportsTableBody"><tr><td colspan="5" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody>
-                        </table>
-                    </div>
+                    <div class="page-header"><h2 class="page-title">Звіти</h2><button class="btn btn-primary" onclick="openReportModal()"><i class="fas fa-plus"></i> Додати звіт</button></div>
+                    <div class="table-container"><table><thead><tr><th>ID</th><th>Назва</th><th>Сума</th><th>Дата</th><th>Дії</th></tr></thead><tbody id="reportsTableBody"><tr><td colspan="5" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></td></tr></tbody></table></div>
                 </div>
 
                 <!-- Волонтери -->
                 <div id="volunteersPage" class="admin-page">
-                    <div class="page-header">
-                        <h2 class="page-title">Волонтери</h2>
-                        <button class="btn btn-primary" onclick="openVolunteerModal()"><i class="fas fa-plus"></i> Додати волонтера</button>
-                    </div>
+                    <div class="page-header"><h2 class="page-title">Волонтери</h2><button class="btn btn-primary" onclick="openVolunteerModal()"><i class="fas fa-plus"></i> Додати волонтера</button></div>
                     <div id="volunteersList"></div>
                 </div>
 
                 <!-- Партнери -->
                 <div id="partnersPage" class="admin-page">
-                    <div class="page-header">
-                        <h2 class="page-title">Партнери</h2>
-                        <button class="btn btn-primary" onclick="openPartnerModal()"><i class="fas fa-plus"></i> Додати партнера</button>
-                    </div>
+                    <div class="page-header"><h2 class="page-title">Партнери</h2><button class="btn btn-primary" onclick="openPartnerModal()"><i class="fas fa-plus"></i> Додати партнера</button></div>
                     <div id="partnersList"></div>
                 </div>
 
                 <!-- Допомога -->
                 <div id="helpPage" class="admin-page">
                     <h2 class="page-title">Як отримати допомогу</h2>
-                    <div class="settings-card">
-                        <h3><i class="fas fa-heading"></i> Заголовок</h3>
-                        <input type="text" id="helpTitle" style="width:100%; padding:10px; border:2px solid var(--gray-light); border-radius:8px;">
-                    </div>
-                    <div class="settings-card">
-                        <h3><i class="fas fa-align-left"></i> Текст</h3>
-                        <textarea id="helpContent" rows="5" style="width:100%; padding:10px; border:2px solid var(--gray-light); border-radius:8px;"></textarea>
-                    </div>
-                    <div class="settings-card">
-                        <h3><i class="fas fa-list-ol"></i> Інструкції</h3>
-                        <div id="instructionsList"></div>
-                        <button class="btn btn-primary btn-sm" onclick="addInstruction()" style="margin-top:10px;"><i class="fas fa-plus"></i> Додати інструкцію</button>
-                    </div>
-                    <div class="settings-card">
-                        <h3><i class="fas fa-phone-alt"></i> Контакти</h3>
-                        <div class="form-group"><label>Телефон</label><input type="text" id="helpPhone"></div>
-                        <div class="form-group"><label>Email</label><input type="email" id="helpEmail"></div>
-                        <div class="form-group"><label>Telegram</label><input type="text" id="helpTelegram"></div>
-                    </div>
+                    <div class="settings-card"><h3><i class="fas fa-heading"></i> Заголовок</h3><input type="text" id="helpTitle" style="width:100%; padding:12px; border:2px solid var(--gray-light); border-radius:10px;"></div>
+                    <div class="settings-card"><h3><i class="fas fa-align-left"></i> Текст</h3><textarea id="helpContent" rows="5" style="width:100%; padding:12px; border:2px solid var(--gray-light); border-radius:10px;"></textarea></div>
+                    <div class="settings-card"><h3><i class="fas fa-list-ol"></i> Інструкції</h3><div id="instructionsList"></div><button class="btn btn-primary btn-sm" onclick="addInstruction()" style="margin-top:10px;"><i class="fas fa-plus"></i> Додати інструкцію</button></div>
+                    <div class="settings-card"><h3><i class="fas fa-phone-alt"></i> Контакти</h3><div class="form-group"><label>Телефон</label><input type="text" id="helpPhone"></div><div class="form-group"><label>Email</label><input type="email" id="helpEmail"></div><div class="form-group"><label>Telegram</label><input type="text" id="helpTelegram"></div></div>
                     <button class="btn btn-primary" onclick="saveHelpPage()"><i class="fas fa-save"></i> Зберегти</button>
                 </div>
 
                 <!-- Про нас -->
                 <div id="aboutPage" class="admin-page">
                     <h2 class="page-title">Про нас</h2>
-                    <div class="settings-card">
-                        <h3><i class="fas fa-info-circle"></i> Текст</h3>
-                        <textarea id="aboutText" rows="10" style="width:100%; padding:10px; border:2px solid var(--gray-light); border-radius:8px;"></textarea>
-                        <button class="btn btn-primary" onclick="saveAbout()" style="margin-top:15px;"><i class="fas fa-save"></i> Зберегти</button>
-                    </div>
+                    <div class="settings-card"><h3><i class="fas fa-info-circle"></i> Текст</h3><textarea id="aboutText" rows="10" style="width:100%; padding:12px; border:2px solid var(--gray-light); border-radius:10px;"></textarea><button class="btn btn-primary" onclick="saveAbout()" style="margin-top:15px;"><i class="fas fa-save"></i> Зберегти</button></div>
                 </div>
 
                 <!-- Контакти -->
                 <div id="contactsPage" class="admin-page">
                     <h2 class="page-title">Контакти</h2>
-                    <div class="settings-card">
-                        <h3><i class="fas fa-address-book"></i> Контактна інформація</h3>
-                        <div class="contacts-grid">
-                            <div class="contact-item"><div class="contact-icon"><i class="fas fa-phone"></i></div><input type="text" id="contactPhone" class="contact-input" placeholder="Телефон"></div>
-                            <div class="contact-item"><div class="contact-icon"><i class="fas fa-envelope"></i></div><input type="email" id="contactEmail" class="contact-input" placeholder="Email"></div>
-                            <div class="contact-item"><div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div><input type="text" id="contactAddress" class="contact-input" placeholder="Адреса"></div>
-                        </div>
+                    <div class="settings-card"><h3><i class="fas fa-address-book"></i> Контактна інформація</h3>
+                        <div class="contacts-grid"><div class="contact-item"><div class="contact-icon"><i class="fas fa-phone"></i></div><input type="text" id="contactPhone" class="contact-input" placeholder="Телефон"></div>
+                        <div class="contact-item"><div class="contact-icon"><i class="fas fa-envelope"></i></div><input type="email" id="contactEmail" class="contact-input" placeholder="Email"></div>
+                        <div class="contact-item"><div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div><input type="text" id="contactAddress" class="contact-input" placeholder="Адреса"></div></div>
                         <button class="btn btn-primary" onclick="saveContacts()"><i class="fas fa-save"></i> Зберегти</button>
                     </div>
                 </div>
 
-                <!-- Соціальні мережі -->
-                <div id="socialPage" class="admin-page">
-                    <div class="page-header">
-                        <h2 class="page-title">Соціальні мережі</h2>
-                        <button class="btn btn-primary" onclick="openSocialModal()"><i class="fas fa-plus"></i> Додати</button>
+                <!-- Реквізити -->
+                <div id="requisitesPage" class="admin-page">
+                    <h2 class="page-title">Реквізити</h2>
+                    <div class="settings-card"><h3><i class="fas fa-credit-card"></i> Реквізити для донатів</h3>
+                        <div class="form-group"><label>Номер карти</label><input type="text" id="requisitesCard" placeholder="5168 7573 1234 5678"></div>
+                        <div class="form-group"><label>Банк</label><input type="text" id="requisitesBank" placeholder="Монобанк"></div>
+                        <div class="form-group"><label>Отримувач</label><input type="text" id="requisitesName" placeholder="Волонтерський штаб 4.5.0"></div>
+                        <button class="btn btn-primary btn-block" onclick="saveRequisites()"><i class="fas fa-save"></i> Зберегти реквізити</button>
                     </div>
-                    <div id="socialList" class="social-grid"></div>
+                </div>
+
+                <!-- Соцмережі -->
+                <div id="socialPage" class="admin-page">
+                    <div class="page-header"><h2 class="page-title">Соціальні мережі</h2><button class="btn btn-primary" onclick="openSocialModal()"><i class="fas fa-plus"></i> Додати</button></div>
+                    <div id="socialList"></div>
                 </div>
 
                 <!-- Налаштування -->
                 <div id="settingsPage" class="admin-page">
                     <h2 class="page-title">Налаштування</h2>
-                    <div class="settings-card">
-                        <h3><i class="fas fa-lock"></i> Зміна пароля</h3>
-                        <input type="text" id="newUsername" placeholder="Новий логін" style="width:100%; padding:10px; margin-bottom:10px; border:2px solid var(--gray-light); border-radius:8px;">
-                        <input type="password" id="newPassword" placeholder="Новий пароль" style="width:100%; padding:10px; margin-bottom:15px; border:2px solid var(--gray-light); border-radius:8px;">
-                        <button class="btn btn-primary" onclick="changeCredentials()"><i class="fas fa-sync-alt"></i> Змінити</button>
-                    </div>
-                    <div class="settings-card">
-                        <h3><i class="fas fa-image"></i> Логотип</h3>
-                        <input type="file" id="logoUpload" accept="image/*" style="margin-bottom:15px;">
-                        <button class="btn btn-primary" onclick="uploadLogo()"><i class="fas fa-upload"></i> Завантажити</button>
-                    </div>
-                    <div class="settings-card">
-                        <h3><i class="fas fa-globe"></i> Назва сайту</h3>
-                        <input type="text" id="siteName" style="width:100%; padding:10px; margin-bottom:15px; border:2px solid var(--gray-light); border-radius:8px;">
-                        <button class="btn btn-primary" onclick="saveSiteName()"><i class="fas fa-save"></i> Зберегти</button>
-                    </div>
+                    <div class="settings-card"><h3><i class="fas fa-lock"></i> Зміна пароля</h3><input type="text" id="newUsername" placeholder="Новий логін" style="width:100%; padding:12px; margin-bottom:10px;"><input type="password" id="newPassword" placeholder="Новий пароль" style="width:100%; padding:12px; margin-bottom:15px;"><button class="btn btn-primary" onclick="changeCredentials()"><i class="fas fa-sync-alt"></i> Змінити</button></div>
+                    <div class="settings-card"><h3><i class="fas fa-image"></i> Логотип</h3><input type="file" id="logoUpload" accept="image/*" style="margin-bottom:15px;"><button class="btn btn-primary" onclick="uploadLogo()"><i class="fas fa-upload"></i> Завантажити</button></div>
+                    <div class="settings-card"><h3><i class="fas fa-globe"></i> Назва сайту</h3><input type="text" id="siteName" style="width:100%; padding:12px; margin-bottom:15px;"><button class="btn btn-primary" onclick="saveSiteName()"><i class="fas fa-save"></i> Зберегти</button></div>
                 </div>
             </div>
         </main>
@@ -948,11 +842,8 @@
     <div id="toastContainer"></div>
 
     <script>
-        // Глобальні змінні
         let currentEditId = null;
-        let currentEditType = null;
         let selectedPlatform = null;
-        let selectedIcon = null;
         let instructions = [];
 
         // ==================== НАВІГАЦІЯ ====================
@@ -965,7 +856,7 @@
             document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
             document.getElementById(page + 'Page').classList.add('active');
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            if (event && event.target) {
+            if (event?.target) {
                 const target = event.target.closest('.nav-item');
                 if (target) target.classList.add('active');
             }
@@ -980,7 +871,6 @@
                 if (!data.authenticated || data.user.role !== 'superadmin') {
                     window.location.href = '/admin-login';
                 } else {
-                    document.getElementById('adminUsername').textContent = data.user.username;
                     loadAllData();
                 }
             } catch (error) {
@@ -1007,18 +897,17 @@
                 loadHelpPage(),
                 loadAbout(),
                 loadContacts(),
+                loadRequisites(),
                 loadSocial(),
                 loadSettings()
             ]);
         }
 
-        // ==================== ДАШБОРД ====================
         async function loadDashboard() {
             try {
                 const [statsRes, activityRes] = await Promise.all([fetch('/api/stats'), fetch('/api/activity')]);
                 const stats = await statsRes.json();
                 const activity = await activityRes.json();
-                
                 document.getElementById('statsCards').innerHTML = `
                     <div class="stat-card"><div class="stat-icon"><i class="fas fa-hand-holding-heart"></i></div><div><div class="stat-number">${stats.activeCollections || 0}</div><div class="stat-label">Активні збори</div></div></div>
                     <div class="stat-card"><div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div><div><div class="stat-number">${(stats.totalRaised || 0).toLocaleString()} грн</div><div class="stat-label">Зібрано</div></div></div>
@@ -1028,8 +917,7 @@
                     <div class="stat-card"><div class="stat-icon"><i class="fas fa-handshake"></i></div><div><div class="stat-number">${stats.totalPartners || 0}</div><div class="stat-label">Партнери</div></div></div>
                 `;
                 document.getElementById('pendingBadge').textContent = stats.pendingDonations || 0;
-                
-                const activityHtml = activity && activity.length ? activity.map(a => `<div style="padding:12px; border-bottom:1px solid var(--gray-light);"><strong>${new Date(a.timestamp).toLocaleString()}</strong><br>${a.details}</div>`).join('') : '<div class="empty-message">Немає активності</div>';
+                const activityHtml = activity?.length ? activity.map(a => `<div style="padding:12px; border-bottom:1px solid var(--gray-light);"><strong>${new Date(a.timestamp).toLocaleString()}</strong><br>${a.details}</div>`).join('') : '<div class="empty-message">Немає активності</div>';
                 document.getElementById('activityList').innerHTML = activityHtml;
             } catch (error) { showToast('Помилка дашборду', 'error'); }
         }
@@ -1051,16 +939,14 @@
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
-                <div class="modal-content">
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                    <h2>${id ? 'Редагувати новину' : 'Додати новину'}</h2>
-                    <div class="form-group"><label>Дата</label><input type="date" id="newsDate" value="${new Date().toISOString().split('T')[0]}"></div>
-                    <div class="form-group"><label>Заголовок</label><input type="text" id="newsTitle" placeholder="Заголовок"></div>
-                    <div class="form-group"><label>Текст</label><textarea id="newsContent" rows="5" placeholder="Текст новини"></textarea></div>
-                    <div class="form-group"><label><input type="checkbox" id="newsImportant"> Важлива новина</label></div>
-                    <div class="form-group"><label>Медіа</label><input type="file" id="newsMedia" accept="image/*,video/*" multiple></div>
-                    <div class="modal-actions"><button class="btn btn-primary" onclick="saveNews()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                </div>
+                <div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button>
+                <h2>${id ? 'Редагувати новину' : 'Додати новину'}</h2>
+                <div class="form-group"><label>Дата</label><input type="date" id="newsDate" value="${new Date().toISOString().split('T')[0]}"></div>
+                <div class="form-group"><label>Заголовок</label><input type="text" id="newsTitle" placeholder="Заголовок"></div>
+                <div class="form-group"><label>Текст</label><textarea id="newsContent" rows="5" placeholder="Текст новини"></textarea></div>
+                <div class="form-group"><label><input type="checkbox" id="newsImportant"> Важлива новина</label></div>
+                <div class="form-group"><label>Медіа</label><input type="file" id="newsMedia" accept="image/*,video/*" multiple></div>
+                <div class="modal-actions"><button class="btn btn-primary" onclick="saveNews()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div></div>
             `;
             document.body.appendChild(modal);
             modal.classList.add('active');
@@ -1085,29 +971,17 @@
             formData.append('important', document.getElementById('newsImportant').checked);
             const files = document.getElementById('newsMedia').files;
             for (let file of files) formData.append('media', file);
-            
             try {
                 const url = id ? `/api/news/${id}` : '/api/news';
                 const method = id ? 'PUT' : 'POST';
                 const res = await fetch(url, { method, body: formData });
-                if (res.ok) {
-                    showToast(id ? 'Оновлено' : 'Додано', 'success');
-                    closeModal();
-                    loadNews();
-                    loadDashboard();
-                } else showToast('Помилка', 'error');
+                if (res.ok) { showToast(id ? 'Оновлено' : 'Додано', 'success'); closeModal(); loadNews(); loadDashboard(); }
+                else showToast('Помилка', 'error');
             } catch (error) { showToast('Помилка', 'error'); }
         }
 
         async function editNews(id) { openNewsModal(id); }
-        async function deleteNews(id) {
-            if (confirm('Видалити новину?')) {
-                await fetch('/api/news/' + id, { method: 'DELETE' });
-                showToast('Видалено', 'success');
-                loadNews();
-                loadDashboard();
-            }
-        }
+        async function deleteNews(id) { if (confirm('Видалити новину?')) { await fetch('/api/news/' + id, { method: 'DELETE' }); showToast('Видалено', 'success'); loadNews(); loadDashboard(); } }
 
         // ==================== ЗБОРИ ====================
         async function loadCollections() {
@@ -1127,16 +1001,14 @@
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
-                <div class="modal-content">
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                    <h2>${id ? 'Редагувати збір' : 'Додати збір'}</h2>
-                    <div class="form-group"><label>Назва</label><input type="text" id="collectionName" placeholder="Назва"></div>
-                    <div class="form-group"><label>Опис</label><textarea id="collectionDesc" rows="3" placeholder="Опис"></textarea></div>
-                    <div class="form-group"><label>Цільова сума</label><input type="number" id="collectionTarget" placeholder="0"></div>
-                    <div class="form-group"><label>Реквізити</label><input type="text" id="collectionRequisites" placeholder="Номер картки"></div>
-                    <div class="form-group"><label>Фото</label><input type="file" id="collectionPhotos" accept="image/*" multiple></div>
-                    <div class="modal-actions"><button class="btn btn-primary" onclick="saveCollection()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                </div>
+                <div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button>
+                <h2>${id ? 'Редагувати збір' : 'Додати збір'}</h2>
+                <div class="form-group"><label>Назва</label><input type="text" id="collectionName" placeholder="Назва"></div>
+                <div class="form-group"><label>Опис</label><textarea id="collectionDesc" rows="3" placeholder="Опис"></textarea></div>
+                <div class="form-group"><label>Цільова сума</label><input type="number" id="collectionTarget" placeholder="0"></div>
+                <div class="form-group"><label>Реквізити</label><input type="text" id="collectionRequisites" placeholder="Номер картки"></div>
+                <div class="form-group"><label>Фото</label><input type="file" id="collectionPhotos" accept="image/*" multiple></div>
+                <div class="modal-actions"><button class="btn btn-primary" onclick="saveCollection()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div></div>
             `;
             document.body.appendChild(modal);
             modal.classList.add('active');
@@ -1154,12 +1026,7 @@
 
         async function saveCollection() {
             const id = currentEditId;
-            const data = {
-                name: document.getElementById('collectionName').value,
-                description: document.getElementById('collectionDesc').value,
-                target: parseFloat(document.getElementById('collectionTarget').value),
-                requisites: document.getElementById('collectionRequisites').value
-            };
+            const data = { name: document.getElementById('collectionName').value, description: document.getElementById('collectionDesc').value, target: parseFloat(document.getElementById('collectionTarget').value), requisites: document.getElementById('collectionRequisites').value };
             try {
                 let collection;
                 if (id) {
@@ -1183,14 +1050,7 @@
         }
 
         async function editCollection(id) { openCollectionModal(id); }
-        async function deleteCollection(id) {
-            if (confirm('Видалити збір?')) {
-                await fetch('/api/collections/' + id, { method: 'DELETE' });
-                showToast('Видалено', 'success');
-                loadCollections();
-                loadDashboard();
-            }
-        }
+        async function deleteCollection(id) { if (confirm('Видалити збір?')) { await fetch('/api/collections/' + id, { method: 'DELETE' }); showToast('Видалено', 'success'); loadCollections(); loadDashboard(); } }
 
         // ==================== ДОНАТИ ====================
         async function loadDonations() {
@@ -1205,20 +1065,8 @@
             } catch (error) { showToast('Помилка', 'error'); }
         }
 
-        async function confirmDonation(id) {
-            await fetch('/api/donations/' + id + '/confirm', { method: 'PUT' });
-            showToast('Підтверджено', 'success');
-            loadDonations();
-            loadDashboard();
-        }
-        async function deleteDonation(id) {
-            if (confirm('Видалити донат?')) {
-                await fetch('/api/donations/' + id, { method: 'DELETE' });
-                showToast('Видалено', 'success');
-                loadDonations();
-                loadDashboard();
-            }
-        }
+        async function confirmDonation(id) { await fetch('/api/donations/' + id + '/confirm', { method: 'PUT' }); showToast('Підтверджено', 'success'); loadDonations(); loadDashboard(); }
+        async function deleteDonation(id) { if (confirm('Видалити донат?')) { await fetch('/api/donations/' + id, { method: 'DELETE' }); showToast('Видалено', 'success'); loadDonations(); loadDashboard(); } }
 
         // ==================== ЗВІТИ ====================
         async function loadReports() {
@@ -1237,16 +1085,14 @@
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
-                <div class="modal-content">
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                    <h2>${id ? 'Редагувати звіт' : 'Додати звіт'}</h2>
-                    <div class="form-group"><label>Дата</label><input type="date" id="reportDate" value="${new Date().toISOString().split('T')[0]}"></div>
-                    <div class="form-group"><label>Назва</label><input type="text" id="reportTitle" placeholder="Назва"></div>
-                    <div class="form-group"><label>Опис</label><textarea id="reportContent" rows="3" placeholder="Опис"></textarea></div>
-                    <div class="form-group"><label>Сума</label><input type="number" id="reportAmount" placeholder="0"></div>
-                    <div class="form-group"><label>Медіа</label><input type="file" id="reportMedia" accept="image/*,video/*" multiple></div>
-                    <div class="modal-actions"><button class="btn btn-primary" onclick="saveReport()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                </div>
+                <div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button>
+                <h2>${id ? 'Редагувати звіт' : 'Додати звіт'}</h2>
+                <div class="form-group"><label>Дата</label><input type="date" id="reportDate" value="${new Date().toISOString().split('T')[0]}"></div>
+                <div class="form-group"><label>Назва</label><input type="text" id="reportTitle" placeholder="Назва"></div>
+                <div class="form-group"><label>Опис</label><textarea id="reportContent" rows="3" placeholder="Опис"></textarea></div>
+                <div class="form-group"><label>Сума</label><input type="number" id="reportAmount" placeholder="0"></div>
+                <div class="form-group"><label>Медіа</label><input type="file" id="reportMedia" accept="image/*,video/*" multiple></div>
+                <div class="modal-actions"><button class="btn btn-primary" onclick="saveReport()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div></div>
             `;
             document.body.appendChild(modal);
             modal.classList.add('active');
@@ -1264,12 +1110,7 @@
 
         async function saveReport() {
             const id = currentEditId;
-            const data = {
-                title: document.getElementById('reportTitle').value,
-                content: document.getElementById('reportContent').value,
-                amount: parseFloat(document.getElementById('reportAmount').value),
-                date: document.getElementById('reportDate').value
-            };
+            const data = { title: document.getElementById('reportTitle').value, content: document.getElementById('reportContent').value, amount: parseFloat(document.getElementById('reportAmount').value), date: document.getElementById('reportDate').value };
             try {
                 let report;
                 if (id) {
@@ -1293,14 +1134,7 @@
         }
 
         async function editReport(id) { openReportModal(id); }
-        async function deleteReport(id) {
-            if (confirm('Видалити звіт?')) {
-                await fetch('/api/reports/' + id, { method: 'DELETE' });
-                showToast('Видалено', 'success');
-                loadReports();
-                loadDashboard();
-            }
-        }
+        async function deleteReport(id) { if (confirm('Видалити звіт?')) { await fetch('/api/reports/' + id, { method: 'DELETE' }); showToast('Видалено', 'success'); loadReports(); loadDashboard(); } }
 
         // ==================== ВОЛОНТЕРИ ====================
         async function loadVolunteers() {
@@ -1310,11 +1144,9 @@
                 const container = document.getElementById('volunteersList');
                 if (!data.length) { container.innerHTML = '<div class="empty-message">Немає волонтерів</div>'; return; }
                 container.innerHTML = data.map(v => `
-                    <div class="volunteer-card">
-                        <div class="volunteer-photo">${v.photo ? `<img src="${v.photo}">` : '<i class="fas fa-user fa-3x" style="color:var(--gray);"></i>'}</div>
-                        <div class="volunteer-info"><div class="volunteer-name">${escapeHtml(v.name)}</div><div class="volunteer-role">${escapeHtml(v.role)}</div><div>${escapeHtml(v.description)}</div></div>
-                        <div><button class="btn btn-sm btn-primary" onclick="editVolunteer(${v.id})"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="deleteVolunteer(${v.id})"><i class="fas fa-trash"></i></button></div>
-                    </div>
+                    <div class="volunteer-card"><div class="volunteer-photo">${v.photo ? `<img src="${v.photo}">` : '<i class="fas fa-user fa-3x" style="color:var(--gray);"></i>'}</div>
+                    <div class="volunteer-info"><div class="volunteer-name">${escapeHtml(v.name)}</div><div class="volunteer-role">${escapeHtml(v.role)}</div><div>${escapeHtml(v.description)}</div></div>
+                    <div><button class="btn btn-sm btn-primary" onclick="editVolunteer(${v.id})"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="deleteVolunteer(${v.id})"><i class="fas fa-trash"></i></button></div></div>
                 `).join('');
             } catch (error) { showToast('Помилка', 'error'); }
         }
@@ -1324,15 +1156,13 @@
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
-                <div class="modal-content">
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                    <h2>${id ? 'Редагувати волонтера' : 'Додати волонтера'}</h2>
-                    <div class="form-group"><label>Ім'я</label><input type="text" id="volunteerName" placeholder="ПІБ"></div>
-                    <div class="form-group"><label>Роль</label><input type="text" id="volunteerRole" placeholder="Роль"></div>
-                    <div class="form-group"><label>Опис</label><textarea id="volunteerDesc" rows="3" placeholder="Опис"></textarea></div>
-                    <div class="form-group"><label>Фото</label><input type="file" id="volunteerPhoto" accept="image/*"></div>
-                    <div class="modal-actions"><button class="btn btn-primary" onclick="saveVolunteer()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                </div>
+                <div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button>
+                <h2>${id ? 'Редагувати волонтера' : 'Додати волонтера'}</h2>
+                <div class="form-group"><label>Ім'я</label><input type="text" id="volunteerName" placeholder="ПІБ"></div>
+                <div class="form-group"><label>Роль</label><input type="text" id="volunteerRole" placeholder="Роль"></div>
+                <div class="form-group"><label>Опис</label><textarea id="volunteerDesc" rows="3" placeholder="Опис"></textarea></div>
+                <div class="form-group"><label>Фото</label><input type="file" id="volunteerPhoto" accept="image/*"></div>
+                <div class="modal-actions"><button class="btn btn-primary" onclick="saveVolunteer()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div></div>
             `;
             document.body.appendChild(modal);
             modal.classList.add('active');
@@ -1349,11 +1179,7 @@
 
         async function saveVolunteer() {
             const id = currentEditId;
-            const data = {
-                name: document.getElementById('volunteerName').value,
-                role: document.getElementById('volunteerRole').value,
-                description: document.getElementById('volunteerDesc').value
-            };
+            const data = { name: document.getElementById('volunteerName').value, role: document.getElementById('volunteerRole').value, description: document.getElementById('volunteerDesc').value };
             try {
                 let volunteer;
                 if (id) {
@@ -1377,14 +1203,7 @@
         }
 
         async function editVolunteer(id) { openVolunteerModal(id); }
-        async function deleteVolunteer(id) {
-            if (confirm('Видалити волонтера?')) {
-                await fetch('/api/volunteers/' + id, { method: 'DELETE' });
-                showToast('Видалено', 'success');
-                loadVolunteers();
-                loadDashboard();
-            }
-        }
+        async function deleteVolunteer(id) { if (confirm('Видалити волонтера?')) { await fetch('/api/volunteers/' + id, { method: 'DELETE' }); showToast('Видалено', 'success'); loadVolunteers(); loadDashboard(); } }
 
         // ==================== ПАРТНЕРИ ====================
         async function loadPartners() {
@@ -1394,11 +1213,9 @@
                 const container = document.getElementById('partnersList');
                 if (!data.length) { container.innerHTML = '<div class="empty-message">Немає партнерів</div>'; return; }
                 container.innerHTML = data.map(p => `
-                    <div class="partner-card">
-                        <div class="partner-logo">${p.logo ? `<img src="${p.logo}">` : '<i class="fas fa-building fa-3x" style="color:var(--gray);"></i>'}</div>
-                        <div class="partner-info"><div class="partner-name">${escapeHtml(p.name)}</div><div>${escapeHtml(p.description)}</div>${p.website ? `<a href="${p.website}" target="_blank">${p.website}</a>` : ''}</div>
-                        <div><button class="btn btn-sm btn-primary" onclick="editPartner(${p.id})"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="deletePartner(${p.id})"><i class="fas fa-trash"></i></button></div>
-                    </div>
+                    <div class="partner-card"><div class="partner-logo">${p.logo ? `<img src="${p.logo}">` : '<i class="fas fa-building fa-3x" style="color:var(--gray);"></i>'}</div>
+                    <div class="partner-info"><div class="partner-name">${escapeHtml(p.name)}</div><div>${escapeHtml(p.description)}</div>${p.website ? `<a href="${p.website}" target="_blank">${p.website}</a>` : ''}</div>
+                    <div><button class="btn btn-sm btn-primary" onclick="editPartner(${p.id})"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="deletePartner(${p.id})"><i class="fas fa-trash"></i></button></div></div>
                 `).join('');
             } catch (error) { showToast('Помилка', 'error'); }
         }
@@ -1408,15 +1225,13 @@
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
-                <div class="modal-content">
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                    <h2>${id ? 'Редагувати партнера' : 'Додати партнера'}</h2>
-                    <div class="form-group"><label>Назва</label><input type="text" id="partnerName" placeholder="Назва організації"></div>
-                    <div class="form-group"><label>Опис</label><textarea id="partnerDesc" rows="3" placeholder="Опис"></textarea></div>
-                    <div class="form-group"><label>Сайт</label><input type="url" id="partnerWebsite" placeholder="https://..."></div>
-                    <div class="form-group"><label>Логотип</label><input type="file" id="partnerLogo" accept="image/*"></div>
-                    <div class="modal-actions"><button class="btn btn-primary" onclick="savePartner()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                </div>
+                <div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button>
+                <h2>${id ? 'Редагувати партнера' : 'Додати партнера'}</h2>
+                <div class="form-group"><label>Назва</label><input type="text" id="partnerName" placeholder="Назва організації"></div>
+                <div class="form-group"><label>Опис</label><textarea id="partnerDesc" rows="3" placeholder="Опис"></textarea></div>
+                <div class="form-group"><label>Сайт</label><input type="url" id="partnerWebsite" placeholder="https://..."></div>
+                <div class="form-group"><label>Логотип</label><input type="file" id="partnerLogo" accept="image/*"></div>
+                <div class="modal-actions"><button class="btn btn-primary" onclick="savePartner()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div></div>
             `;
             document.body.appendChild(modal);
             modal.classList.add('active');
@@ -1433,11 +1248,7 @@
 
         async function savePartner() {
             const id = currentEditId;
-            const data = {
-                name: document.getElementById('partnerName').value,
-                description: document.getElementById('partnerDesc').value,
-                website: document.getElementById('partnerWebsite').value
-            };
+            const data = { name: document.getElementById('partnerName').value, description: document.getElementById('partnerDesc').value, website: document.getElementById('partnerWebsite').value };
             try {
                 let partner;
                 if (id) {
@@ -1461,16 +1272,9 @@
         }
 
         async function editPartner(id) { openPartnerModal(id); }
-        async function deletePartner(id) {
-            if (confirm('Видалити партнера?')) {
-                await fetch('/api/partners/' + id, { method: 'DELETE' });
-                showToast('Видалено', 'success');
-                loadPartners();
-                loadDashboard();
-            }
-        }
+        async function deletePartner(id) { if (confirm('Видалити партнера?')) { await fetch('/api/partners/' + id, { method: 'DELETE' }); showToast('Видалено', 'success'); loadPartners(); loadDashboard(); } }
 
-        // ==================== СТОРІНКА ДОПОМОГИ ====================
+        // ==================== ДОПОМОГА ====================
         async function loadHelpPage() {
             try {
                 const res = await fetch('/api/help-page');
@@ -1489,247 +1293,119 @@
             const container = document.getElementById('instructionsList');
             if (!instructions.length) { container.innerHTML = '<div class="empty-message">Немає інструкцій</div>'; return; }
             container.innerHTML = instructions.map((inst, idx) => `
-                <div class="instruction-item">
-                    <div class="instruction-number">${idx + 1}</div>
-                    <input type="text" value="${escapeHtml(inst)}" onchange="updateInstruction(${idx}, this.value)" style="flex:1; padding:8px; border:2px solid var(--gray-light); border-radius:8px;">
-                    <button class="btn btn-sm btn-danger" onclick="removeInstruction(${idx})"><i class="fas fa-trash"></i></button>
-                </div>
+                <div class="instruction-item"><div class="instruction-number">${idx+1}</div><input type="text" value="${escapeHtml(inst)}" onchange="updateInstruction(${idx}, this.value)" style="flex:1; padding:10px; border:2px solid var(--gray-light); border-radius:8px;"><button class="btn btn-sm btn-danger" onclick="removeInstruction(${idx})"><i class="fas fa-trash"></i></button></div>
             `).join('');
         }
 
-        function addInstruction() {
-            instructions.push('Нова інструкція');
-            renderInstructions();
-        }
+        function addInstruction() { instructions.push('Нова інструкція'); renderInstructions(); }
         function updateInstruction(index, value) { instructions[index] = value; }
         function removeInstruction(index) { instructions.splice(index, 1); renderInstructions(); }
 
         async function saveHelpPage() {
-            const data = {
-                title: document.getElementById('helpTitle').value,
-                content: document.getElementById('helpContent').value,
-                instructions: instructions,
-                contacts: {
-                    phone: document.getElementById('helpPhone').value,
-                    email: document.getElementById('helpEmail').value,
-                    telegram: document.getElementById('helpTelegram').value
-                }
-            };
+            const data = { title: document.getElementById('helpTitle').value, content: document.getElementById('helpContent').value, instructions: instructions, contacts: { phone: document.getElementById('helpPhone').value, email: document.getElementById('helpEmail').value, telegram: document.getElementById('helpTelegram').value } };
             const res = await fetch('/api/help-page', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-            if (res.ok) showToast('Збережено', 'success');
-            else showToast('Помилка', 'error');
+            if (res.ok) showToast('Збережено', 'success'); else showToast('Помилка', 'error');
         }
 
         // ==================== ПРО НАС ====================
-        async function loadAbout() {
-            const res = await fetch('/api/about');
-            const data = await res.json();
-            document.getElementById('aboutText').value = data.content;
-        }
-        async function saveAbout() {
-            await fetch('/api/about', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: document.getElementById('aboutText').value }) });
-            showToast('Збережено', 'success');
-        }
+        async function loadAbout() { const res = await fetch('/api/about'); const data = await res.json(); document.getElementById('aboutText').value = data.content; }
+        async function saveAbout() { await fetch('/api/about', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: document.getElementById('aboutText').value }) }); showToast('Збережено', 'success'); }
 
         // ==================== КОНТАКТИ ====================
-        async function loadContacts() {
-            const res = await fetch('/api/settings');
-            const data = await res.json();
-            document.getElementById('contactPhone').value = data.contacts?.phone || '';
-            document.getElementById('contactEmail').value = data.contacts?.email || '';
-            document.getElementById('contactAddress').value = data.contacts?.address || '';
-        }
-        async function saveContacts() {
-            const res = await fetch('/api/settings');
-            const settings = await res.json();
-            settings.contacts = {
-                phone: document.getElementById('contactPhone').value,
-                email: document.getElementById('contactEmail').value,
-                address: document.getElementById('contactAddress').value
-            };
-            await fetch('/api/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) });
-            showToast('Збережено', 'success');
+        async function loadContacts() { const res = await fetch('/api/settings'); const data = await res.json(); document.getElementById('contactPhone').value = data.contacts?.phone || ''; document.getElementById('contactEmail').value = data.contacts?.email || ''; document.getElementById('contactAddress').value = data.contacts?.address || ''; }
+        async function saveContacts() { const res = await fetch('/api/settings'); const settings = await res.json(); settings.contacts = { phone: document.getElementById('contactPhone').value, email: document.getElementById('contactEmail').value, address: document.getElementById('contactAddress').value }; await fetch('/api/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }); showToast('Збережено', 'success'); }
+
+        // ==================== РЕКВІЗИТИ ====================
+        async function loadRequisites() {
+            try {
+                const res = await fetch('/api/settings');
+                const data = await res.json();
+                document.getElementById('requisitesCard').value = data.requisites?.card || '';
+                document.getElementById('requisitesBank').value = data.requisites?.bank || '';
+                document.getElementById('requisitesName').value = data.requisites?.name || '';
+            } catch (error) { showToast('Помилка', 'error'); }
         }
 
-        // ==================== СОЦІАЛЬНІ МЕРЕЖІ ====================
+        async function saveRequisites() {
+            try {
+                const data = { card: document.getElementById('requisitesCard').value, bank: document.getElementById('requisitesBank').value, name: document.getElementById('requisitesName').value };
+                const res = await fetch('/api/settings/requisites', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                if (res.ok) showToast('Реквізити збережено', 'success'); else showToast('Помилка', 'error');
+            } catch (error) { showToast('Помилка', 'error'); }
+        }
+
+        // ==================== СОЦМЕРЕЖІ ====================
         async function loadSocial() {
             try {
                 const res = await fetch('/api/settings');
                 const data = await res.json();
                 const container = document.getElementById('socialList');
-                if (!data.social?.length) {
-                    container.innerHTML = '<div class="empty-message">Немає доданих соціальних мереж</div>';
-                    return;
-                }
+                if (!data.social?.length) { container.innerHTML = '<div class="empty-message">Немає доданих соціальних мереж</div>'; return; }
                 container.innerHTML = data.social.map(s => `
-                    <div class="social-card">
-                        <div class="social-icon-large ${s.icon}"><i class="fab fa-${s.icon}"></i></div>
-                        <div class="social-info">
-                            <div class="social-name">${s.platform}</div>
-                            <div class="social-url">${s.url}</div>
-                            <span class="social-status ${s.active ? 'active' : 'inactive'}">${s.active ? 'Активна' : 'Неактивна'}</span>
-                        </div>
-                        <div class="social-actions">
-                            <button class="btn btn-sm btn-success" onclick="toggleSocial(${s.id})"><i class="fas fa-${s.active ? 'pause' : 'play'}"></i></button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteSocial(${s.id})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
+                    <div class="social-card"><div class="social-icon"><i class="fab fa-${s.icon}"></i></div><div class="partner-info"><div class="partner-name">${s.platform}</div><div class="partner-description">${s.url}</div></div>
+                    <div><button class="btn btn-sm btn-success" onclick="toggleSocial(${s.id})"><i class="fas fa-${s.active ? 'pause' : 'play'}"></i></button> <button class="btn btn-sm btn-danger" onclick="deleteSocial(${s.id})"><i class="fas fa-trash"></i></button></div></div>
                 `).join('');
             } catch (error) { showToast('Помилка', 'error'); }
         }
 
         const socialPlatforms = [
-            { name: 'Facebook', icon: 'facebook', color: '#1877f2' },
-            { name: 'Instagram', icon: 'instagram', color: '#e4405f' },
-            { name: 'Telegram', icon: 'telegram', color: '#26a5e4' },
-            { name: 'YouTube', icon: 'youtube', color: '#ff0000' },
-            { name: 'TikTok', icon: 'tiktok', color: '#000000' },
-            { name: 'Twitter', icon: 'twitter', color: '#1da1f2' },
-            { name: 'LinkedIn', icon: 'linkedin', color: '#0077b5' },
-            { name: 'GitHub', icon: 'github', color: '#333333' },
-            { name: 'WhatsApp', icon: 'whatsapp', color: '#25d366' },
-            { name: 'Viber', icon: 'viber', color: '#7360f2' },
-            { name: 'Discord', icon: 'discord', color: '#5865f2' },
-            { name: 'Reddit', icon: 'reddit', color: '#ff4500' },
-            { name: 'Pinterest', icon: 'pinterest', color: '#bd081c' },
-            { name: 'Snapchat', icon: 'snapchat', color: '#fffc00' },
-            { name: 'Skype', icon: 'skype', color: '#00aff0' },
-            { name: 'VK', icon: 'vk', color: '#4680c2' },
-            { name: 'Odnoklassniki', icon: 'odnoklassniki', color: '#ee8208' },
-            { name: 'Signal', icon: 'signal', color: '#3a76f0' },
-            { name: 'Messenger', icon: 'messenger', color: '#0084ff' },
-            { name: 'Tumblr', icon: 'tumblr', color: '#35465c' },
-            { name: 'Flickr', icon: 'flickr', color: '#0063dc' }
+            { name: 'Facebook', icon: 'facebook' }, { name: 'Instagram', icon: 'instagram' }, { name: 'Telegram', icon: 'telegram' },
+            { name: 'YouTube', icon: 'youtube' }, { name: 'TikTok', icon: 'tiktok' }, { name: 'Twitter', icon: 'twitter' },
+            { name: 'LinkedIn', icon: 'linkedin' }, { name: 'GitHub', icon: 'github' }, { name: 'WhatsApp', icon: 'whatsapp' },
+            { name: 'Viber', icon: 'viber' }, { name: 'Discord', icon: 'discord' }, { name: 'Reddit', icon: 'reddit' }
         ];
 
         function openSocialModal() {
             selectedPlatform = null;
-            selectedIcon = null;
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
-                <div class="modal-content">
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                    <h2>Додати соціальну мережу</h2>
-                    <div class="form-group"><label>Виберіть платформу</label><div class="platform-selector" id="platformSelector"></div></div>
-                    <div class="form-group"><label>Посилання</label><input type="url" id="socialUrl" placeholder="https://..."></div>
-                    <div class="modal-actions"><button class="btn btn-primary" onclick="saveSocial()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div>
-                </div>
+                <div class="modal-content"><button class="modal-close" onclick="closeModal()">&times;</button>
+                <h2>Додати соціальну мережу</h2>
+                <div class="form-group"><label>Виберіть платформу</label><div class="platform-selector" id="platformSelector"></div></div>
+                <div class="form-group"><label>Посилання</label><input type="url" id="socialUrl" placeholder="https://..."></div>
+                <div class="modal-actions"><button class="btn btn-primary" onclick="saveSocial()">Зберегти</button><button class="btn btn-danger" onclick="closeModal()">Скасувати</button></div></div>
             `;
             document.body.appendChild(modal);
             modal.classList.add('active');
-            
             const container = document.getElementById('platformSelector');
-            container.innerHTML = socialPlatforms.map(p => `
-                <div class="platform-card" onclick="selectPlatform('${p.icon}', '${p.icon}')">
-                    <i class="fab fa-${p.icon}"></i>
-                    <span>${p.name}</span>
-                </div>
-            `).join('');
+            container.innerHTML = socialPlatforms.map(p => `<div class="platform-card" onclick="selectPlatform('${p.icon}', '${p.icon}')"><i class="fab fa-${p.icon}"></i><span>${p.name}</span></div>`).join('');
         }
 
         function selectPlatform(platform, icon) {
-            document.querySelectorAll('.platform-card').forEach(card => card.classList.remove('selected'));
-            if (event && event.currentTarget) event.currentTarget.classList.add('selected');
+            document.querySelectorAll('.platform-card').forEach(c => c.classList.remove('selected'));
+            if (event?.currentTarget) event.currentTarget.classList.add('selected');
             selectedPlatform = platform;
-            selectedIcon = icon;
         }
 
         async function saveSocial() {
             if (!selectedPlatform) { showToast('Виберіть платформу', 'warning'); return; }
             const url = document.getElementById('socialUrl').value;
             if (!url) { showToast('Введіть посилання', 'warning'); return; }
-            try {
-                const res = await fetch('/api/social', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ platform: selectedPlatform, icon: selectedIcon, url: url, active: true })
-                });
-                if (res.ok) {
-                    showToast('Додано', 'success');
-                    closeModal();
-                    loadSocial();
-                    loadDashboard();
-                } else showToast('Помилка', 'error');
-            } catch (error) { showToast('Помилка', 'error'); }
+            await fetch('/api/social', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ platform: selectedPlatform, icon: selectedPlatform, url: url, active: true }) });
+            showToast('Додано', 'success'); closeModal(); loadSocial(); loadDashboard();
         }
 
         async function toggleSocial(id) {
             const res = await fetch('/api/settings');
             const data = await res.json();
             const social = data.social.find(s => s.id === id);
-            if (social) {
-                social.active = !social.active;
-                await fetch('/api/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ social: data.social }) });
-                showToast('Статус змінено', 'success');
-                loadSocial();
-            }
+            if (social) { social.active = !social.active; await fetch('/api/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ social: data.social }) }); showToast('Статус змінено', 'success'); loadSocial(); }
         }
-
-        async function deleteSocial(id) {
-            if (confirm('Видалити соціальну мережу?')) {
-                await fetch('/api/social/' + id, { method: 'DELETE' });
-                showToast('Видалено', 'success');
-                loadSocial();
-                loadDashboard();
-            }
-        }
+        async function deleteSocial(id) { if (confirm('Видалити?')) { await fetch('/api/social/' + id, { method: 'DELETE' }); showToast('Видалено', 'success'); loadSocial(); loadDashboard(); } }
 
         // ==================== НАЛАШТУВАННЯ ====================
-        async function loadSettings() {
-            const res = await fetch('/api/settings');
-            const data = await res.json();
-            document.getElementById('siteName').value = data.siteName || 'Волонтерський штаб 4.5.0';
-        }
-        async function saveSiteName() {
-            const res = await fetch('/api/settings');
-            const settings = await res.json();
-            settings.siteName = document.getElementById('siteName').value;
-            await fetch('/api/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) });
-            showToast('Збережено', 'success');
-        }
-        async function changeCredentials() {
-            const username = document.getElementById('newUsername').value;
-            const password = document.getElementById('newPassword').value;
-            if (!username && !password) { showToast('Введіть дані', 'warning'); return; }
-            await fetch('/api/settings/credentials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
-            showToast('Змінено', 'success');
-            document.getElementById('newUsername').value = '';
-            document.getElementById('newPassword').value = '';
-        }
-        async function uploadLogo() {
-            const file = document.getElementById('logoUpload').files[0];
-            if (!file) { showToast('Виберіть файл', 'warning'); return; }
-            const formData = new FormData();
-            formData.append('logo', file);
-            await fetch('/api/settings/logo', { method: 'POST', body: formData });
-            showToast('Логотип завантажено', 'success');
-        }
+        async function loadSettings() { const res = await fetch('/api/settings'); const data = await res.json(); document.getElementById('siteName').value = data.siteName || 'Волонтерський штаб 4.5.0'; }
+        async function saveSiteName() { const res = await fetch('/api/settings'); const settings = await res.json(); settings.siteName = document.getElementById('siteName').value; await fetch('/api/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) }); showToast('Збережено', 'success'); }
+        async function changeCredentials() { const username = document.getElementById('newUsername').value; const password = document.getElementById('newPassword').value; if (!username && !password) { showToast('Введіть дані', 'warning'); return; } await fetch('/api/settings/credentials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) }); showToast('Змінено', 'success'); document.getElementById('newUsername').value = ''; document.getElementById('newPassword').value = ''; }
+        async function uploadLogo() { const file = document.getElementById('logoUpload').files[0]; if (!file) { showToast('Виберіть файл', 'warning'); return; } const formData = new FormData(); formData.append('logo', file); await fetch('/api/settings/logo', { method: 'POST', body: formData }); showToast('Логотип завантажено', 'success'); }
 
-        // ==================== ДОПОМІЖНІ ФУНКЦІЇ ====================
-        function closeModal() {
-            const modal = document.querySelector('.modal.active');
-            if (modal) modal.remove();
-            document.body.style.overflow = '';
-            currentEditId = null;
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i><span>${escapeHtml(message)}</span>`;
-            document.getElementById('toastContainer').appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
-        }
+        // ==================== ДОПОМІЖНІ ====================
+        function closeModal() { const modal = document.querySelector('.modal.active'); if (modal) modal.remove(); currentEditId = null; }
+        function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+        function showToast(message, type = 'info') { const toast = document.createElement('div'); toast.className = `toast ${type}`; toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i><span>${escapeHtml(message)}</span>`; document.getElementById('toastContainer').appendChild(toast); setTimeout(() => toast.remove(), 3000); }
 
         document.addEventListener('DOMContentLoaded', () => { checkAuth(); });
     </script>
 </body>
-</html>
+    </html>
